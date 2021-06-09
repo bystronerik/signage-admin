@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://fryda.deizon.com/sitemap.xml

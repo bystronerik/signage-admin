@@ -1,0 +1,66 @@
+<div class="flex py-1 w-full transform transition-all duration-300 pointer-events-auto">
+  <div
+    class="flex w-full visible flex-row shadow-lg border-l-4 rounded-md duration-100 cursor-pointer transform transition-all hover:scale-102 bg-white dark:bg-gray-700 max-h-40 {{
+      data.type.base
+    }}"
+  >
+    <div class="flex flex-row p-2 flex-no-wrap w-full">
+      <div class="flex items-center h-12 w-12 mx-auto text-xl select-none">
+        <svg
+          class="mx-auto h-8 {{ data.type.iconStyle }}"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            *ngIf="data.type.toString() == 'INFO'"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+          <path
+            *ngIf="data.type.toString() == 'SUCCESS'"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+          />
+          <path
+            *ngIf="data.type.toString() == 'WARNING'"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+          <path
+            *ngIf="data.type.toString() == 'ERROR'"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+          />
+        </svg>
+      </div>
+
+      <div class="flex flex-col flex-no-wrap px-1 w-full">
+        <div class="flex my-auto text-gray-800 dark:text-gray-100 font-bold select-none">{{ data.title }}</div>
+        <p class="-mt-0.5 my-auto break-words flex text-gray-500 dark:text-gray-200 text-sm">
+          {{ data.content }}
+        </p>
+      </div>
+      <div (click)="dismissAlert()" class="w-10 h-12 mr-2 items-center mx-auto text-center leading-none text-lg">
+        <svg
+          class="mt-3 h-6 text-center text-gray-600 cursor-pointer hover:scale-105 transform"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>

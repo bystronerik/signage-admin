@@ -1,0 +1,287 @@
+<main class="h-full overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <div class="flex justify-between">
+      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Detail {{ this.assetList.type === 'playlist' ? 'playlistu' : this.assetList.type === 'client' ? 'klienta' :
+        this.assetList.type === 'highpriority' ? 'prioritního playlistu' : '' }}
+        <span class="text-gray-500 dark:text-gray-600">#{{assetList.id}}</span>
+      </h2>
+      <div class="my-6">
+        <a class="mr-1 btn btn-sm btn-secondary" routerLink="edit"> Upravit </a>
+        <a class="ml-1 btn btn-sm btn-danger" (click)="showDelete()"> Smazat </a>
+      </div>
+    </div>
+
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div class="mt-2 flex px-4 py-4 justify-between">
+        <!-- Card -->
+
+        <div class="flex justify-between">
+          <!-- Left side -->
+
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Název</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{assetList.name}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Počet assetů</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="assetList.assets; then assetsCount else assetsEmpty"></span>
+              <ng-template #assetsCount>{{assetList.assets.length}}</ng-template>
+              <ng-template #assetsEmpty>0</ng-template>
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
+            <span>Vstupní animace</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="assetList.animationIn; then animationInSet else animationInNull"></span>
+              <ng-template #animationInSet
+                >{{assetList.animationIn.name ? assetList.animationIn.name : "bez animace"}}</ng-template
+              >
+              <ng-template #animationInNull>bez animace</ng-template>
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
+            <span>Závěrečná animace</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="assetList.animationOut; then animationOutSet else animationOutNull"></span>
+              <ng-template #animationOutSet
+                >{{assetList.animationOut.name ? assetList.animationOut.name : "bez animace"}}</ng-template
+              >
+              <ng-template #animationOutNull>bez animace</ng-template>
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Aktivní</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{assetList.enabled === true ? 'Ano' : 'Ne'}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
+            <span>Validita</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="assetList.validity; then validitySet else validityNull"></span>
+              <ng-template #validitySet
+                >{{assetList.validity.enabled ? assetList.validity.from + " - " + assetList.validity.to : "bez
+                omezení"}}</ng-template
+              >
+              <ng-template #validityNull>bez omezení</ng-template>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-2 text-xl font-semibold text-gray-700 dark:text-gray-200 z-30 relative">Přiřazené assety</div>
+      <ng2-smart-table
+        [settings]="settings"
+        [source]="source"
+        (create)="addAsset()"
+        (edit)="editValidity($event)"
+        (delete)="showDeleteEntry($event)"
+        class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+      ></ng2-smart-table>
+
+      <app-modal id="add-asset-modal" class="modal" style="display: none">
+        <form (ngSubmit)="submitModal()" #groupForm="ngForm">
+          <!-- Modal body -->
+          <div class="mt-4 mb-6">
+            <!-- Modal title -->
+            <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">Přidat asset</p>
+            <!-- Modal description -->
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400"> </span>
+              <select
+                (change)="changeAsset($event)"
+                [ngClass]="{ disabled: loading }"
+                [disabled]="loading"
+                name="group"
+                class="
+                  block
+                  w-full
+                  mt-1
+                  text-sm
+                  dark:text-gray-300
+                  dark:border-gray-600
+                  dark:bg-gray-700
+                  form-select
+                  focus:border-purple-400
+                  focus:outline-none
+                  focus:shadow-outline-purple
+                  dark:focus:shadow-outline-gray
+                "
+              >
+                <option value="" disabled>Zvolte asset</option>
+                <option value="null">Prázdná hodnota</option>
+                <option *ngFor="let item of assets" [value]="item.id" [selected]="assetEntry.asset === item.id">
+                  {{item.name}}
+                </option>
+              </select>
+            </label>
+            <div class="mt-4">
+              <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                <input
+                  [(ngModel)]="assetEntry.validityEnabled"
+                  [ngClass]="{ disabled: loading }"
+                  [disabled]="loading"
+                  type="checkbox"
+                  name="toggle"
+                  id="toggle"
+                  class="
+                    toggle-checkbox
+                    absolute
+                    block
+                    w-6
+                    h-6
+                    rounded-full
+                    bg-white
+                    border-4
+                    appearance-none
+                    cursor-pointer
+                  "
+                />
+                <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"></label>
+              </div>
+              <label for="toggle" class="text-base align-middle">Časově omezená validita</label>
+            </div>
+            <div class="mt-4 flex justify-between">
+              <label class="inline-block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Validní od</span>
+                <input
+                  [(ngModel)]="assetEntry.validFrom"
+                  [ngClass]="{ disabled: loading || !assetEntry.validityEnabled }"
+                  [disabled]="loading || !assetEntry.validityEnabled"
+                  name="validity.from"
+                  type="datetime-local"
+                  class="
+                    block
+                    w-full
+                    mt-1
+                    text-sm text-black
+                    dark:border-gray-600
+                    dark:bg-gray-700
+                    focus:border-purple-400
+                    focus:outline-none
+                    focus:shadow-outline-purple
+                    dark:text-gray-300
+                    dark:focus:shadow-outline-gray
+                    form-input
+                  "
+                />
+              </label>
+              <label class="inline-block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Validní do</span>
+                <input
+                  [(ngModel)]="assetEntry.validTo"
+                  [ngClass]="{ disabled: loading || !assetEntry.validityEnabled }"
+                  [disabled]="loading || !assetEntry.validityEnabled"
+                  name="validity.to"
+                  type="datetime-local"
+                  class="
+                    block
+                    w-full
+                    mt-1
+                    text-sm text-black
+                    dark:border-gray-600
+                    dark:bg-gray-700
+                    focus:border-purple-400
+                    focus:outline-none
+                    focus:shadow-outline-purple
+                    dark:text-gray-300
+                    dark:focus:shadow-outline-gray
+                    form-input
+                  "
+                />
+              </label>
+            </div>
+          </div>
+          <footer
+            class="
+              flex flex-col
+              items-center
+              justify-end
+              px-6
+              py-3
+              -mx-6
+              -mb-4
+              space-y-4
+              sm:space-y-0 sm:space-x-6
+              sm:flex-row
+              bg-gray-50
+              dark:bg-gray-800
+            "
+          >
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="
+                w-full
+                px-5
+                py-3
+                text-sm
+                font-medium
+                leading-5
+                text-white text-gray-700
+                transition-colors
+                duration-150
+                border border-gray-300
+                rounded-lg
+                dark:text-gray-400
+                sm:px-4
+                sm:py-2
+                sm:w-auto
+                active:bg-transparent
+                hover:border-gray-500
+                focus:border-gray-500
+                active:text-gray-500
+                focus:outline-none
+                focus:shadow-outline-gray
+              "
+            >
+              Zrušit
+            </button>
+            <button
+              type="submit"
+              class="
+                w-full
+                px-5
+                py-3
+                text-sm
+                font-medium
+                leading-5
+                text-white
+                transition-colors
+                duration-150
+                bg-purple-600
+                border border-transparent
+                rounded-lg
+                sm:w-auto
+                sm:px-4
+                sm:py-2
+                active:bg-purple-600
+                hover:bg-purple-700
+                focus:outline-none
+                focus:shadow-outline-purple
+              "
+            >
+              Přidat
+            </button>
+          </footer>
+        </form>
+      </app-modal>
+    </div>
+  </div>
+  <app-delete-modal
+    itemName="asset list"
+    (confirm)="submitDelete()"
+    id="delete-assetlist-modal"
+    class="modal"
+    style="display: none"
+  >
+  </app-delete-modal>
+  <app-delete-modal
+    itemName="přiřazení assetu"
+    (confirm)="submitDeleteEntry()"
+    id="delete-assetlist-asset-modal"
+    class="modal"
+    style="display: none"
+  >
+  </app-delete-modal>
+</main>

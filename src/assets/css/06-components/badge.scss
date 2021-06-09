@@ -1,0 +1,82 @@
+.badge {
+  height: $md;
+  @apply inline-flex;
+  @apply items-center;
+  @apply justify-center;
+  @apply py-3;
+  @apply px-6;
+  @apply text-center;
+  @apply text-gray-800;
+  @apply select-none;
+  @apply no-underline;
+  @apply rounded-md;
+
+  > * {
+    @apply px-2;
+  }
+}
+
+.badge-block {
+  @apply w-full;
+  @apply flex;
+}
+
+.badge-sm {
+  height: $sm;
+  @apply py-2;
+  @apply px-3;
+  @apply text-base;
+}
+
+.badge-lg {
+  height: $lg;
+  @apply py-4;
+  @apply px-10;
+  @apply text-xl;
+}
+
+.badge-neutral {
+  @apply bg-transparent;
+  //@apply text-body;
+}
+
+.badge-neutral-accent {
+  background-color: var(--accent);
+  color: var(--text-body);
+  filter: contrast(0.9);
+}
+
+.badge-white {
+  @apply bg-gray-100;
+  box-shadow: 0 6px 12px 0 rgba(163, 163, 163, 0.2);
+}
+
+.badge-secondary {
+  @apply bg-gray-500;
+  @apply text-white;
+  box-shadow: 0 6px 12px 0 rgba(68, 68, 68, 0.2);
+}
+
+.badge-success {
+  @apply bg-success-500;
+  @apply text-white;
+  box-shadow: 0 6px 12px 0 rgba(39, 255, 28, 0.2);
+}
+
+.badge-primary {
+  @apply bg-primary-500;
+  @apply text-white;
+  box-shadow: 0 6px 12px 0 rgba(50, 125, 255, 0.2);
+}
+
+.badge-warning {
+  @apply bg-warning-500;
+  @apply text-white;
+  box-shadow: 0 6px 12px 0 rgba(255, 151, 14, 0.2);
+}
+
+.badge-danger {
+  @apply bg-danger-500;
+  @apply text-white;
+  box-shadow: 0 6px 12px 0 rgba(255, 14, 14, 0.2);
+}

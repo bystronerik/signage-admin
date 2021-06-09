@@ -1,0 +1,9 @@
+.toggle-checkbox + .toggle-label {
+  @apply bg-gray-300;
+}
+.toggle-checkbox:checked {
+  @apply right-0 border-primary-400;
+}
+.toggle-checkbox:checked + .toggle-label {
+  @apply bg-primary-400;
+}

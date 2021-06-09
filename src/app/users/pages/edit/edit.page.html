@@ -1,0 +1,166 @@
+<main class="h-full overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+      <span *ngIf="user.id == undefined; then createTitle else editTitle"></span>
+      <ng-template #createTitle>Nový uživatel</ng-template>
+      <ng-template #editTitle
+        >Editace uživatele <span class="text-gray-500 dark:text-gray-600">#{{user.id}}</span>
+      </ng-template>
+    </h2>
+
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div class="w-full md:w-full lg:w-1/2">
+        <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+          <div>
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400">Uživatelské jméno</span>
+              <input
+                [(ngModel)]="user.username"
+                [ngClass]="{ disabled: loading }"
+                [disabled]="loading || user.id === authService.userValue.id"
+                name="username"
+                type="text"
+                class="
+                  block
+                  w-full
+                  mt-1
+                  text-sm text-black
+                  dark:border-gray-600
+                  dark:bg-gray-700
+                  focus:border-purple-400
+                  focus:outline-none
+                  focus:shadow-outline-purple
+                  dark:text-gray-300
+                  dark:focus:shadow-outline-gray
+                  form-input
+                "
+              />
+            </label>
+          </div>
+          <div class="mt-4">
+            <label class="block mt-4 text-sm">
+              <span class="text-gray-700 dark:text-gray-400"> Heslo </span>
+              <div class="relative text-gray-500 focus-within:text-purple-600">
+                <input
+                  [(ngModel)]="user.password"
+                  [ngClass]="{ disabled: loading }"
+                  [disabled]="loading"
+                  name="password"
+                  type="text"
+                  class="
+                    block
+                    w-full
+                    pr-20
+                    mt-1
+                    text-sm text-black
+                    dark:text-gray-300
+                    dark:border-gray-600
+                    dark:bg-gray-700
+                    focus:border-purple-400
+                    focus:outline-none
+                    focus:shadow-outline-purple
+                    dark:focus:shadow-outline-gray
+                    form-input
+                  "
+                />
+                <button
+                  (click)="generatePassword()"
+                  [ngClass]="{ disabled: loading }"
+                  [disabled]="loading"
+                  type="button"
+                  class="absolute inset-y-0 right-0 btn btn-primary btn-sm h-full rounded-l-none"
+                >
+                  Vygenerovat
+                </button>
+              </div>
+            </label>
+          </div>
+          <div class="mt-4">
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400"> Role </span>
+              <select
+                (change)="changeRole($event)"
+                [ngClass]="{ disabled: loading }"
+                [disabled]="loading || user.id === authService.userValue.id"
+                name="group"
+                class="
+                  block
+                  w-full
+                  mt-1
+                  text-sm
+                  dark:text-gray-300
+                  dark:border-gray-600
+                  dark:bg-gray-700
+                  form-select
+                  focus:border-purple-400
+                  focus:outline-none
+                  focus:shadow-outline-purple
+                  dark:focus:shadow-outline-gray
+                "
+              >
+                <option value="" disabled>Zvolte roli</option>
+                <option *ngFor="let item of roles" [value]="item" [selected]="user.role == item">{{item}}</option>
+              </select>
+            </label>
+          </div>
+          <div class="mt-8">
+            <button
+              type="submit"
+              [disabled]="!userForm.form.valid || loading"
+              [ngClass]="{ disabled: loading }"
+              class="
+                flex
+                items-center
+                justify-center
+                w-full
+                px-4
+                py-2
+                text-sm
+                font-medium
+                leading-5
+                text-white
+                transition-colors
+                duration-150
+                bg-purple-600
+                border border-transparent
+                rounded-lg
+                active:bg-purple-600
+                hover:bg-purple-700
+                focus:outline-none
+                focus:shadow-outline-purple
+              "
+            >
+              <svg *ngIf="!loading" class="w-4 h-4" fill="currentColor" aria-hidden="true" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span *ngIf="!loading">
+                <span *ngIf="user.id == undefined; then createBtn else editBtn"></span>
+                <ng-template #createBtn>Vytvořit</ng-template>
+                <ng-template #editBtn>Uložit</ng-template>
+              </span>
+              <svg
+                *ngIf="loading"
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span *ngIf="loading">Ukládání</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>

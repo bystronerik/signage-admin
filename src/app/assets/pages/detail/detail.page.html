@@ -1,0 +1,132 @@
+<main class="h-full overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <div class="flex justify-between">
+      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Detail grafického obsahu <span class="text-gray-500 dark:text-gray-600">#{{asset.id}}</span>
+      </h2>
+      <div class="my-6">
+        <a class="mr-1 btn btn-sm btn-secondary" routerLink="edit"> Upravit </a>
+        <a class="ml-1 btn btn-sm btn-danger" (click)="showDelete()"> Smazat </a>
+      </div>
+    </div>
+
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div class="mt-2 flex px-4 py-4">
+        <!-- Card -->
+        <div class="flex">
+          <ng-container *ngIf="asset.type">
+            <img *ngIf="asset.type.includes('image')" class="object-contain h-64" src="{{asset.path}}" />
+            <video *ngIf="asset.type.includes('video')" class="h-64" controls>
+              <source src="{{asset.path}}" type="{{asset.type}}" />
+              Your browser does not support the video tag.
+            </video>
+          </ng-container>
+        </div>
+        <div class="flex">
+          <!-- Left side -->
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Název</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{asset.name}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Typ</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{asset.type}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
+            <span>Délka zobrazení</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{asset.showTime ? asset.showTime : "standardní"}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
+            <span>Vstupní animace</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="asset.animationIn; then animationInSet else animationInNull"></span>
+              <ng-template #animationInSet
+                >{{asset.animationIn.name ? asset.animationIn.name : "bez animace"}}</ng-template
+              >
+              <ng-template #animationInNull>bez animace</ng-template>
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
+            <span>Závěrečná animace</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="asset.animationOut; then animationOutSet else animationOutNull"></span>
+              <ng-template #animationOutSet
+                >{{asset.animationOut.name ? asset.animationOut.name : "bez animace"}}</ng-template
+              >
+              <ng-template #animationOutNull>bez animace</ng-template>
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
+            <span>Validita</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="asset.validity; then validitySet else validityNull"></span>
+              <ng-template #validitySet
+                >{{asset.validity.enabled ? asset.validity.from + " - " + asset.validity.to : "bez
+                omezení"}}</ng-template
+              >
+              <ng-template #validityNull>bez omezení</ng-template>
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Smazat po</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="asset.validity; then validitySet else validityNull"></span>
+              <ng-template #validitySet>{{asset.validity.enabled ? asset.validity.to : "bez omezení"}}</ng-template>
+              <ng-template #validityNull>bez omezení</ng-template>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <h2 class="mb-0 relative text-xl font-semibold text-gray-700 dark:text-gray-200">Obsaženo v playlistech</h2>
+        <ng2-smart-table
+          [settings]="settings"
+          [source]="playlists"
+          (create)="createNew('playlist')"
+          (edit)="showDetail('playlist', $event)"
+          (delete)="showAssignDelete($event)"
+          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+        >
+        </ng2-smart-table>
+        <h2 class="mb-0 relative text-xl font-semibold text-gray-700 dark:text-gray-200">Obsaženo u klientů</h2>
+        <ng2-smart-table
+          [settings]="settings"
+          [source]="clients"
+          (create)="createNew('client')"
+          (edit)="showDetail('client', $event)"
+          (delete)="showAssignDelete($event)"
+          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+        >
+        </ng2-smart-table>
+        <h2 class="mb-0 relative text-xl font-semibold text-gray-700 dark:text-gray-200">
+          Obsaženo v prioritních playlistech
+        </h2>
+        <ng2-smart-table
+          [settings]="settings"
+          [source]="highpriority"
+          (create)="createNew('highpriority')"
+          (edit)="showDetail('highpriority', $event)"
+          (delete)="showAssignDelete($event)"
+          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+        >
+        </ng2-smart-table>
+      </div>
+    </div>
+  </div>
+  <app-delete-modal
+    itemName="asset"
+    (confirm)="submitDelete()"
+    id="delete-asset-modal"
+    class="modal"
+    style="display: none"
+  >
+  </app-delete-modal>
+  <app-delete-modal
+    itemName="přiřazení assetu"
+    (confirm)="submitAssignDelete()"
+    id="delete-assetassign-modal"
+    class="modal"
+    style="display: none"
+  >
+  </app-delete-modal>
+</main>

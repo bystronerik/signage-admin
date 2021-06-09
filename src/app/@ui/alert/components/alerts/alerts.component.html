@@ -1,0 +1,9 @@
+<div class="bottom-0 right-0 fixed z-50 w-full md:max-w-sm p-4 md:p-4 max-h-screen overflow-hidden pointer-events-none">
+  <div class="flex-1 flex-col fade w-full mr-8 justify-end pointer-events-none">
+    <app-alert-item
+      *ngFor="let alert of getAlerts()"
+      (dismiss)="dismissAlert(alert.id)"
+      [data]="alert"
+    ></app-alert-item>
+  </div>
+</div>

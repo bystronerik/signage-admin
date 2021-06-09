@@ -1,0 +1,5 @@
+export enum StyleValueType {
+  PURE_CSS = 'PURE_CSS',
+  TAILWINDCSS = 'TAILWINDCSS',
+  ANIMATECSS = 'ANIMATECSS',
+}

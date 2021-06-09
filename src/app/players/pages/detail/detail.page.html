@@ -1,0 +1,48 @@
+<main class="h-full overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <div class="flex justify-between">
+      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Detail panelu <span class="text-gray-500 dark:text-gray-600">#{{player.id}}</span>
+      </h2>
+      <div class="my-6">
+        <a class="mr-1 btn btn-sm btn-secondary" routerLink="edit"> Upravit </a>
+        <a class="mx-1 btn btn-sm btn-success" href="{{playerUrl}}" target="_blank"> Náhled </a>
+        <a class="ml-1 btn btn-sm btn-danger" (click)="showDelete()"> Smazat </a>
+      </div>
+    </div>
+
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div class="mt-2 flex px-4 py-4 justify-between">
+        <!-- Card -->
+
+        <div class="flex justify-between">
+          <!-- Left side -->
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Název</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{player.name}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Přístupový token</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{player.token}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Skupina</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="player.group; then groupName else groupEmpty"></span>
+              <ng-template #groupName>{{player.group.name}}</ng-template>
+              <ng-template #groupEmpty>Nezařazeno</ng-template>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-delete-modal
+    itemName="panel"
+    (confirm)="submitDelete()"
+    id="delete-player-modal"
+    class="modal"
+    style="display: none"
+  >
+  </app-delete-modal>
+</main>

@@ -1,0 +1,24 @@
+@mixin apply-theme($mode) {
+  @each $key, $value in map-get($themes, $mode) {
+    --#{$key}: #{$value};
+  }
+
+  background-color: var(--background-color);
+  color: var(--text-body-darker);
+}
+
+.app,
+.app.light {
+  @include apply-theme(light);
+}
+
+.app.dark {
+  @include apply-theme(dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  /* defaults to dark theme */
+  .app {
+    @include apply-theme(dark);
+  }
+}

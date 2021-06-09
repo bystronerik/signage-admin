@@ -1,0 +1,11 @@
+a:not(.btn) {
+  @apply inline-block;
+  @apply font-bold;
+  @apply text-sm;
+
+  &:hover,
+  &:active,
+  &:focus {
+    @apply underline;
+  }
+}

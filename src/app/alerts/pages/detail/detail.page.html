@@ -1,0 +1,87 @@
+<main class="h-full overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <div class="flex justify-between">
+      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Detail informační zprávy <span class="text-gray-500 dark:text-gray-600">#{{alert.id}}</span>
+      </h2>
+      <div class="my-6">
+        <a class="mr-1 btn btn-sm btn-secondary" routerLink="edit"> Upravit </a>
+        <a class="ml-1 btn btn-sm btn-danger" (click)="showDelete()"> Smazat </a>
+      </div>
+    </div>
+
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div class="mt-2 flex px-4 py-4">
+        <!-- Card -->
+        <div class="flex">
+          <!-- Left side -->
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Název</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{alert.name}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Text</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{alert.value}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Pozice</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{positionName(alert.position)}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Typ</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{typeName(alert.type)}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Pozadí</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              {{alert.background ? alert.background.name : "nenastaveno"}}
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Ohraničení</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              {{alert.borders ? alert.borders.name : "nenastaveno"}}
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Velikost textu</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              {{alert.textSize ? alert.textSize.name : "nenastaveno"}}
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Barva textu</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              {{alert.textColor ? alert.textColor.name : "nenastaveno"}}
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Zarovnání textu</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              {{alert.textPosition ? alert.textPosition.name : "nenastaveno"}}
+            </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Validita</span>
+            <span class="mt-2 text-black dark:text-gray-200">
+              <span *ngIf="alert.validity; then validitySet else validityNull"></span>
+              <ng-template #validitySet
+                >{{alert.validity.enabled ? alert.validity.from + " - " + alert.validity.to : "bez
+                omezení"}}</ng-template
+              >
+              <ng-template #validityNull>bez omezení</ng-template>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-delete-modal
+    itemName="informační zprávu"
+    (confirm)="submitDelete()"
+    id="delete-alert-modal"
+    class="modal"
+    style="display: none"
+  >
+  </app-delete-modal>
+</main>
