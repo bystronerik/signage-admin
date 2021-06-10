@@ -16,6 +16,7 @@ export class AllAssetsGQL extends Query<Response> {
         id
         name
         type
+        path
         showTime
       }
     }

@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  // apiUrl: 'http://api.fryda.deizon.com:9090/graphql',
-  // playersUrl: 'http://player.fryda.deizon.com',
-  apiUrl: 'http://127.0.0.1:9090/graphql',
-  playersUrl: 'http://localhost:8081',
+  apiUrl: 'http://api.fryda.deizon.com:9090/graphql',
+  playersUrl: 'http://player.fryda.deizon.com',
+  //apiUrl: 'http://127.0.0.1:9090/graphql',
+  //playersUrl: 'http://localhost:8081',
 };
 
 /*
