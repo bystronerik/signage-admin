@@ -122,7 +122,6 @@ export class DetailPage implements OnInit {
     for(const item of this.assets) {
       if(item.id === this.assetEntry.asset) {
         this.selectedAsset = item;
-        console.log(this.selectedAsset);
         return;
       }
     }

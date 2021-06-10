@@ -10,6 +10,7 @@ import { AlertPosition } from '@core/shared/alert/alert-position.enum';
 import { AlertType } from '@core/shared/alert/alert-type.enum';
 import { Style, StyleService, StyleType } from '@core/shared/style';
 import { FindStyleInput } from '@core/graphql/style';
+import {style} from "@angular/animations";
 
 @Component({
   templateUrl: './edit.page.html',
@@ -19,6 +20,8 @@ export class EditPage implements OnInit {
   alert: Alert;
   positions = {};
   loading = false;
+  activeStyles = {};
+  styles: Style[];
 
   height: Style[];
   backgrounds: Style[];
@@ -26,6 +29,7 @@ export class EditPage implements OnInit {
   textSize: Style[];
   textColor: Style[];
   textPosition: Style[];
+
 
   constructor(
     private route: ActivatedRoute,
@@ -90,6 +94,13 @@ export class EditPage implements OnInit {
               if (!this.alert.textSize) {
                 this.alert.textSize = new Style();
               }
+
+              this.activeStyles['background'] = this.alert.background.value;
+              this.activeStyles['borders'] = this.alert.borders.value;
+              this.activeStyles['height'] = this.alert.height.value;
+              this.activeStyles['textPosition'] = this.alert.textPosition.value;
+              this.activeStyles['textColor'] = this.alert.textColor.value;
+              this.activeStyles['textSize'] = this.alert.textSize.value;
             },
             (error) => {
               this.router.navigate([Path.Alerts]);
@@ -109,6 +120,7 @@ export class EditPage implements OnInit {
           this.textSize = val.data.findAllStyles.filter((item) => item.type === StyleType.TEXT_SIZE);
           this.textColor = val.data.findAllStyles.filter((item) => item.type === StyleType.TEXT_COLOR);
           this.textPosition = val.data.findAllStyles.filter((item) => item.type === StyleType.TEXT_ALIGN);
+          this.styles = val.data.findAllStyles;
         },
         (error) => {
           this.appAlertService.showError('Chyba načítání', 'Při pokusu o načtení animací se objevila chyba');
@@ -163,5 +175,14 @@ export class EditPage implements OnInit {
 
   changeStyle(event, type) {
     this.alert[type].id = event.target.value;
+    for(const item of this.styles) {
+      if(this.alert[type].id === item.id) {
+        this.activeStyles[type] = item.value;
+      }
+    }
+  }
+
+  getStylesClass() {
+    return Object.values(this.activeStyles).join(' ');
   }
 }
