@@ -5,9 +5,9 @@ import { AuthService } from '@app/+auth';
 import { FindGroupInput, UpdateGroupInput } from '@core/graphql/group';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
-import {Player, PlayerService} from '@core/shared/player';
+import { AssetList, AssetListService } from '@core/shared/assetlist';
+import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
 import { AppAlertService } from '@core/shared/app-alert';
-import {FindPlayerInput, UpdatePlayerInput} from '@core/graphql/player';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -16,14 +16,14 @@ import {FindPlayerInput, UpdatePlayerInput} from '@core/graphql/player';
 })
 export class DetailPage implements OnInit {
   group: Group;
-  selected: Player;
-  playerList: Player[];
+  selected: AssetList;
+  assetLists: AssetList[];
   loading = false;
 
-  private playerId: string;
+  private assetListId: string;
 
   public settings;
-  public source: Group;
+  public source: GroupPlaylistsDataSource;
 
   constructor(
     private router: Router,
@@ -31,11 +31,11 @@ export class DetailPage implements OnInit {
     private groupService: GroupService,
     private route: ActivatedRoute,
     private modalService: ModalService,
-    private playerService: PlayerService,
+    private assetListService: AssetListService,
     private groupPlaylistsDataSource: GroupPlaylistsDataSource,
     private alertService: AppAlertService
   ) {
-    //this.source = groupPlaylistsDataSource;
+    this.source = groupPlaylistsDataSource;
     this.settings = {
       columns: {
         name: {
@@ -66,28 +66,27 @@ export class DetailPage implements OnInit {
 
   ngOnInit(): void {
     this.group = new Group();
-    this.selected = new Player();
+    this.selected = new AssetList();
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
         const input = new FindGroupInput();
         input.id = params.get('id');
-        //this.source.id = input.id;
-        /*
+        this.source.groupId = input.id;
         this.groupService
           .findGroup(input)
           .result()
           .then(
             (value) => {
               this.group = value.data.findGroup;
-              this.source.id = this.group.id;
+              this.source.groupId = this.group.id;
 
-              this.playerService
-                .findAllPlayers(new FindPlayerInput())
+              this.assetListService
+                .findAllAssetLists(new FindAssetListInput())
                 .result()
                 .then(
                   (val) => {
-                    this.playerList = val.data.findAllPlayers;
+                    this.assetLists = val.data.findAllAssetLists;
                   },
                   (error) => {
                     this.alertService.showError('Chyba načítání', 'Při pokusu o načtení asset listů se objevila chyba');
@@ -95,9 +94,9 @@ export class DetailPage implements OnInit {
                 );
             },
             (error) => {
-              this.router.navigate([Path.Groups]);
+              this.router.navigate([Path.Planner]);
             }
-          );*/
+          );
       }
     });
   }
@@ -107,7 +106,7 @@ export class DetailPage implements OnInit {
   }
 
   removeAssetList(event) {
-    this.playerId = event.data.id;
+    this.assetListId = event.data.id;
   }
 
   submitAssetListDelete() {
@@ -116,7 +115,7 @@ export class DetailPage implements OnInit {
     const input = new UpdateGroupInput();
 
     input.assetLists = this.group.assetLists.map((value) => value.id);
-    delete input.assetLists[this.playerId];
+    delete input.assetLists[this.assetListId];
 
     this.groupService
       .updateGroup(this.group.id, input)
@@ -124,7 +123,7 @@ export class DetailPage implements OnInit {
       .then(
         (value) => {
           this.loading = false;
-          //this.source.refresh();
+          this.source.refresh();
           this.closeModal();
           this.alertService.showSuccess('Asset list odebrán', 'Asset list byl úspěšně odebrán ze skupiny');
         },
@@ -141,11 +140,11 @@ export class DetailPage implements OnInit {
   submitModal() {
     this.loading = true;
 
-    const input = new UpdatePlayerInput();
+    const input = new UpdateGroupInput();
 
-    //input.token = this.playerList.map((value) => value.id);
-    //input.assetLists.push(this.selected.id);
-/*
+    input.assetLists = this.group.assetLists.map((value) => value.id);
+    input.assetLists.push(this.selected.id);
+
     this.groupService
       .updateGroup(this.group.id, input)
       .toPromise()
@@ -160,7 +159,7 @@ export class DetailPage implements OnInit {
           this.loading = false;
           this.alertService.showError('Chyba ukládání', 'Při pokusu o uložení se vyskytla chyba');
         }
-      ); */
+      );
   }
 
   changeAssetList(event) {
@@ -177,7 +176,7 @@ export class DetailPage implements OnInit {
       .toPromise()
       .then(
         (value) => {
-          this.router.navigate([Path.Groups]);
+          this.router.navigate([Path.Planner]);
           this.alertService.showSuccess('Smazáno', 'Skupina byla úspěšně smazán');
         },
         (error) => {

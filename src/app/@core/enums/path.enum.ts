@@ -56,4 +56,10 @@ export enum Path {
   UsersCreate = 'new',
   UsersDetail = ':id',
   UsersEdit = ':id/edit',
+
+  Planner = 'planner',
+  PlannerListing = '',
+  PlannerCreate = 'new',
+  PlannerDetail = ':id',
+  PlannerEdit = ':id/edit',
 }

@@ -1,0 +1,24 @@
+<main class="h-full overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Skupiny</h2>
+
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (create)="createNew()"
+      (edit)="showDetail($event)"
+      (delete)="showDelete($event)"
+      class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+    >
+    </ng2-smart-table>
+
+    <app-delete-modal
+      itemName="skupinu"
+      (confirm)="submitDelete()"
+      id="delete-group-modal"
+      class="modal"
+      style="display: none"
+    >
+    </app-delete-modal>
+  </div>
+</main>

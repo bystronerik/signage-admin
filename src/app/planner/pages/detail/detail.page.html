@@ -1,50 +1,6 @@
 <main class="h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
-    <div class="flex justify-between">
-      <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Detail skupiny <span class="text-gray-500 dark:text-gray-600">#{{group.id}}</span>
-      </h2>
-      <div class="my-6">
-        <a class="mr-1 btn btn-sm btn-secondary" routerLink="edit"> Upravit </a>
-        <a class="ml-1 btn btn-sm btn-danger" (click)="showDelete()"> Smazat </a>
-      </div>
-    </div>
-
     <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-      <div class="mt-2 flex px-4 py-4 justify-between">
-        <!-- Card -->
-
-        <div class="flex justify-between">
-          <!-- Left side -->
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Název</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{group.name}} </span>
-          </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Počet playerů</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="playerList; then assetListsCount else assetListsEmpty"></span>
-              <ng-template #assetListsCount>{{playerList.length}}</ng-template>
-              <ng-template #assetListsEmpty>0</ng-template>
-            </span>
-          </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Informační zpráva</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{group.alert ? group.alert.name : "nenastavena"}} </span>
-          </div>
-          <!--
-          <div
-            class="ml-8 flex flex-col text-gray-600
-						dark:text-gray-400">
-            <span>Počet panelů</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="group.players; then playersCount else playersEmpty"></span>
-							<ng-template #playersCount>{{group.players.length}}</ng-template>
-              <ng-template #playersEmpty>0</ng-template>
-						</span>
-          </div>-->
-        </div>
-      </div>
 
       <div class="mt-2 -mb-5 text-xl font-semibold text-gray-700 dark:text-gray-200 relative">Přiřazené assetlisty</div>
       <ng2-smart-table
@@ -60,7 +16,7 @@
           <!-- Modal body -->
           <div class="mt-4 mb-6">
             <!-- Modal title -->
-            <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">Přidat panel</p>
+            <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">Přidat assetList</p>
             <!-- Modal description -->
             <label class="block text-sm">
               <span class="text-gray-700 dark:text-gray-400"> </span>
@@ -84,9 +40,9 @@
                   dark:focus:shadow-outline-gray
                 "
               >
-                <option value="" disabled>Zvolte panel</option>
+                <option value="" disabled>Zvolte assetlist</option>
                 <option value="null">Prázdná hodnota</option>
-                <option *ngFor="let item of playerList" [value]="item.id">{{item.name}}</option>
+                <option *ngFor="let item of assetLists" [value]="item.id">{{item.name}}</option>
               </select>
             </label>
           </div>
