@@ -5,9 +5,9 @@ import { AuthService } from '@app/+auth';
 import { FindGroupInput, UpdateGroupInput } from '@core/graphql/group';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
-import {Player, PlayerService} from '@core/shared/player';
+import { Player, PlayerService } from '@core/shared/player';
 import { AppAlertService } from '@core/shared/app-alert';
-import {FindPlayerInput, UpdatePlayerInput} from '@core/graphql/player';
+import { FindPlayerInput, UpdatePlayerInput } from '@core/graphql/player';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -145,7 +145,7 @@ export class DetailPage implements OnInit {
 
     //input.token = this.playerList.map((value) => value.id);
     //input.assetLists.push(this.selected.id);
-/*
+    /*
     this.groupService
       .updateGroup(this.group.id, input)
       .toPromise()

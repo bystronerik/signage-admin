@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthService} from '@app/+auth';
-import {Path} from '@core/enums';
-import {Asset, AssetService} from '@core/shared/asset';
-import {ModalService} from '@core/services';
-import {FindAssetInput} from '@core/graphql/asset';
-import {AssetList, AssetListAssetsDataSource, AssetListService} from '@core/shared/assetlist';
-import {AssetAssignInput} from '@core/graphql/assetlist/asset-assign-input.model';
-import {FindAssetListInput} from '@core/graphql/assetlist/find-assetlist-input.model';
-import {AppAlertService} from '@core/shared/app-alert';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@app/+auth';
+import { Path } from '@core/enums';
+import { Asset, AssetService } from '@core/shared/asset';
+import { ModalService } from '@core/services';
+import { FindAssetInput } from '@core/graphql/asset';
+import { AssetList, AssetListAssetsDataSource, AssetListService } from '@core/shared/assetlist';
+import { AssetAssignInput } from '@core/graphql/assetlist/asset-assign-input.model';
+import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
+import { AppAlertService } from '@core/shared/app-alert';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -119,8 +119,8 @@ export class DetailPage implements OnInit {
 
   changeAsset(event) {
     this.assetEntry.asset = event.target.value;
-    for(const item of this.assets) {
-      if(item.id === this.assetEntry.asset) {
+    for (const item of this.assets) {
+      if (item.id === this.assetEntry.asset) {
         this.selectedAsset = item;
         return;
       }

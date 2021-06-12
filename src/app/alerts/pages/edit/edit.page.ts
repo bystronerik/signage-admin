@@ -10,7 +10,7 @@ import { AlertPosition } from '@core/shared/alert/alert-position.enum';
 import { AlertType } from '@core/shared/alert/alert-type.enum';
 import { Style, StyleService, StyleType } from '@core/shared/style';
 import { FindStyleInput } from '@core/graphql/style';
-import {style} from "@angular/animations";
+import { style } from '@angular/animations';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -29,7 +29,6 @@ export class EditPage implements OnInit {
   textSize: Style[];
   textColor: Style[];
   textPosition: Style[];
-
 
   constructor(
     private route: ActivatedRoute,
@@ -175,8 +174,8 @@ export class EditPage implements OnInit {
 
   changeStyle(event, type) {
     this.alert[type].id = event.target.value;
-    for(const item of this.styles) {
-      if(this.alert[type].id === item.id) {
+    for (const item of this.styles) {
+      if (this.alert[type].id === item.id) {
         this.activeStyles[type] = item.value;
       }
     }

@@ -116,7 +116,11 @@
               </select>
             </label>
             <div *ngIf="selectedAsset" class="mt-4">
-              <img *ngIf="selectedAsset.type.includes('image')" class="object-contain h-64" src="{{selectedAsset.path}}" />
+              <img
+                *ngIf="selectedAsset.type.includes('image')"
+                class="object-contain h-64"
+                src="{{selectedAsset.path}}"
+              />
             </div>
             <div class="mt-4">
               <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
