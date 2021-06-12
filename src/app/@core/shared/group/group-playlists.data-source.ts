@@ -27,7 +27,7 @@ export class GroupPlaylistsDataSource extends LocalDataSource {
       input.id = this.groupId;
 
       this.groupService
-        .findGroup(input)
+        .find(input)
         .result()
         .then(
           (value) => {

@@ -36,7 +36,7 @@ export class EditPage implements OnInit {
         const input = new FindPlayerInput();
         input.id = params.get('id');
         this.playerService
-          .findPlayer(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -53,7 +53,7 @@ export class EditPage implements OnInit {
     });
 
     this.groupService
-      .findAllGroups(new FindGroupInput())
+      .find(new FindGroupInput())
       .result()
       .then(
         (value) => {
@@ -74,8 +74,8 @@ export class EditPage implements OnInit {
     input.group = this.player.group.id;
 
     const query = this.player.id
-      ? this.playerService.updatePlayer(this.player.id, input)
-      : this.playerService.createPlayer(input);
+      ? this.playerService.update(this.player.id, input)
+      : this.playerService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

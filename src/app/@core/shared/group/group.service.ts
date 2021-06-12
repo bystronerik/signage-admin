@@ -12,11 +12,14 @@ import {
   UpdateGroupInput,
 } from '@core/graphql/group';
 import { DeleteGroupGQL } from '@core/graphql/group/delete-group.gql';
+import {map} from 'rxjs/operators';
+import {IEntityService} from '@core/interfaces/entity-service.interface';
+import {Group} from '@core/shared/group/group.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GroupService {
+export class GroupService implements IEntityService<Group, FindGroupInput, UpdateGroupInput, CreateGroupInput>{
   constructor(
     private allGroupsGQL: AllGroupsGQL,
     private oneGroupGQL: OneGroupGQL,
@@ -25,23 +28,23 @@ export class GroupService {
     private deleteGroupGQL: DeleteGroupGQL
   ) {}
 
-  findAllGroups(input: FindGroupInput): QueryRef<any, {}> {
-    return this.allGroupsGQL.watch({ data: input });
+  findAll(input: FindGroupInput): Observable<any> {
+    return this.allGroupsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllGroups));
   }
 
-  findGroup(input: FindGroupInput): QueryRef<any, {}> {
+  find(input: FindGroupInput): QueryRef<any, any> {
     return this.oneGroupGQL.watch({ data: input });
   }
 
-  updateGroup(id: string, input: UpdateGroupInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateGroupInput): Observable<FetchResult<any>> {
     return this.updateGroupGQL.mutate({ id, data: input });
   }
 
-  createGroup(input: CreateGroupInput): Observable<FetchResult<any>> {
+  create(input: CreateGroupInput): Observable<FetchResult<any>> {
     return this.createGroupGQL.mutate({ data: input });
   }
 
-  deleteGroup(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<any>> {
     return this.deleteGroupGQL.mutate({ id });
   }
 }

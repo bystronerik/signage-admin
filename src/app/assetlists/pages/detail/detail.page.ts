@@ -87,14 +87,14 @@ export class DetailPage implements OnInit {
         input.id = params.get('id');
         this.source.assetListId = input.id;
         this.assetListService
-          .findAssetList(input)
+          .find(input)
           .result()
           .then(
             (value) => {
               this.assetList = value.data.findAssetList;
 
               this.assetsService
-                .findAllAssets(new FindAssetInput())
+                .find(new FindAssetInput())
                 .result()
                 .then(
                   (val) => {
@@ -167,7 +167,7 @@ export class DetailPage implements OnInit {
 
   submitDelete() {
     this.assetListService
-      .deleteAssetList(this.assetList.id)
+      .delete(this.assetList.id)
       .toPromise()
       .then(
         (value) => {

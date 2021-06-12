@@ -1,57 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSource } from 'ng2-smart-table/lib/lib/data-source/data-source';
 import { Router } from '@angular/router';
 import { Path } from '@core/enums';
-import { AlertDataSource, AlertService } from '@core/shared/alert';
+import { AlertService } from '@core/shared/alert';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
+import { Entity, EntityComponent, ShowingPlace } from '@core/shared/entity';
 
 @Component({
   templateUrl: './listing.page.html',
   styleUrls: ['./listing.page.scss'],
 })
-export class ListingPage implements OnInit {
-  public settings;
-  public source: DataSource;
-
+export class ListingPage extends EntityComponent implements OnInit {
   private alertId: string;
 
   constructor(
     private modalService: ModalService,
     private router: Router,
-    alertDataSource: AlertDataSource,
     private appAlertService: AppAlertService,
-    private alertService: AlertService
+    public alertService: AlertService
   ) {
-    this.source = alertDataSource;
-    this.settings = {
-      columns: {
-        name: {
-          title: 'Název',
-        },
-        type: {
-          title: 'Typ',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Vytvořit',
-      },
-      edit: {
-        editButtonContent: 'Detail',
-      },
-      delete: {
-        deleteButtonContent: 'Smazat',
-      },
-    };
+    super(alertService);
+
+    this.name('Alert')
+      .icon(null);
+
+    this.field('name')
+      .name('Název')
+      .showAt(ShowingPlace.DATAGRID);
+
+    this.field('type')
+      .name('Typ')
+      .showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}
@@ -60,22 +39,22 @@ export class ListingPage implements OnInit {
     await this.router.navigate([Path.Alerts, Path.AlertsCreate]);
   }
 
-  async showDetail(event) {
-    await this.router.navigate([Path.Alerts, event.data.id]);
+  async showDetail(id: string) {
+    await this.router.navigate([Path.Alerts, id]);
   }
 
-  showDelete(event) {
-    this.alertId = event.data.id;
+  showDelete(id: string) {
+    this.alertId = id;
     this.modalService.open('delete-alert-modal');
   }
 
   submitDelete() {
     this.alertService
-      .deleteAlert(this.alertId)
+      .delete(this.alertId)
       .toPromise()
       .then(
         (value) => {
-          this.source.refresh();
+          this.getEntityDataLoader().refresh();
           this.appAlertService.showSuccess('Smazáno', 'Alert byl úspěšně odstraněn');
         },
         (error) => {

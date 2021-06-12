@@ -1,5 +1,4 @@
-export class CreatePlayerInput {
-  name: string;
-  token: string;
-  group: string;
+import { UpdatePlayerInput } from '@core/graphql/player/update-player-input.model';
+
+export class CreatePlayerInput extends UpdatePlayerInput{
 }

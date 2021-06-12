@@ -30,7 +30,7 @@ export class DetailPage implements OnInit {
         const input = new FindUserInput();
         input.id = params.get('id');
         this.userService
-          .findUser(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -50,7 +50,7 @@ export class DetailPage implements OnInit {
 
   submitDelete() {
     this.userService
-      .deleteUser(this.user.id)
+      .delete(this.user.id)
       .toPromise()
       .then(
         (value) => {

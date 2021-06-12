@@ -1,9 +1,3 @@
-export class CreateAssetInput {
-  name: string;
-  showTime: number;
-  animationIn: string;
-  animationOut: string;
-  validityEnabled: boolean;
-  validFrom: string;
-  validTo: string;
-}
+import {UpdateAssetInput} from '@core/graphql/asset/update-asset-input.model';
+
+export class CreateAssetInput extends UpdateAssetInput{}

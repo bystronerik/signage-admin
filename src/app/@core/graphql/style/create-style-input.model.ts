@@ -1,6 +1,4 @@
-export class CreateStyleInput {
-  name: string;
-  type: string;
-  value: string;
-  valueType: string;
+import { UpdateStyleInput } from '@core/graphql/style/update-style-input.model';
+
+export class CreateStyleInput extends UpdateStyleInput{
 }

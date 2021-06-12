@@ -76,15 +76,15 @@ export class DetailPage implements OnInit {
         input.id = params.get('id');
 
         this.groupService
-          .findGroup(input)
+          .find(input)
           .result()
           .then(
             (value) => {
               this.group = value.data.findGroup;
 
               this.playerService
-                .findAllPlayers(new FindPlayerInput())
-                .result()
+                .findAll(new FindPlayerInput())
+                .toPromise()
                 .then(
                   (val) => {
                     this.players = val.data.findAllPlayers;
@@ -118,7 +118,7 @@ export class DetailPage implements OnInit {
     input.group = '';
 
     this.playerService
-      .updatePlayer(this.playerId, input)
+      .update(this.playerId, input)
       .toPromise()
       .then(
         (value) => {
@@ -144,7 +144,7 @@ export class DetailPage implements OnInit {
     input.group = this.group.id;
 
     this.playerService
-      .updatePlayer(this.selected.id, input)
+      .update(this.selected.id, input)
       .toPromise()
       .then(
         (value) => {
@@ -170,7 +170,7 @@ export class DetailPage implements OnInit {
 
   submitDelete() {
     this.groupService
-      .deleteGroup(this.group.id)
+      .delete(this.group.id)
       .toPromise()
       .then(
         (value) => {

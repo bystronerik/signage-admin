@@ -46,7 +46,7 @@ export class EditPage implements OnInit {
         const input = new FindAssetListInput();
         input.id = params.get('id');
         this.assetListService
-          .findAssetList(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -74,7 +74,7 @@ export class EditPage implements OnInit {
     const findInput = new FindStyleInput();
     findInput.type = StyleType.ANIMATION;
     this.styleService
-      .findAllStyles(findInput)
+      .find(findInput)
       .result()
       .then(
         (val) => {
@@ -108,8 +108,8 @@ export class EditPage implements OnInit {
     input.enabled = this.assetList.enabled !== undefined ? this.assetList.enabled : true;
 
     const query = this.assetList.id
-      ? this.assetListService.updateAssetList(this.assetList.id, input)
-      : this.assetListService.createAssetList(input);
+      ? this.assetListService.update(this.assetList.id, input)
+      : this.assetListService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

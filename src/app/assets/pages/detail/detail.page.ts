@@ -33,6 +33,7 @@ export class DetailPage implements OnInit {
     this.highpriority = [];
     this.playlists = [];
     this.clients = [];
+
     this.settings = {
       columns: {
         name: {
@@ -68,7 +69,7 @@ export class DetailPage implements OnInit {
         const input = new FindAssetInput();
         input.id = params.get('id');
         this.assetService
-          .findAsset(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -99,7 +100,7 @@ export class DetailPage implements OnInit {
 
   submitDelete() {
     this.assetService
-      .deleteAsset(this.asset.id)
+      .delete(this.asset.id)
       .toPromise()
       .then(
         (value) => {

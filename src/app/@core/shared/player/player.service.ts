@@ -12,11 +12,14 @@ import {
   UpdatePlayerInput,
 } from '@core/graphql/player';
 import { DeletePlayerGQL } from '@core/graphql/player/delete-player.gql';
+import {map} from 'rxjs/operators';
+import {IEntityService} from '@core/interfaces/entity-service.interface';
+import {Player} from '@core/shared/player/player.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PlayerService {
+export class PlayerService implements IEntityService<Player, FindPlayerInput, UpdatePlayerInput, CreatePlayerInput>{
   constructor(
     private allPlayersGQL: AllPlayersGQL,
     private onePlayerGQL: OnePlayerGQL,
@@ -25,23 +28,23 @@ export class PlayerService {
     private deletePlayerGQL: DeletePlayerGQL
   ) {}
 
-  findAllPlayers(input: FindPlayerInput): QueryRef<any, {}> {
-    return this.allPlayersGQL.watch({ data: input });
+  findAll(input: FindPlayerInput): Observable<any> {
+    return this.allPlayersGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllPlayers));
   }
 
-  findPlayer(input: FindPlayerInput): QueryRef<any, {}> {
+  find(input: FindPlayerInput): QueryRef<any, any> {
     return this.onePlayerGQL.watch({ data: input });
   }
 
-  updatePlayer(id: string, input: UpdatePlayerInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdatePlayerInput): Observable<FetchResult<any>> {
     return this.updatePlayerGQL.mutate({ id, data: input });
   }
 
-  createPlayer(input: CreatePlayerInput): Observable<FetchResult<any>> {
+  create(input: CreatePlayerInput): Observable<FetchResult<any>> {
     return this.createPlayerGQL.mutate({ data: input });
   }
 
-  deletePlayer(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<any>> {
     return this.deletePlayerGQL.mutate({ id });
   }
 }

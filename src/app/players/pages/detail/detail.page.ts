@@ -32,7 +32,7 @@ export class DetailPage implements OnInit {
         const input = new FindPlayerInput();
         input.id = params.get('id');
         this.playerService
-          .findPlayer(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -53,7 +53,7 @@ export class DetailPage implements OnInit {
 
   submitDelete() {
     this.playerService
-      .deletePlayer(this.player.id)
+      .delete(this.player.id)
       .toPromise()
       .then(
         (value) => {

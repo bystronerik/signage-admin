@@ -33,7 +33,7 @@ export class EditPage implements OnInit {
         const input = new FindUserInput();
         input.id = params.get('id');
         this.userService
-          .findUser(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -61,7 +61,7 @@ export class EditPage implements OnInit {
 
     input.password = this.user.password;
 
-    const query = this.user.id ? this.userService.updateUser(this.user.id, input) : this.userService.createUser(input);
+    const query = this.user.id ? this.userService.update(this.user.id, input) : this.userService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

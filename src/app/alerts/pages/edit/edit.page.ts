@@ -10,7 +10,6 @@ import { AlertPosition } from '@core/shared/alert/alert-position.enum';
 import { AlertType } from '@core/shared/alert/alert-type.enum';
 import { Style, StyleService, StyleType } from '@core/shared/style';
 import { FindStyleInput } from '@core/graphql/style';
-import { style } from '@angular/animations';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -60,7 +59,7 @@ export class EditPage implements OnInit {
         const input = new FindAlertInput();
         input.id = params.get('id');
         this.alertService
-          .findAlert(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -109,7 +108,7 @@ export class EditPage implements OnInit {
     });
 
     this.styleService
-      .findAllStyles(new FindStyleInput())
+      .find(new FindStyleInput())
       .result()
       .then(
         (val) => {
@@ -147,8 +146,8 @@ export class EditPage implements OnInit {
     input.running = this.alert.running;
 
     const query = this.alert.id
-      ? this.alertService.updateAlert(this.alert.id, input)
-      : this.alertService.createAlert(input);
+      ? this.alertService.update(this.alert.id, input)
+      : this.alertService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

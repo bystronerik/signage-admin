@@ -35,7 +35,7 @@ export class EditPage implements OnInit {
         const input = new FindGroupInput();
         input.id = params.get('id');
         this.groupService
-          .findGroup(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -53,7 +53,7 @@ export class EditPage implements OnInit {
     });
 
     this.alertService
-      .findAllAlerts(new FindAlertInput())
+      .find(new FindAlertInput())
       .result()
       .then(
         (val) => {
@@ -73,8 +73,8 @@ export class EditPage implements OnInit {
     input.alert = this.group.alert.id;
 
     const query = this.group.id
-      ? this.groupService.updateGroup(this.group.id, input)
-      : this.groupService.createGroup(input);
+      ? this.groupService.update(this.group.id, input)
+      : this.groupService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

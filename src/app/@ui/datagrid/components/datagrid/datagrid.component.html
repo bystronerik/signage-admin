@@ -1,1 +1,38 @@
-<p>datagrid works!</p>
+<div class="w-100 block p-5 mt-10 mb-10 text-black dark:text-white dark:bg-gray-800 bg-white rounded-2xl">
+  <div class="inline-block w-8/12">
+    <p>Počet záznamů celkem: {{(data | async)?.length}}</p>
+  </div>
+  <div class="inline-block w-4/12 text-right">
+    <a (click)="add();" class="btn btn-sm btn-success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-8 pl-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+      </svg>
+      Přidat
+    </a>
+    <!--
+    TODO: Filtr
+    <button
+      class="inline-flex items-center h-10 px-5 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+      </svg>
+      <span>Filtr</span>
+    </button>-->
+  </div>
+</div>
+<div class="block w-100 dark:text-white text-black mb-5">
+  <div class="inline-block font-bold text-lg text-center w-1/12">
+      &nbsp;
+  </div>
+  <div *ngFor="let item of entity.getDatagridFields(); count as total"
+    class="inline-block font-bold text-lg w-1/{{total+1}} md:w-1/{{total+1}} lg:w-1/{{total+1}} xl:w-1/{{total+1}}">
+    {{item.name}}
+  </div>
+</div>
+  <div
+    class="w-100 mt-3 mb-3 border-white pt-3 dark:text-white text-black border border-b-0 border-r-0 border-l-0 border-black dark:border-white"
+    *ngFor="let item of data | async">
+    <app-datagrid-item (showItem)="getDetailItem($event);" (deleteItem)="delete($event);"
+                       [entity]="item" [entityFields]="entity"></app-datagrid-item>
+  </div>

@@ -44,7 +44,7 @@ export class EditPage implements OnInit {
         const input = new FindAssetInput();
         input.id = params.get('id');
         this.assetService
-          .findAsset(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -72,7 +72,7 @@ export class EditPage implements OnInit {
     const findInput = new FindStyleInput();
     findInput.type = StyleType.ANIMATION;
     this.styleService
-      .findAllStyles(findInput)
+      .find(findInput)
       .result()
       .then(
         (val) => {
@@ -97,8 +97,8 @@ export class EditPage implements OnInit {
     input.showTime = this.asset.showTime;
 
     const query = this.asset.id
-      ? this.assetService.updateAsset(this.asset.id, input, this.fileToUpload)
-      : this.assetService.createAsset(input, this.fileToUpload);
+      ? this.assetService.update(this.asset.id, input, this.fileToUpload)
+      : this.assetService.create(input, this.fileToUpload);
     query.toPromise().then(
       (value) => {
         this.loading = false;

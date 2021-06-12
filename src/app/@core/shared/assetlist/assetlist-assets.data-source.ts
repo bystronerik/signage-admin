@@ -34,7 +34,7 @@ export class AssetListAssetsDataSource extends LocalDataSource {
       input.id = this.assetListId;
 
       this.assetListService
-        .findAssetList(input)
+        .find(input)
         .result()
         .then((value) => {
           const data = value.data.findAssetList.assets ? value.data.findAssetList.assets : [];

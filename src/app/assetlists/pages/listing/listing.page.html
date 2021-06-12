@@ -7,16 +7,13 @@
         Assetlisty
       </span>
     </h2>
-
-    <ng2-smart-table
-      [settings]="settings"
-      [source]="source"
-      (create)="createNew()"
-      (edit)="showDetail($event)"
-      (delete)="showDelete($event)"
-      class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-    >
-    </ng2-smart-table>
+    <app-datagrid
+      (detailItem)="showDetail($event)"
+      (addItem)="createNew()"
+      (deleteItem)="showDelete($event)"
+      [entity]="getEntityStructure()"
+      [dataLoader]="getEntityDataLoader()">
+    </app-datagrid>
   </div>
   <app-delete-modal
     itemName="asset list"

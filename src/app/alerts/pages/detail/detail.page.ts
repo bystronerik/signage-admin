@@ -33,7 +33,7 @@ export class DetailPage implements OnInit {
         const input = new FindAlertInput();
         input.id = params.get('id');
         this.alertService
-          .findAlert(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -53,7 +53,7 @@ export class DetailPage implements OnInit {
 
   submitDelete() {
     this.alertService
-      .deleteAlert(this.alert.id)
+      .delete(this.alert.id)
       .toPromise()
       .then(
         (value) => {

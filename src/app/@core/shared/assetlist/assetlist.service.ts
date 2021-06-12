@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { QueryRef } from 'apollo-angular';
-import { Observable } from 'rxjs';
-import { FetchResult } from '@apollo/client/core';
+import {Injectable} from '@angular/core';
+import {QueryRef} from 'apollo-angular';
+import {Observable} from 'rxjs';
+import {FetchResult} from '@apollo/client/core';
 import {
   AllAssetListsGQL,
   AssetAssignGQL,
@@ -15,11 +15,14 @@ import {
   UpdateAssetListGQL,
   UpdateAssetListInput,
 } from '@core/graphql/assetlist';
+import {IEntityService} from '@core/interfaces/entity-service.interface';
+import {AssetList} from '@core/shared/assetlist/assetlist.model';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AssetListService {
+export class AssetListService implements IEntityService<AssetList, FindAssetListInput, UpdateAssetListInput, CreateAssetListInput>{
   constructor(
     private allAssetListsGQL: AllAssetListsGQL,
     private oneAssetListGQL: OneAssetListGQL,
@@ -30,23 +33,23 @@ export class AssetListService {
     private assetRemoveGQL: AssetRemoveGQL
   ) {}
 
-  findAllAssetLists(input: FindAssetListInput): QueryRef<any, {}> {
-    return this.allAssetListsGQL.watch({ data: input });
+  findAll(input: FindAssetListInput): Observable<any> {
+    return this.allAssetListsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllAssetLists));
   }
 
-  findAssetList(input: FindAssetListInput): QueryRef<any, {}> {
+  find(input: FindAssetListInput): QueryRef<any> {
     return this.oneAssetListGQL.watch({ data: input });
   }
 
-  updateAssetList(id: string, input: UpdateAssetListInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateAssetListInput): Observable<FetchResult<any>> {
     return this.updateAssetListGQL.mutate({ id, data: input });
   }
 
-  createAssetList(input: CreateAssetListInput): Observable<FetchResult<any>> {
+  create(input: CreateAssetListInput): Observable<FetchResult<any>> {
     return this.createAssetListGQL.mutate({ data: input });
   }
 
-  deleteAssetList(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<any>> {
     return this.deleteAssetListGQL.mutate({ id });
   }
 

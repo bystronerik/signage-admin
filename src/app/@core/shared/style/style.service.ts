@@ -12,11 +12,14 @@ import {
 } from '@core/graphql/style';
 import { Observable } from 'rxjs';
 import { FetchResult } from '@apollo/client/core';
+import {map} from 'rxjs/operators';
+import {IEntityService} from '@core/interfaces/entity-service.interface';
+import {Style} from '@core/shared/style/style.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StyleService {
+export class StyleService implements IEntityService<Style, FindStyleInput, UpdateStyleInput, CreateStyleInput>{
   constructor(
     private allStylesGQL: AllStylesGQL,
     private oneStyleGQL: OneStyleGQL,
@@ -25,23 +28,23 @@ export class StyleService {
     private deleteStyleGQL: DeleteStyleGQL
   ) {}
 
-  findAllStyles(input: FindStyleInput): QueryRef<any, {}> {
-    return this.allStylesGQL.watch({ data: input });
+  findAll(input: FindStyleInput): Observable<any> {
+    return this.allStylesGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllStyles));
   }
 
-  findStyle(input: FindStyleInput): QueryRef<any, {}> {
+  find(input: FindStyleInput): QueryRef<any, any> {
     return this.oneStyleGQL.watch({ data: input });
   }
 
-  updateStyle(id: string, input: UpdateStyleInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateStyleInput): Observable<FetchResult<any>> {
     return this.updateStyleGQL.mutate({ id, data: input });
   }
 
-  createStyle(input: CreateStyleInput): Observable<FetchResult<any>> {
+  create(input: CreateStyleInput): Observable<FetchResult<any>> {
     return this.createStyleGQL.mutate({ data: input });
   }
 
-  deleteStyle(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<any>> {
     return this.deleteStyleGQL.mutate({ id });
   }
 }

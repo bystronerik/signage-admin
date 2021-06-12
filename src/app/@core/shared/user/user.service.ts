@@ -12,11 +12,14 @@ import {
   UpdateUserInput,
 } from '@core/graphql/user';
 import { DeleteUserGQL } from '@core/graphql/user/delete-user.gql';
+import { IEntityService } from '@core/interfaces/entity-service.interface';
+import { User } from '@core/shared/user/user.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class UserService implements IEntityService<User, FindUserInput, CreateUserInput, UpdateUserInput>{
   constructor(
     private allUsersGQL: AllUsersGQL,
     private oneUserGQL: OneUserGQL,
@@ -25,23 +28,23 @@ export class UserService {
     private deleteUserGQL: DeleteUserGQL
   ) {}
 
-  findAllUsers(input: FindUserInput): QueryRef<any, {}> {
-    return this.allUsersGQL.watch({ data: input });
+  findAll(input: FindUserInput): Observable<any> {
+    return this.allUsersGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllUsers));
   }
 
-  findUser(input: FindUserInput): QueryRef<any, {}> {
+  find(input: FindUserInput): QueryRef<any, {}> {
     return this.oneUserGQL.watch({ data: input });
   }
 
-  updateUser(id: string, input: UpdateUserInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateUserInput): Observable<FetchResult<any>> {
     return this.updateUserGQL.mutate({ id, data: input });
   }
 
-  createUser(input: CreateUserInput): Observable<FetchResult<any>> {
+  create(input: CreateUserInput): Observable<FetchResult<any>> {
     return this.createUserGQL.mutate({ data: input });
   }
 
-  deleteUser(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<any>> {
     return this.deleteUserGQL.mutate({ id });
   }
 }

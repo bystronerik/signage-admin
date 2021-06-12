@@ -1,59 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSource } from 'ng2-smart-table/lib/lib/data-source/data-source';
 import { Path } from '@core/enums';
 import { Router } from '@angular/router';
-import { UserDataSource, UserService } from '@core/shared/user';
+import { UserService } from '@core/shared/user';
 import { ModalService } from '@core/services';
 import { AuthService } from '@app/+auth';
 import { AppAlertService } from '@core/shared/app-alert';
+import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
+import { FindInput } from '@core/graphql/findinput';
+import { Observable } from 'rxjs';
+import { FindUserInput } from '@core/graphql/user';
+import { EntityComponent, ShowingPlace } from '@core/shared/entity';
 
 @Component({
   templateUrl: './listing.page.html',
   styleUrls: ['./listing.page.scss'],
 })
-export class ListingPage implements OnInit {
-  public settings;
-  public source: DataSource;
-
+export class ListingPage extends EntityComponent implements OnInit {
   private userId: string;
 
   constructor(
     private router: Router,
-    userDataSource: UserDataSource,
     private userService: UserService,
     private modalService: ModalService,
     private authService: AuthService,
     private alertService: AppAlertService
   ) {
-    this.source = userDataSource;
-    this.settings = {
-      columns: {
-        username: {
-          title: 'Uživatelské jméno',
-        },
-        role: {
-          title: 'Role',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Vytvořit',
-      },
-      edit: {
-        editButtonContent: 'Detail',
-      },
-      delete: {
-        deleteButtonContent: 'Smazat',
-      },
-    };
+    super(userService);
+
+    this.name('User')
+      .icon(null);
+
+    this.field('id')
+      .name('ID');
+
+    this.field('username')
+      .name('Uživatelské jméno')
+      .showAt(ShowingPlace.DATAGRID);
+
+    this.field('role')
+      .name('Role')
+      .showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}
@@ -81,11 +67,11 @@ export class ListingPage implements OnInit {
 
   submitDelete() {
     this.userService
-      .deleteUser(this.userId)
+      .delete(this.userId)
       .toPromise()
       .then(
         (value) => {
-          this.source.refresh();
+          this.getEntityDataLoader().refresh();
           this.alertService.showSuccess('Smazáno', 'Uživatel byl úspěšně odstraněn');
         },
         (error) => {

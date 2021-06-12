@@ -1,11 +1,5 @@
-export class CreateAssetListInput {
-  name: string;
-  type: string;
-  animationIn: string;
-  animationOut: string;
-  validityEnabled: boolean;
-  validFrom: string;
-  validTo: string;
-  prioritized: boolean;
-  enabled: boolean;
+import { UpdateAssetListInput } from '@core/graphql/assetlist/update-assetlist-input.model';
+
+export class CreateAssetListInput extends UpdateAssetListInput {
+
 }

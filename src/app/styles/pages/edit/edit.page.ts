@@ -44,7 +44,7 @@ export class EditPage implements OnInit {
         const input = new FindStyleInput();
         input.id = params.get('id');
         this.styleService
-          .findStyle(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -68,8 +68,8 @@ export class EditPage implements OnInit {
     input.valueType = this.style.valueType;
 
     const query = this.style.id
-      ? this.styleService.updateStyle(this.style.id, input)
-      : this.styleService.createStyle(input);
+      ? this.styleService.update(this.style.id, input)
+      : this.styleService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

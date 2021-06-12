@@ -1,5 +1,6 @@
-export class FindAssetListInput {
-  id: string;
+import {FindInput} from '@core/graphql/findinput';
+
+export class FindAssetListInput extends FindInput {
   name: string;
   type: string;
   prioritized: boolean;

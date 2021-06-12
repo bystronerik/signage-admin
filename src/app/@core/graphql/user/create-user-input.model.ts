@@ -1,5 +1,4 @@
-export class CreateUserInput {
-  username: string;
-  password: string;
-  role: string;
+import { UpdateUserInput } from '@core/graphql/user/update-user-input.model';
+
+export class CreateUserInput extends UpdateUserInput{
 }

@@ -12,11 +12,14 @@ import {
   UpdateAlertInput,
 } from '@core/graphql/alert';
 import { DeleteAlertGQL } from '@core/graphql/alert/delete-alert.gql';
+import {map} from 'rxjs/operators';
+import {IEntityService} from '@core/interfaces/entity-service.interface';
+import {Alert} from '@core/shared/alert/alert.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AlertService {
+export class AlertService implements IEntityService<Alert, FindAlertInput, UpdateAlertInput, CreateAlertInput> {
   constructor(
     private allAlertsGQL: AllAlertsGQL,
     private oneAlertGQL: OneAlertGQL,
@@ -25,23 +28,23 @@ export class AlertService {
     private deleteAlertGQL: DeleteAlertGQL
   ) {}
 
-  findAllAlerts(input: FindAlertInput): QueryRef<any, {}> {
-    return this.allAlertsGQL.watch({ data: input });
+  findAll(input: FindAlertInput): Observable<any> {
+    return this.allAlertsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllAlerts));
   }
 
-  findAlert(input: FindAlertInput): QueryRef<any, {}> {
+  find(input: FindAlertInput): QueryRef<any, any> {
     return this.oneAlertGQL.watch({ data: input });
   }
 
-  updateAlert(id: string, input: UpdateAlertInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateAlertInput): Observable<FetchResult<any>> {
     return this.updateAlertGQL.mutate({ id, data: input });
   }
 
-  createAlert(input: CreateAlertInput): Observable<FetchResult<any>> {
+  create(input: CreateAlertInput): Observable<FetchResult<any>> {
     return this.createAlertGQL.mutate({ data: input });
   }
 
-  deleteAlert(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<any>> {
     return this.deleteAlertGQL.mutate({ id });
   }
 }

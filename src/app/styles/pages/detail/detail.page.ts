@@ -41,7 +41,7 @@ export class DetailPage implements OnInit {
         const input = new FindStyleInput();
         input.id = params.get('id');
         this.styleService
-          .findStyle(input)
+          .find(input)
           .result()
           .then(
             (value) => {
@@ -65,7 +65,7 @@ export class DetailPage implements OnInit {
 
   submitDelete() {
     this.styleService
-      .deleteStyle(this.style.id)
+      .delete(this.style.id)
       .toPromise()
       .then(
         (value) => {

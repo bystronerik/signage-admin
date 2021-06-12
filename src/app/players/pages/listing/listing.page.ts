@@ -1,60 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSource } from 'ng2-smart-table/lib/lib/data-source/data-source';
 import { Router } from '@angular/router';
 import { Path } from '@core/enums';
-import { PlayerDataSource, PlayerService } from '@core/shared/player';
+import { PlayerService } from '@core/shared/player';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
+import { Entity, EntityComponent, ShowingPlace } from '@core/shared/entity';
+import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
+import { FindInput } from '@core/graphql/findinput';
+import { Observable } from 'rxjs';
+import { FindStyleInput } from '@core/graphql/style';
+import { FindPlayerInput } from '@core/graphql/player';
 
 @Component({
   templateUrl: './listing.page.html',
   styleUrls: ['./listing.page.scss'],
 })
-export class ListingPage implements OnInit {
-  public settings;
-  public source: DataSource;
-
+export class ListingPage extends EntityComponent implements OnInit {
   private playerId: string;
 
   constructor(
     private router: Router,
-    playerDataSource: PlayerDataSource,
-    private playerService: PlayerService,
+    public playerService: PlayerService,
     private modalService: ModalService,
     private alertService: AppAlertService
   ) {
-    this.source = playerDataSource;
-    this.settings = {
-      columns: {
-        name: {
-          title: 'Název',
-        },
-        token: {
-          title: 'Přístupový token',
-        },
-        group: {
-          title: 'Skupina',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Přidat panel',
-      },
-      edit: {
-        editButtonContent: 'Detail',
-      },
-      delete: {
-        deleteButtonContent: 'Smazat',
-      },
-    };
+    super(playerService);
+
+    this.name('Style')
+      .icon(null);
+
+    this.field('id')
+      .name('ID');
+
+    this.field('name')
+      .name('Název')
+      .showAt(ShowingPlace.DATAGRID);
+
+    this.field('token')
+      .name('Přístupový token')
+      .showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}
@@ -63,22 +47,22 @@ export class ListingPage implements OnInit {
     await this.router.navigate([Path.Players, Path.PlayersCreate]);
   }
 
-  async showDetail(event) {
-    await this.router.navigate([Path.Players, event.data.id]);
+  async showDetail(id: string) {
+    await this.router.navigate([Path.Players, id]);
   }
 
-  showDelete(event) {
-    this.playerId = event.data.id;
+  showDelete(id: string) {
+    this.playerId = id;
     this.modalService.open('delete-player-modal');
   }
 
   submitDelete() {
     this.playerService
-      .deletePlayer(this.playerId)
+      .delete(this.playerId)
       .toPromise()
       .then(
         (value) => {
-          this.source.refresh();
+          this.getEntityDataLoader().refresh();
           this.alertService.showSuccess('Smazáno', 'Panel byl úspěšně odstraněn');
         },
         (error) => {

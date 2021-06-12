@@ -1,57 +1,44 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Path } from '@core/enums';
-import { StyleDataSource, StyleService } from '@core/shared/style';
+import { StyleService } from '@core/shared/style';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
+import { EntityComponent, ShowingPlace } from '@core/shared/entity';
+import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
+import { FindStyleInput } from '@core/graphql/style';
+import { FindInput } from '@core/graphql/findinput';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './listing.page.html',
   styleUrls: ['./listing.page.scss'],
 })
-export class ListingPage implements OnInit {
-  public settings;
-  public source: StyleDataSource;
-
+export class ListingPage extends EntityComponent implements OnInit {
   private styleId: string;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    styleDataSource: StyleDataSource,
     private modalService: ModalService,
-    private styleService: StyleService,
+    public styleService: StyleService,
     private alertService: AppAlertService
   ) {
-    this.source = styleDataSource;
-    this.settings = {
-      columns: {
-        name: {
-          title: 'Název',
-        },
-        type: {
-          title: 'Typ',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Vytvořit',
-      },
-      edit: {
-        editButtonContent: 'Detail',
-      },
-      delete: {
-        deleteButtonContent: 'Smazat',
-      },
-    };
+    super(styleService);
+
+    this.name('Style')
+      .icon(null);
+
+    this.field('id')
+      .name('ID');
+
+    this.field('name')
+      .name('Název')
+      .showAt(ShowingPlace.DATAGRID);
+
+    this.field('type')
+      .name('Typ')
+      .showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}
@@ -60,22 +47,22 @@ export class ListingPage implements OnInit {
     await this.router.navigate([Path.StylesCreate], { relativeTo: this.route });
   }
 
-  async showDetail(event) {
-    await this.router.navigate([event.data.id], { relativeTo: this.route });
+  async showDetail(id: string) {
+    await this.router.navigate([id], { relativeTo: this.route });
   }
 
-  showDelete(event) {
-    this.styleId = event.data.id;
+  showDelete(id: string) {
+    this.styleId = id;
     this.modalService.open('delete-style-modal');
   }
 
   submitDelete() {
     this.styleService
-      .deleteStyle(this.styleId)
+      .delete(this.styleId)
       .toPromise()
       .then(
         (value) => {
-          this.source.refresh();
+          this.getEntityDataLoader().refresh();
           this.alertService.showSuccess('Smazáno', 'Vzhledová konfigurace byla úspěšně smazána');
         },
         (error) => {
