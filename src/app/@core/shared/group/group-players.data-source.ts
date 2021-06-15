@@ -25,14 +25,14 @@ export class GroupPlayersDataSource extends LocalDataSource {
     const input = new FindPlayerInput();
 
     return new Promise<Player[]>((resolve, reject) => {
-      input.id = this.groupId;
+      input.group = this.groupId;
 
       this.playerService
         .findAllPlayers(input)
         .result()
         .then(
           (value) => {
-            resolve(value.data.findGroup.player ? value.data.findGroup.player : []);
+            resolve(value.data.findAllPlayers ? value.data.findAllPlayers : []);
           },
           (error) => {}
         );

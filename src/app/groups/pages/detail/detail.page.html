@@ -23,9 +23,9 @@
           <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
             <span>Počet playerů</span>
             <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="playerList; then assetListsCount else assetListsEmpty"></span>
-              <ng-template #assetListsCount>{{playerList.length}}</ng-template>
-              <ng-template #assetListsEmpty>0</ng-template>
+              <span *ngIf="players; then playersCount else playersEmpty"></span>
+              <ng-template #playersCount>{{players.length}}</ng-template>
+              <ng-template #playersEmpty>0</ng-template>
             </span>
           </div>
           <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
@@ -46,16 +46,16 @@
         </div>
       </div>
 
-      <div class="mt-2 -mb-5 text-xl font-semibold text-gray-700 dark:text-gray-200 relative">Přiřazené assetlisty</div>
+      <div class="mt-2 -mb-5 text-xl font-semibold text-gray-700 dark:text-gray-200 relative">Přiřazené přehrávače</div>
       <ng2-smart-table
         [settings]="settings"
         [source]="source"
-        (create)="addAssetList()"
-        (delete)="removeAssetList($event)"
+        (create)="addPlayer()"
+        (delete)="removePlayer($event)"
         class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
       ></ng2-smart-table>
 
-      <app-modal id="add-assetlist-modal" class="modal" style="display: none">
+      <app-modal id="add-player-modal" class="modal" style="display: none">
         <form (ngSubmit)="submitModal()" #groupForm="ngForm">
           <!-- Modal body -->
           <div class="mt-4 mb-6">
@@ -65,7 +65,7 @@
             <label class="block text-sm">
               <span class="text-gray-700 dark:text-gray-400"> </span>
               <select
-                (change)="changeAssetList($event)"
+                (change)="changePlayer($event)"
                 [ngClass]="{ disabled: loading }"
                 [disabled]="loading"
                 name="group"
@@ -86,7 +86,7 @@
               >
                 <option value="" disabled>Zvolte panel</option>
                 <option value="null">Prázdná hodnota</option>
-                <option *ngFor="let item of playerList" [value]="item.id">{{item.name}}</option>
+                <option *ngFor="let item of players" [value]="item.id">{{item.name}}</option>
               </select>
             </label>
           </div>
@@ -176,8 +176,8 @@
   </app-delete-modal>
   <app-delete-modal
     itemName="přiřazení asset listu"
-    (confirm)="submitAssetListDelete()"
-    id="delete-assetassign-modal"
+    (confirm)="submitPlayerDelete()"
+    id="delete-playerassign-modal"
     class="modal"
     style="display: none"
   >

@@ -8,6 +8,7 @@ import { ModalService } from '@core/services';
 import { Player, PlayerService } from '@core/shared/player';
 import { AppAlertService } from '@core/shared/app-alert';
 import { FindPlayerInput, UpdatePlayerInput } from '@core/graphql/player';
+import { GroupPlayersDataSource } from '@core/shared/group/group-players.data-source';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -15,15 +16,15 @@ import { FindPlayerInput, UpdatePlayerInput } from '@core/graphql/player';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DetailPage implements OnInit {
+  public settings;
+  public source: GroupPlayersDataSource;
+
   group: Group;
   selected: Player;
-  playerList: Player[];
+  players: Player[];
   loading = false;
 
   private playerId: string;
-
-  public settings;
-  public source: Group;
 
   constructor(
     private router: Router,
@@ -32,10 +33,10 @@ export class DetailPage implements OnInit {
     private route: ActivatedRoute,
     private modalService: ModalService,
     private playerService: PlayerService,
-    private groupPlaylistsDataSource: GroupPlaylistsDataSource,
+    private groupPlayersDataSource: GroupPlayersDataSource,
     private alertService: AppAlertService
   ) {
-    //this.source = groupPlaylistsDataSource;
+    this.source = groupPlayersDataSource;
     this.settings = {
       columns: {
         name: {
@@ -70,63 +71,61 @@ export class DetailPage implements OnInit {
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
+        this.source.groupId = params.get('id');
         const input = new FindGroupInput();
         input.id = params.get('id');
-        //this.source.id = input.id;
-        /*
+
         this.groupService
           .findGroup(input)
           .result()
           .then(
             (value) => {
               this.group = value.data.findGroup;
-              this.source.id = this.group.id;
 
               this.playerService
                 .findAllPlayers(new FindPlayerInput())
                 .result()
                 .then(
                   (val) => {
-                    this.playerList = val.data.findAllPlayers;
+                    this.players = val.data.findAllPlayers;
                   },
                   (error) => {
-                    this.alertService.showError('Chyba načítání', 'Při pokusu o načtení asset listů se objevila chyba');
+                    this.alertService.showError('Chyba načítání', 'Při pokusu o načtení přehrávačů se objevila chyba');
                   }
                 );
             },
             (error) => {
               this.router.navigate([Path.Groups]);
             }
-          );*/
+          );
       }
     });
   }
 
-  addAssetList() {
-    this.modalService.open('add-assetlist-modal');
+  addPlayer() {
+    this.modalService.open('add-player-modal');
   }
 
-  removeAssetList(event) {
+  removePlayer(event) {
     this.playerId = event.data.id;
+    this.modalService.open('delete-playerassign-modal');
   }
 
-  submitAssetListDelete() {
+  submitPlayerDelete() {
     this.loading = true;
 
-    const input = new UpdateGroupInput();
+    const input = new UpdatePlayerInput();
+    input.group = '';
 
-    input.assetLists = this.group.assetLists.map((value) => value.id);
-    delete input.assetLists[this.playerId];
-
-    this.groupService
-      .updateGroup(this.group.id, input)
+    this.playerService
+      .updatePlayer(this.playerId, input)
       .toPromise()
       .then(
         (value) => {
           this.loading = false;
-          //this.source.refresh();
+          this.source.refresh();
           this.closeModal();
-          this.alertService.showSuccess('Asset list odebrán', 'Asset list byl úspěšně odebrán ze skupiny');
+          this.alertService.showSuccess('Přehrávač odebrán', 'Přehrávač byl úspěšně odebrán ze skupiny');
         },
         (error) => {
           this.alertService.showError('Chyba ukládání', 'Při pokusu o uložení se vyskytla chyba');
@@ -135,35 +134,33 @@ export class DetailPage implements OnInit {
   }
 
   closeModal() {
-    this.modalService.close('add-assetlist-modal');
+    this.modalService.close('add-player-modal');
   }
 
   submitModal() {
     this.loading = true;
 
     const input = new UpdatePlayerInput();
+    input.group = this.group.id;
 
-    //input.token = this.playerList.map((value) => value.id);
-    //input.assetLists.push(this.selected.id);
-    /*
-    this.groupService
-      .updateGroup(this.group.id, input)
+    this.playerService
+      .updatePlayer(this.selected.id, input)
       .toPromise()
       .then(
         (value) => {
           this.loading = false;
           this.source.refresh();
           this.closeModal();
-          this.alertService.showSuccess('Asset list přiřazen', 'Asset list byl úspěšně přiřazen ke skupině');
+          this.alertService.showSuccess('Přehrávač přiřazen', 'Přehrávač byl úspěšně přiřazen ke skupině');
         },
         (error) => {
           this.loading = false;
           this.alertService.showError('Chyba ukládání', 'Při pokusu o uložení se vyskytla chyba');
         }
-      ); */
+      );
   }
 
-  changeAssetList(event) {
+  changePlayer(event) {
     this.selected.id = event.target.value;
   }
 
