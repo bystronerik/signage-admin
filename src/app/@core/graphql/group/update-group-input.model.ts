@@ -1,5 +1,5 @@
 export class UpdateGroupInput {
   name: string;
   alert: string;
-  assetLists: string[];
+  assetLists: any;
 }

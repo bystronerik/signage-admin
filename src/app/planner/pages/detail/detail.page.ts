@@ -81,8 +81,11 @@ export class DetailPage implements OnInit {
               this.group = value.data.findGroup;
               this.source.groupId = this.group.id;
 
+              const assetListInput = new FindAssetListInput();
+              assetListInput.type = 'playlist';
+
               this.assetListService
-                .findAllAssetLists(new FindAssetListInput())
+                .findAllAssetLists(assetListInput)
                 .result()
                 .then(
                   (val) => {
@@ -107,6 +110,7 @@ export class DetailPage implements OnInit {
 
   removeAssetList(event) {
     this.assetListId = event.data.id;
+    this.modalService.open('delete-assetassign-modal');
   }
 
   submitAssetListDelete() {
@@ -114,8 +118,10 @@ export class DetailPage implements OnInit {
 
     const input = new UpdateGroupInput();
 
-    input.assetLists = this.group.assetLists.map((value) => value.id);
-    delete input.assetLists[this.assetListId];
+    input.assetLists = {
+      mergeStrategy: 'REDUCE',
+      content: [this.assetListId]
+    };
 
     this.groupService
       .updateGroup(this.group.id, input)
@@ -142,8 +148,10 @@ export class DetailPage implements OnInit {
 
     const input = new UpdateGroupInput();
 
-    input.assetLists = this.group.assetLists.map((value) => value.id);
-    input.assetLists.push(this.selected.id);
+    input.assetLists = {
+      mergeStrategy: 'EXTEND',
+      content: [this.selected.id]
+    };
 
     this.groupService
       .updateGroup(this.group.id, input)
