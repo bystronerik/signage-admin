@@ -3,6 +3,8 @@ import { User } from '@core/shared/user';
 import { BehaviorSubject } from 'rxjs';
 import { Token } from '../interfaces';
 import { LoginGQL } from '@core/graphql';
+import { Router } from '@angular/router';
+import { Path } from '@core/enums';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +18,7 @@ export class AuthService {
 
   isLoggedIn = new BehaviorSubject<boolean>(this.loggedIn);
 
-  constructor(private loginGQL: LoginGQL) {}
+  constructor(private loginGQL: LoginGQL, private router: Router) {}
 
   get userValue(): User {
     return this.userSubject?.value;
@@ -67,6 +69,8 @@ export class AuthService {
     this.userSubject.next(null);
     this.tokenSubject.next(null);
     this.isLoggedIn.next(false);
+
+    this.router.navigate([`/${Path.SignIn}`]);
   }
 
   private _getUser(): User {
