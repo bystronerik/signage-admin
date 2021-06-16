@@ -55,14 +55,17 @@
             <span>Aktivní</span>
             <span class="mt-2 text-black dark:text-gray-200"> {{assetList.enabled === true ? 'Ano' : 'Ne'}} </span>
           </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Prioritní</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{assetList.prioritized === true ? 'Ano' : 'Ne'}} </span>
+          </div>
           <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
             <span>Validita</span>
             <span class="mt-2 text-black dark:text-gray-200">
               <span *ngIf="assetList.validity; then validitySet else validityNull"></span>
-              <ng-template #validitySet
-                >{{assetList.validity.enabled ? assetList.validity.from + " - " + assetList.validity.to : "bez
-                omezení"}}</ng-template
-              >
+              <ng-template #validitySet>
+                {{assetList.validity.enabled ? assetList.validity.from + " - " + assetList.validity.to : "bez omezení"}}
+              </ng-template>
               <ng-template #validityNull>bez omezení</ng-template>
             </span>
           </div>

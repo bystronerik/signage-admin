@@ -6,5 +6,6 @@ export class CreateAssetListInput {
   validityEnabled: boolean;
   validFrom: string;
   validTo: string;
+  prioritized: boolean;
   enabled: boolean;
 }

@@ -8,6 +8,7 @@ export class AssetList {
   animationIn: Style;
   animationOut: Style;
   validity: Validity;
+  prioritized: boolean;
   enabled: boolean;
   assets: AssetEntry[];
 }

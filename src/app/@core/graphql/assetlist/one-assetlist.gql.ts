@@ -16,6 +16,7 @@ export class OneAssetListGQL extends Query<Response> {
         id
         name
         type
+        prioritized
         enabled
         validity {
           enabled

@@ -104,6 +104,7 @@ export class EditPage implements OnInit {
     input.validityEnabled = this.assetList.validity.enabled;
     input.validFrom = this.assetList.validity.from;
     input.validTo = this.assetList.validity.to;
+    input.prioritized = this.assetList.prioritized;
     input.enabled = this.assetList.enabled !== undefined ? this.assetList.enabled : true;
 
     const query = this.assetList.id
