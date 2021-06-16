@@ -32,6 +32,10 @@
             <span class="mt-2 text-black dark:text-gray-200"> {{typeName(alert.type)}} </span>
           </div>
           <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
+            <span>Běžící</span>
+            <span class="mt-2 text-black dark:text-gray-200"> {{alert.running === true ? 'Ano' : 'Ne'}} </span>
+          </div>
+          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
             <span>Pozadí</span>
             <span class="mt-2 text-black dark:text-gray-200">
               {{alert.background ? alert.background.name : "nenastaveno"}}

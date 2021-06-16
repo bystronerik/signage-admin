@@ -18,6 +18,7 @@ export class OneAlertGQL extends Query<Response> {
         type
         position
         value
+        running
         validity {
           enabled
           from

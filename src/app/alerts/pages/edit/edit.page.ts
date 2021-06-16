@@ -144,6 +144,7 @@ export class EditPage implements OnInit {
     input.textColor = this.alert.textColor.id;
     input.textPosition = this.alert.textPosition.id;
     input.textSize = this.alert.textSize.id;
+    input.running = this.alert.running;
 
     const query = this.alert.id
       ? this.alertService.updateAlert(this.alert.id, input)

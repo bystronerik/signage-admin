@@ -15,4 +15,5 @@ export class UpdateAlertInput {
   textSize: string;
   textColor: string;
   textPosition: string;
+  running: boolean;
 }

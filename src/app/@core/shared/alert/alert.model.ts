@@ -16,4 +16,5 @@ export class Alert {
   textSize: Style;
   textColor: Style;
   textPosition: Style;
+  running: boolean;
 }
