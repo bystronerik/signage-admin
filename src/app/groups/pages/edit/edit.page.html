@@ -62,7 +62,7 @@
               >
                 <option value="" disabled>Zvolte informační zprávu</option>
                 <option value="null">Bez informační zprávy</option>
-                <option *ngFor="let item of alerts" [value]="item.id" [selected]="group.alert.id == item.id">
+                <option *ngFor="let item of alerts | async" [value]="item.id" [selected]="group.alert.id == item.id">
                   {{item.name}}
                 </option>
               </select>

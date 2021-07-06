@@ -3,7 +3,7 @@ import { Query, gql } from 'apollo-angular';
 import { Style } from '@core/shared/style';
 
 export interface Response {
-  findAnimation: Style;
+  findStyle: Style;
 }
 
 @Injectable({

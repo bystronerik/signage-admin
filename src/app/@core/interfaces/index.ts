@@ -1,1 +1,1 @@
-import {IEntityService} from '@core/interfaces/entity-service.interface';
+import { IEntityService } from '@core/interfaces/entity-service.interface';

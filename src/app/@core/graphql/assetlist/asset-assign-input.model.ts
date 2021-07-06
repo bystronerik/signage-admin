@@ -3,4 +3,8 @@ export class AssetAssignInput {
   validityEnabled: boolean;
   validFrom: string;
   validTo: string;
+  showTime: number;
+  animationIn: string;
+  animationOut: string;
+  position: number;
 }

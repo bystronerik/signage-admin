@@ -26,19 +26,13 @@ export class ListingPage extends EntityComponent implements OnInit {
   ) {
     super(styleService);
 
-    this.name('Style')
-      .icon(null);
+    this.name('Style').icon(null);
 
-    this.field('id')
-      .name('ID');
+    this.field('id').name('ID');
 
-    this.field('name')
-      .name('Název')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('name').name('Název').showAt(ShowingPlace.DATAGRID);
 
-    this.field('type')
-      .name('Typ')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('type').name('Typ').showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}

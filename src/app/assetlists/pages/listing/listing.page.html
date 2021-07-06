@@ -12,7 +12,8 @@
       (addItem)="createNew()"
       (deleteItem)="showDelete($event)"
       [entity]="getEntityStructure()"
-      [dataLoader]="getEntityDataLoader()">
+      [dataLoader]="getEntityDataLoader()"
+    >
     </app-datagrid>
   </div>
   <app-delete-modal

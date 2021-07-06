@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@ui/+layout/layout.module';
 import { ModalModule } from '@ui/modal/modal.module';
 import { AlertModule } from '@ui/alert/alert.module';
-import {DatagridModule} from "@ui/datagrid/datagrid.module";
+import { DatagridModule } from '@ui/datagrid/datagrid.module';
 
 @NgModule({
   declarations: [ListingPage, DetailPage, EditPage],

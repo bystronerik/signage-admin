@@ -1,4 +1,4 @@
-<main class="h-full overflow-y-auto">
+<main class="entity h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
     <div class="flex justify-between">
       <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -19,24 +19,20 @@
       <div class="mt-2 flex px-4 py-4 justify-between">
         <!-- Card -->
 
-        <div class="flex justify-between">
+        <div class="fields">
           <!-- Left side -->
 
-          <img class="h-16 w-16 rounded-full object-cover" src="/assets/images/avatar.jpg" alt="" />
-
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Uživatelské jméno</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{user.username}} </span>
+          <div class="field">
+            <label for="username">Uživatelské jméno</label>
+            <input id="username" [value]="user.username" readonly type="text" />
           </div>
-
-          <div class="ml-12 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Heslo</span>
-            <span class="mt-2 text-black dark:text-gray-200"> ******** </span>
+          <div class="field">
+            <label for="password">Heslo</label>
+            <input id="password" value="********" readonly type="password" />
           </div>
-
-          <div class="ml-12 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Role</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{user.role}} </span>
+          <div class="field">
+            <label for="role">Role</label>
+            <input id="role" [value]="user.role" readonly type="text" />
           </div>
         </div>
       </div>

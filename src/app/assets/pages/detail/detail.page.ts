@@ -7,6 +7,11 @@ import { Path } from '@core/enums';
 import { AssetList, AssetListService } from '@core/shared/assetlist';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
+import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
+import { FindInput } from '@core/graphql/findinput';
+import { Observable, Observer } from 'rxjs';
+import { Entity, ShowingPlace } from '@core/shared/entity';
+import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -14,11 +19,12 @@ import { AppAlertService } from '@core/shared/app-alert';
 })
 export class DetailPage implements OnInit {
   asset: Asset;
-  highpriority: AssetList[];
-  clients: AssetList[];
-  playlists: AssetList[];
+  playlists: Observable<AssetList[]>;
 
-  public settings;
+  entity: Entity;
+  dataLoader: EntityDataLoader;
+
+  private observer: Observer<AssetList[]>;
   private assetListId: string;
 
   constructor(
@@ -30,40 +36,23 @@ export class DetailPage implements OnInit {
     private assetListService: AssetListService,
     private alertService: AppAlertService
   ) {
-    this.highpriority = [];
-    this.playlists = [];
-    this.clients = [];
+    this.entity = new Entity();
+    this.entity.name = 'Playlisty';
+    this.entity.fields.push(new EntityFieldBuilder('name').name('Název').showAt(ShowingPlace.DATAGRID).result());
 
-    this.settings = {
-      columns: {
-        name: {
-          title: 'Název',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Přidat',
-      },
-      edit: {
-        editButtonContent: 'Upravit',
-      },
-      delete: {
-        deleteButtonContent: 'Odstranit',
-      },
-    };
+    const source = new Observable<AssetList[]>((val) => {
+      this.observer = val;
+    });
+
+    this.dataLoader = new (class extends EntityDataLoader {
+      public loadItems(input: FindInput): Observable<any> {
+        return source;
+      }
+    })();
   }
 
   ngOnInit(): void {
     this.asset = new Asset();
-
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
         const input = new FindAssetInput();
@@ -74,9 +63,7 @@ export class DetailPage implements OnInit {
           .then(
             (value) => {
               this.asset = value.data.findAsset;
-              this.highpriority = this.asset.assetLists.filter((val) => val.type === 'highpriority');
-              this.playlists = this.asset.assetLists.filter((val) => val.type === 'playlist');
-              this.clients = this.asset.assetLists.filter((val) => val.type === 'client');
+              this.observer.next(this.asset.assetLists.filter((val) => val.type === 'playlist'));
             },
             (error) => {
               this.router.navigate([Path.Assets]);
@@ -90,8 +77,8 @@ export class DetailPage implements OnInit {
     this.router.navigate(['assetlists', type]);
   }
 
-  showDetail(type: string, event) {
-    this.router.navigate(['assetlists', type, event.data.id]);
+  showDetail(type: string, id: string) {
+    this.router.navigate(['assetlists', type, id]);
   }
 
   showDelete() {
@@ -113,25 +100,7 @@ export class DetailPage implements OnInit {
       );
   }
 
-  showAssignDelete(event) {
-    this.assetListId = event.data.id;
-    this.modalService.open('delete-assetassign-modal');
-  }
-
-  submitAssignDelete() {
-    this.assetListService
-      .removeAssetFromAssetList(this.assetListId, this.asset.id)
-      .toPromise()
-      .then(
-        (value) => {
-          this.highpriority = this.highpriority.filter((val) => val.id !== this.assetListId);
-          this.playlists = this.playlists.filter((val) => val.id !== this.assetListId);
-          this.clients = this.clients.filter((val) => val.id !== this.assetListId);
-          this.alertService.showSuccess('Smazáno', 'Přiřazení assetu bylo úspěšně odstraněno');
-        },
-        (error) => {
-          this.alertService.showError('Chyba ukládání', 'Při pokusu o smazání se vyskytla chyba');
-        }
-      );
+  showAssignDelete(type: string, id: string) {
+    this.router.navigate(['assetlists', type, id]);
   }
 }

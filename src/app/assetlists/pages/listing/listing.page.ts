@@ -24,16 +24,11 @@ export class ListingPage extends EntityComponent implements OnInit {
   ) {
     super(assetListService);
 
-    this.name('AssetList')
-      .icon(null);
+    this.name('AssetList').icon(null);
 
-    this.field('name')
-      .name('Název')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('name').name('Název').showAt(ShowingPlace.DATAGRID);
 
-    this.field('enabled')
-      .name('Aktivní')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('enabled').name('Aktivní').showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {

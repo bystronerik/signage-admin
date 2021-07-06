@@ -67,9 +67,7 @@ export class EditPage implements OnInit {
     input.value = this.style.value;
     input.valueType = this.style.valueType;
 
-    const query = this.style.id
-      ? this.styleService.update(this.style.id, input)
-      : this.styleService.create(input);
+    const query = this.style.id ? this.styleService.update(this.style.id, input) : this.styleService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

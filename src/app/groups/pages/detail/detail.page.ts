@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Group, GroupPlaylistsDataSource, GroupService } from '@core/shared/group';
+import { Group, GroupService } from '@core/shared/group';
 import { AuthService } from '@app/+auth';
 import { FindGroupInput, UpdateGroupInput } from '@core/graphql/group';
 import { Path } from '@core/enums';
@@ -9,6 +9,12 @@ import { Player, PlayerService } from '@core/shared/player';
 import { AppAlertService } from '@core/shared/app-alert';
 import { FindPlayerInput, UpdatePlayerInput } from '@core/graphql/player';
 import { GroupPlayersDataSource } from '@core/shared/group/group-players.data-source';
+import { Entity, ShowingPlace } from '@core/shared/entity';
+import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
+import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
+import { FindInput } from '@core/graphql/findinput';
+import { Observable, Observer } from 'rxjs';
+import { AssetList } from '@core/shared/assetlist';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -16,14 +22,15 @@ import { GroupPlayersDataSource } from '@core/shared/group/group-players.data-so
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DetailPage implements OnInit {
-  public settings;
-  public source: GroupPlayersDataSource;
-
   group: Group;
   selected: Player;
   players: Player[];
   loading = false;
 
+  entity: Entity;
+  dataLoader: EntityDataLoader;
+
+  private observer: Observer<Player[]>;
   private playerId: string;
 
   constructor(
@@ -33,36 +40,21 @@ export class DetailPage implements OnInit {
     private route: ActivatedRoute,
     private modalService: ModalService,
     private playerService: PlayerService,
-    private groupPlayersDataSource: GroupPlayersDataSource,
     private alertService: AppAlertService
   ) {
-    this.source = groupPlayersDataSource;
-    this.settings = {
-      columns: {
-        name: {
-          title: 'Název',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-        edit: false,
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Přidat',
-      },
-      edit: {
-        editButtonContent: 'Detail',
-      },
-      delete: {
-        deleteButtonContent: 'Odstranit',
-      },
-    };
+    this.entity = new Entity();
+    this.entity.name = 'Přehrávače';
+    this.entity.fields.push(new EntityFieldBuilder('name').name('Název').showAt(ShowingPlace.DATAGRID).result());
+
+    const source = new Observable<Player[]>((val) => {
+      this.observer = val;
+    });
+
+    this.dataLoader = new (class extends EntityDataLoader {
+      public loadItems(input: FindPlayerInput): Observable<any> {
+        return source;
+      }
+    })();
   }
 
   ngOnInit(): void {
@@ -71,7 +63,6 @@ export class DetailPage implements OnInit {
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        this.source.groupId = params.get('id');
         const input = new FindGroupInput();
         input.id = params.get('id');
 
@@ -82,17 +73,15 @@ export class DetailPage implements OnInit {
             (value) => {
               this.group = value.data.findGroup;
 
-              this.playerService
-                .findAll(new FindPlayerInput())
-                .toPromise()
-                .then(
-                  (val) => {
-                    this.players = val.data.findAllPlayers;
-                  },
-                  (error) => {
-                    this.alertService.showError('Chyba načítání', 'Při pokusu o načtení přehrávačů se objevila chyba');
-                  }
-                );
+              const playerInput = new FindPlayerInput();
+              playerInput.group = this.group.id;
+              this.playerService.findAll(playerInput).subscribe((val) => {
+                this.observer.next(val);
+              });
+
+              this.playerService.findAll(new FindPlayerInput()).subscribe((players) => {
+                this.players = players as Player[];
+              });
             },
             (error) => {
               this.router.navigate([Path.Groups]);
@@ -106,8 +95,8 @@ export class DetailPage implements OnInit {
     this.modalService.open('add-player-modal');
   }
 
-  removePlayer(event) {
-    this.playerId = event.data.id;
+  removePlayer(id: string) {
+    this.playerId = id;
     this.modalService.open('delete-playerassign-modal');
   }
 
@@ -123,7 +112,7 @@ export class DetailPage implements OnInit {
       .then(
         (value) => {
           this.loading = false;
-          this.source.refresh();
+          this.dataLoader.refresh();
           this.closeModal();
           this.alertService.showSuccess('Přehrávač odebrán', 'Přehrávač byl úspěšně odebrán ze skupiny');
         },
@@ -149,7 +138,7 @@ export class DetailPage implements OnInit {
       .then(
         (value) => {
           this.loading = false;
-          this.source.refresh();
+          this.dataLoader.refresh();
           this.closeModal();
           this.alertService.showSuccess('Přehrávač přiřazen', 'Přehrávač byl úspěšně přiřazen ke skupině');
         },

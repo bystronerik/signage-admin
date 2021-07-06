@@ -1,4 +1,4 @@
-<main class="h-full overflow-y-auto">
+<main class="entity h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
     <div class="flex justify-between">
       <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -13,68 +13,71 @@
     <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
       <div class="mt-2 flex px-4 py-4">
         <!-- Card -->
-        <div class="flex">
+        <div class="fields">
           <!-- Left side -->
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Název</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{alert.name}} </span>
+          <div class="field">
+            <label for="name">Název</label>
+            <input id="name" [value]="alert.name" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Text</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{alert.value}} </span>
+          <div class="field">
+            <label for="value">Text</label>
+            <input id="value" [value]="alert.value" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Pozice</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{positionName(alert.position)}} </span>
+          <div class="field">
+            <label for="position">Pozice</label>
+            <input id="position" [value]="positionName(alert.position)" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Typ</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{typeName(alert.type)}} </span>
+          <div class="field">
+            <label for="type">Typ</label>
+            <input id="type" [value]="typeName(alert.type)" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Běžící</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{alert.running === true ? 'Ano' : 'Ne'}} </span>
+          <div class="field">
+            <label for="running">Běžící</label>
+            <input id="running" [value]='alert.running === true ? "Ano" : "Ne"' readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Pozadí</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              {{alert.background ? alert.background.name : "nenastaveno"}}
-            </span>
+          <div class="field">
+            <label for="background">Pozadí</label>
+            <input
+              id="background"
+              [value]='alert.background ? alert.background.name : "nenastaveno"'
+              readonly
+              type="text"
+            />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Ohraničení</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              {{alert.borders ? alert.borders.name : "nenastaveno"}}
-            </span>
+          <div class="field">
+            <label for="borders">Ohraničení</label>
+            <input id="borders" [value]='alert.borders ? alert.borders.name : "nenastaveno"' readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Velikost textu</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              {{alert.textSize ? alert.textSize.name : "nenastaveno"}}
-            </span>
+          <div class="field">
+            <label for="textSize">Velikost text</label>
+            <input id="textSize" [value]='alert.textSize ? alert.textSize.name : "nenastaveno"' readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Barva textu</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              {{alert.textColor ? alert.textColor.name : "nenastaveno"}}
-            </span>
+          <div class="field">
+            <label for="textColor">Barva text</label>
+            <input
+              id="textColor"
+              [value]='alert.textColor ? alert.textColor.name : "nenastaveno"'
+              readonly
+              type="text"
+            />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Zarovnání textu</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              {{alert.textPosition ? alert.textPosition.name : "nenastaveno"}}
-            </span>
+          <div class="field">
+            <label for="textPosition">Zarovnání textu</label>
+            <input
+              id="textPosition"
+              [value]='alert.textPosition ? alert.textPosition.name : "nenastaveno"'
+              readonly
+              type="text"
+            />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Validita</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="alert.validity; then validitySet else validityNull"></span>
-              <ng-template #validitySet
-                >{{alert.validity.enabled ? alert.validity.from + " - " + alert.validity.to : "bez
-                omezení"}}</ng-template
-              >
-              <ng-template #validityNull>bez omezení</ng-template>
-            </span>
+          <div class="field">
+            <label for="validity">Validita</label>
+            <input
+              id="validity"
+              [value]='alert.validity && alert.validity.enabled ? alert.validity.from + " - " + alert.validity.to : "bez omezení"'
+              readonly
+              type="text"
+            />
           </div>
         </div>
       </div>

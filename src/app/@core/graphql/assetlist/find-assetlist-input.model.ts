@@ -1,4 +1,4 @@
-import {FindInput} from '@core/graphql/findinput';
+import { FindInput } from '@core/graphql/findinput';
 
 export class FindAssetListInput extends FindInput {
   name: string;

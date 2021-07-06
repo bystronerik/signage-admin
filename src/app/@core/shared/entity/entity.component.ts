@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 import { FindStyleInput } from '@core/graphql/style';
 
 export class EntityComponent {
-
   private readonly service: IEntityService<any, any, any, any>;
   private readonly dataLoader: EntityDataLoader;
   private readonly entity: Entity;
@@ -16,11 +15,11 @@ export class EntityComponent {
   constructor(service: IEntityService<any, any, any, any>) {
     this.service = service;
 
-    this.dataLoader = new class extends EntityDataLoader {
+    this.dataLoader = new (class extends EntityDataLoader {
       public loadItems(input: FindInput): Observable<any> {
         return service.findAll(input);
       }
-    };
+    })();
     this.entity = new Entity();
   }
 
@@ -53,5 +52,4 @@ export class EntityComponent {
   public getEntityDataLoader(): EntityDataLoader {
     return this.dataLoader;
   }
-
 }

@@ -9,6 +9,19 @@ import { AssetList, AssetListAssetsDataSource, AssetListService } from '@core/sh
 import { AssetAssignInput } from '@core/graphql/assetlist/asset-assign-input.model';
 import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
 import { AppAlertService } from '@core/shared/app-alert';
+import { Directory, DirectoryService } from '@core/shared/directory';
+import { Observable, Observer } from 'rxjs';
+import { FindDirectoryInput } from '@core/graphql/directory';
+import { cloneDeep } from '@apollo/client/utilities';
+import { Entity, ShowingPlace } from '@core/shared/entity';
+import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
+import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
+import { Player } from '@core/shared/player';
+import { FindPlayerInput } from '@core/graphql/player';
+import { FindInput } from '@core/graphql/findinput';
+import { map } from 'rxjs/operators';
+import { Style, StyleService, StyleType } from '@core/shared/style';
+import { FindStyleInput } from '@core/graphql/style';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -16,15 +29,17 @@ import { AppAlertService } from '@core/shared/app-alert';
 })
 export class DetailPage implements OnInit {
   assetList: AssetList;
-  assets: Asset[];
+  assets: Observable<Asset[]>;
+  directories: Observable<Directory[]>;
+  animations: Observable<Style[]>;
   assetEntry: AssetAssignInput;
   selectedAsset: Asset;
   loading = false;
 
-  private assetId: string;
+  entity: Entity;
+  dataLoader: EntityDataLoader;
 
-  public settings;
-  public source: AssetListAssetsDataSource;
+  private assetId: string;
 
   constructor(
     private router: Router,
@@ -34,46 +49,38 @@ export class DetailPage implements OnInit {
     private modalService: ModalService,
     private assetsService: AssetService,
     private assetListAssetsDataSource: AssetListAssetsDataSource,
-    private alertService: AppAlertService
+    private alertService: AppAlertService,
+    private directoryService: DirectoryService,
+    private styleService: StyleService
   ) {
-    this.source = assetListAssetsDataSource;
-    this.settings = {
-      columns: {
-        assetId: {
-          title: 'ID',
-        },
-        assetName: {
-          title: 'Název',
-        },
-        validityEnabled: {
-          title: 'Omezená validita',
-        },
-        validFrom: {
-          title: 'Validní od',
-        },
-        validTo: {
-          title: 'Validní do',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Přidat',
-      },
-      edit: {
-        editButtonContent: 'Upravit',
-      },
-      delete: {
-        deleteButtonContent: 'Odstranit',
-      },
-    };
+    this.entity = new Entity();
+    this.entity.name = 'Přiřazený obsah';
+    this.entity.fields.push(new EntityFieldBuilder('path').name('Náhled').showAt(ShowingPlace.DATAGRID).result());
+    this.entity.fields.push(new EntityFieldBuilder('name').name('Název').showAt(ShowingPlace.DATAGRID).result());
+    this.entity.fields.push(new EntityFieldBuilder('validity').name('Validita').showAt(ShowingPlace.DATAGRID).result());
+    this.entity.fields.push(
+      new EntityFieldBuilder('animationIn').name('Animace').showAt(ShowingPlace.DATAGRID).result()
+    );
+    this.entity.fields.push(new EntityFieldBuilder('showTime').name('Čas').showAt(ShowingPlace.DATAGRID).result());
+
+    this.dataLoader = new (class extends EntityDataLoader {
+      public loadItems(input: FindAssetListInput): Observable<any> {
+        return assetListService.find(input).valueChanges.pipe(
+          map((val) => {
+            return val.data.findAssetList.assets.map((item) => {
+              return {
+                id: item.id,
+                name: item.asset.name,
+                path: item.asset.path,
+                validity: item.validity.enabled ? item.validity.from + ' - ' + item.validity.to : '-',
+                animationIn: item.animationIn ? item.animationIn.name : '-',
+                showTime: (item.showTime ?? 20) + ' s',
+              };
+            });
+          })
+        );
+      }
+    })();
   }
 
   ngOnInit(): void {
@@ -85,7 +92,6 @@ export class DetailPage implements OnInit {
       if (params.has('id')) {
         const input = new FindAssetListInput();
         input.id = params.get('id');
-        this.source.assetListId = input.id;
         this.assetListService
           .find(input)
           .result()
@@ -93,17 +99,13 @@ export class DetailPage implements OnInit {
             (value) => {
               this.assetList = value.data.findAssetList;
 
-              this.assetsService
-                .find(new FindAssetInput())
-                .result()
-                .then(
-                  (val) => {
-                    this.assets = val.data.findAllAssets;
-                  },
-                  (error) => {
-                    this.alertService.showError('Chyba načítání', 'Při pokusu o načtení assetů se objevila chyba');
-                  }
-                );
+              this.assets = this.assetsService.findAll(new FindAssetInput());
+
+              this.directories = this.directoryService.findAll(new FindDirectoryInput());
+
+              const findInput = new FindStyleInput();
+              findInput.type = StyleType.ANIMATION;
+              this.animations = this.styleService.findAll(findInput);
             },
             (error) => {
               if (params.has('type')) {
@@ -119,11 +121,16 @@ export class DetailPage implements OnInit {
 
   changeAsset(event) {
     this.assetEntry.asset = event.target.value;
-    for (const item of this.assets) {
-      if (item.id === this.assetEntry.asset) {
-        this.selectedAsset = item;
-        return;
-      }
+    if (this.assetEntry.asset.includes('dir-')) {
+      this.selectedAsset = null;
+    } else {
+      this.assets.forEach((val) =>
+        val.forEach((item) => {
+          if (item.id === this.assetEntry.asset) {
+            this.selectedAsset = item;
+          }
+        })
+      );
     }
   }
 
@@ -135,9 +142,9 @@ export class DetailPage implements OnInit {
       .then(
         (value) => {
           this.loading = false;
-          this.source.refresh();
+          this.dataLoader.refresh();
           this.closeModal();
-          this.alertService.showSuccess('Asset přiřazen', 'Asset byl úspěšně přiřazen k asset listu');
+          this.alertService.showSuccess('Asset přiřazen', 'Obsah byl úspěšně přiřazen k playlistu');
         },
         (error) => {
           this.alertService.showError('Chyba ukládání', 'Při pokusu o uložení se vyskytla chyba');
@@ -149,11 +156,7 @@ export class DetailPage implements OnInit {
     this.modalService.open('add-asset-modal');
   }
 
-  editValidity(event) {
-    this.assetEntry.asset = event.data.assetId;
-    this.assetEntry.validityEnabled = event.data.validityEnabled;
-    this.assetEntry.validTo = event.data.validTo;
-    this.assetEntry.validFrom = event.data.validFrom;
+  editEntry(id: string) {
     this.modalService.open('add-asset-modal');
   }
 
@@ -180,8 +183,8 @@ export class DetailPage implements OnInit {
       );
   }
 
-  showDeleteEntry(event) {
-    this.assetId = event.data.assetId;
+  showDeleteEntry(id: string) {
+    this.assetId = id;
     this.modalService.open('delete-assetlist-asset-modal');
   }
 
@@ -191,12 +194,23 @@ export class DetailPage implements OnInit {
       .toPromise()
       .then(
         (value) => {
-          this.source.refresh();
+          this.dataLoader.refresh();
           this.alertService.showSuccess('Smazáno', 'Přiřazení assetu bylo úspěšně odstraněno');
         },
         (error) => {
           this.alertService.showError('Chyba ukládání', 'Při pokusu o smazání se vyskytla chyba');
         }
       );
+  }
+
+  changeAnimation(event, type) {
+    switch (type) {
+      case 'IN':
+        this.assetEntry.animationIn = event.target.value;
+        break;
+      case 'OUT':
+        this.assetEntry.animationOut = event.target.value;
+        break;
+    }
   }
 }

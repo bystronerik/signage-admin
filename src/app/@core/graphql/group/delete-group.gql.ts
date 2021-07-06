@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { gql, Mutation } from 'apollo-angular';
+import { Group } from '@core/shared/group';
 
 export interface Response {
-  deleteGroup: boolean;
+  deleteGroup: Group;
 }
 
 @Injectable({
@@ -11,7 +12,9 @@ export interface Response {
 export class DeleteGroupGQL extends Mutation<Response> {
   document = gql`
     mutation ($id: ID!) {
-      deleteGroup(id: $id)
+      deleteGroup(id: $id) {
+        id
+      }
     }
   `;
 }

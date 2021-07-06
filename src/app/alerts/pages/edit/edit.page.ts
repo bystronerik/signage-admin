@@ -107,23 +107,20 @@ export class EditPage implements OnInit {
       }
     });
 
-    this.styleService
-      .find(new FindStyleInput())
-      .result()
-      .then(
-        (val) => {
-          // this.animations = val.data.findAllStyles;
-          this.backgrounds = val.data.findAllStyles.filter((item) => item.type === StyleType.BACKGROUND);
-          this.borders = val.data.findAllStyles.filter((item) => item.type === StyleType.BORDER);
-          this.textSize = val.data.findAllStyles.filter((item) => item.type === StyleType.TEXT_SIZE);
-          this.textColor = val.data.findAllStyles.filter((item) => item.type === StyleType.TEXT_COLOR);
-          this.textPosition = val.data.findAllStyles.filter((item) => item.type === StyleType.TEXT_ALIGN);
-          this.styles = val.data.findAllStyles;
-        },
-        (error) => {
-          this.appAlertService.showError('Chyba načítání', 'Při pokusu o načtení animací se objevila chyba');
-        }
-      );
+    this.styleService.findAll(new FindStyleInput()).subscribe(
+      (val) => {
+        // this.animations = val.data.findAllStyles;
+        this.backgrounds = val.filter((item) => item.type === StyleType.BACKGROUND);
+        this.borders = val.filter((item) => item.type === StyleType.BORDER);
+        this.textSize = val.filter((item) => item.type === StyleType.TEXT_SIZE);
+        this.textColor = val.filter((item) => item.type === StyleType.TEXT_COLOR);
+        this.textPosition = val.filter((item) => item.type === StyleType.TEXT_ALIGN);
+        this.styles = val;
+      },
+      (error) => {
+        this.appAlertService.showError('Chyba načítání', 'Při pokusu o načtení animací se objevila chyba');
+      }
+    );
   }
 
   async onSubmit() {
@@ -145,9 +142,7 @@ export class EditPage implements OnInit {
     input.textSize = this.alert.textSize.id;
     input.running = this.alert.running;
 
-    const query = this.alert.id
-      ? this.alertService.update(this.alert.id, input)
-      : this.alertService.create(input);
+    const query = this.alert.id ? this.alertService.update(this.alert.id, input) : this.alertService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

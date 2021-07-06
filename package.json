@@ -1,6 +1,6 @@
 {
   "name": "signage-software",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Signage software",
   "author": "deizon",
   "license": "UNLICENSED",
@@ -42,10 +42,6 @@
     "chart.js": "^2.9.4",
     "cypress-file-upload": "^5.0.2",
     "graphql": "^15.0.0",
-    "ng2-charts": "^2.4.2",
-    "ng2-completer": "^9.0.1",
-    "ng2-date-picker": "^11.0.0",
-    "ng2-smart-table": "^1.7.2",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.3",
     "zone.js": "~0.10.2"

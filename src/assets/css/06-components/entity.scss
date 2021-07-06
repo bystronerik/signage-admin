@@ -1,0 +1,39 @@
+.entity {
+  .fields {
+    @apply w-full;
+    @apply text-gray-600;
+
+    .theme-dark & {
+      @apply text-gray-400;
+    }
+
+    .field {
+      @apply p-2;
+      @apply w-1/2;
+      @apply inline-block;
+
+      label {
+      }
+
+      input {
+        @apply block;
+        @apply w-full;
+        @apply mt-1;
+        @apply text-sm;
+        @apply form-input;
+
+        .theme-dark & {
+          @apply text-gray-300;
+          @apply border-gray-600;
+          @apply bg-gray-700;
+        }
+
+        &:focus {
+          @apply outline-none;
+          @apply shadow-none;
+          @apply border-gray-600;
+        }
+      }
+    }
+  }
+}

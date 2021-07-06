@@ -1,4 +1,4 @@
-import {FindInput} from '@core/graphql/findinput';
+import { FindInput } from '@core/graphql/findinput';
 
 export class FindAlertInput extends FindInput {
   name: string;

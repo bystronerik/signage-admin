@@ -19,7 +19,7 @@ import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService implements IEntityService<User, FindUserInput, CreateUserInput, UpdateUserInput>{
+export class UserService implements IEntityService<User, FindUserInput, CreateUserInput, UpdateUserInput> {
   constructor(
     private allUsersGQL: AllUsersGQL,
     private oneUserGQL: OneUserGQL,

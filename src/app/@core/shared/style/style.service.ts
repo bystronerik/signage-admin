@@ -12,14 +12,14 @@ import {
 } from '@core/graphql/style';
 import { Observable } from 'rxjs';
 import { FetchResult } from '@apollo/client/core';
-import {map} from 'rxjs/operators';
-import {IEntityService} from '@core/interfaces/entity-service.interface';
-import {Style} from '@core/shared/style/style.model';
+import { map } from 'rxjs/operators';
+import { IEntityService } from '@core/interfaces/entity-service.interface';
+import { Style } from '@core/shared/style/style.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StyleService implements IEntityService<Style, FindStyleInput, UpdateStyleInput, CreateStyleInput>{
+export class StyleService implements IEntityService<Style, FindStyleInput, UpdateStyleInput, CreateStyleInput> {
   constructor(
     private allStylesGQL: AllStylesGQL,
     private oneStyleGQL: OneStyleGQL,

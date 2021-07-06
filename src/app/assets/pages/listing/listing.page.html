@@ -1,13 +1,30 @@
 <main class="h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Obrázky a videa</h2>
-    <app-datagrid
+    <!--<app-datagrid
       (detailItem)="showDetail($event)"
       (addItem)="createNew()"
       (deleteItem)="showDelete($event)"
       [entity]="getEntityStructure()"
       [dataLoader]="getEntityDataLoader()">
-    </app-datagrid>
+    </app-datagrid>-->
+
+    <a (click)="createNew();" class="btn btn-sm btn-success float-right">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-8 pl-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      Přidat obsah
+    </a>
+
+    <div *ngIf="directory">
+      <app-directory
+        [isRoot]="true"
+        [data]="directory"
+        (deleteItem)="showDelete($event)"
+        (addItem)="createNew()"
+        (detailItem)="showDetail($event)"
+      ></app-directory>
+    </div>
 
     <app-delete-modal
       itemName="asset"

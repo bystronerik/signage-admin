@@ -12,14 +12,14 @@ import {
   UpdateGroupInput,
 } from '@core/graphql/group';
 import { DeleteGroupGQL } from '@core/graphql/group/delete-group.gql';
-import {map} from 'rxjs/operators';
-import {IEntityService} from '@core/interfaces/entity-service.interface';
-import {Group} from '@core/shared/group/group.model';
+import { map } from 'rxjs/operators';
+import { IEntityService } from '@core/interfaces/entity-service.interface';
+import { Group } from '@core/shared/group/group.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GroupService implements IEntityService<Group, FindGroupInput, UpdateGroupInput, CreateGroupInput>{
+export class GroupService implements IEntityService<Group, FindGroupInput, UpdateGroupInput, CreateGroupInput> {
   constructor(
     private allGroupsGQL: AllGroupsGQL,
     private oneGroupGQL: OneGroupGQL,

@@ -62,6 +62,10 @@ const routes: Routes = [
         path: Path.Styles,
         loadChildren: () => import('./styles/styles.module').then((m) => m.StylesModule),
       },
+      {
+        path: Path.Directory,
+        loadChildren: () => import('./directory/directory.module').then((m) => m.DirectoryModule),
+      },
     ],
   },
 

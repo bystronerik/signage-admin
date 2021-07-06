@@ -1,4 +1,4 @@
-<main class="h-full overflow-y-auto">
+<main class="entity h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
     <div class="flex justify-between">
       <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -14,46 +14,28 @@
       <div class="mt-2 flex px-4 py-4 justify-between">
         <!-- Card -->
 
-        <div class="flex justify-between">
+        <div class="fields">
           <!-- Left side -->
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Název</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{group.name}} </span>
+          <div class="field">
+            <label for="name">Název</label>
+            <input id="name" [value]="group.name" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Počet playerů</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="players; then playersCount else playersEmpty"></span>
-              <ng-template #playersCount>{{players.length}}</ng-template>
-              <ng-template #playersEmpty>0</ng-template>
-            </span>
+          <div class="field">
+            <label for="alert">Informační zpráva</label>
+            <input id="alert" [value]='group.alert ? group.alert.name : "nenastavena"' readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Informační zpráva</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{group.alert ? group.alert.name : "nenastavena"}} </span>
-          </div>
-          <!--
-          <div
-            class="ml-8 flex flex-col text-gray-600
-						dark:text-gray-400">
-            <span>Počet panelů</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="group.players; then playersCount else playersEmpty"></span>
-							<ng-template #playersCount>{{group.players.length}}</ng-template>
-              <ng-template #playersEmpty>0</ng-template>
-						</span>
-          </div>-->
         </div>
       </div>
 
-      <div class="mt-2 -mb-5 text-xl font-semibold text-gray-700 dark:text-gray-200 relative">Přiřazené přehrávače</div>
-      <ng2-smart-table
-        [settings]="settings"
-        [source]="source"
-        (create)="addPlayer()"
-        (delete)="removePlayer($event)"
-        class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-      ></ng2-smart-table>
+      <div class="mt-2 mb-2 text-xl font-semibold text-gray-700 dark:text-gray-200 relative">Přiřazené přehrávače</div>
+      <app-datagrid
+        [entity]="entity"
+        [dataLoader]="dataLoader"
+        [showCount]="false"
+        (addItem)="addPlayer()"
+        (detailItem)="changePlayer($event)"
+        (deleteItem)="submitPlayerDelete()"
+      ></app-datagrid>
 
       <app-modal id="add-player-modal" class="modal" style="display: none">
         <form (ngSubmit)="submitModal()" #groupForm="ngForm">

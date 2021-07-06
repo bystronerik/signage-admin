@@ -1,7 +1,6 @@
 import { EntityAction } from '@core/shared/entity/entity-action.model';
 
 export class EntityActionBuilder {
-
   private readonly action: EntityAction;
 
   constructor(action?: EntityAction) {
@@ -25,5 +24,4 @@ export class EntityActionBuilder {
   result(): EntityAction {
     return this.action;
   }
-
 }

@@ -6,4 +6,6 @@ export class UpdateAssetInput {
   validityEnabled: boolean;
   validFrom: string;
   validTo: string;
+  alert: string;
+  directory: string;
 }

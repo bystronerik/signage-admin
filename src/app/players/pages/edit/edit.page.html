@@ -100,7 +100,7 @@
               >
                 <option value="" disabled>Zvolte skupinu</option>
                 <option value="null">Žádná skupina</option>
-                <option *ngFor="let item of groups" [value]="item.id" [selected]="player.group.id == item.id">
+                <option *ngFor="let item of groups | async" [value]="item.id" [selected]="player.group.id == item.id">
                   {{item.name}}
                 </option>
               </select>

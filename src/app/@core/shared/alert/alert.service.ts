@@ -12,9 +12,9 @@ import {
   UpdateAlertInput,
 } from '@core/graphql/alert';
 import { DeleteAlertGQL } from '@core/graphql/alert/delete-alert.gql';
-import {map} from 'rxjs/operators';
-import {IEntityService} from '@core/interfaces/entity-service.interface';
-import {Alert} from '@core/shared/alert/alert.model';
+import { map } from 'rxjs/operators';
+import { IEntityService } from '@core/interfaces/entity-service.interface';
+import { Alert } from '@core/shared/alert/alert.model';
 
 @Injectable({
   providedIn: 'root',

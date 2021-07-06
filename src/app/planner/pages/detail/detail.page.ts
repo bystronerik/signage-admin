@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Group, GroupPlaylistsDataSource, GroupService } from '@core/shared/group';
+import { Group, GroupService } from '@core/shared/group';
 import { AuthService } from '@app/+auth';
 import { FindGroupInput, UpdateGroupInput } from '@core/graphql/group';
 import { Path } from '@core/enums';
@@ -8,6 +8,12 @@ import { ModalService } from '@core/services';
 import { AssetList, AssetListService } from '@core/shared/assetlist';
 import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
 import { AppAlertService } from '@core/shared/app-alert';
+import { environment } from '@environments/environment';
+import { Entity, ShowingPlace } from '@core/shared/entity';
+import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
+import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
+import { Observable, Observer } from 'rxjs';
+import { FindInput } from '@core/graphql/findinput';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -15,15 +21,18 @@ import { AppAlertService } from '@core/shared/app-alert';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DetailPage implements OnInit {
+  public playerUrl: string;
+
   group: Group;
   selected: AssetList;
   assetLists: AssetList[];
   loading = false;
 
-  private assetListId: string;
+  entity: Entity;
+  dataLoader: EntityDataLoader;
 
-  public settings;
-  public source: GroupPlaylistsDataSource;
+  private observer: Observer<AssetList[]>;
+  private assetListId: string;
 
   constructor(
     private router: Router,
@@ -32,36 +41,21 @@ export class DetailPage implements OnInit {
     private route: ActivatedRoute,
     private modalService: ModalService,
     private assetListService: AssetListService,
-    private groupPlaylistsDataSource: GroupPlaylistsDataSource,
     private alertService: AppAlertService
   ) {
-    this.source = groupPlaylistsDataSource;
-    this.settings = {
-      columns: {
-        name: {
-          title: 'Název',
-        },
-      },
-      mode: 'external',
-      noDataMessage: 'Nebyly nalezeny žádné záznamy',
-      actions: {
-        position: 'right',
-        columnTitle: '',
-        edit: false,
-      },
-      attr: {
-        class: 'datagrid',
-      },
-      add: {
-        addButtonContent: 'Přidat',
-      },
-      edit: {
-        editButtonContent: 'Detail',
-      },
-      delete: {
-        deleteButtonContent: 'Odstranit',
-      },
-    };
+    this.entity = new Entity();
+    this.entity.name = 'Playlisty';
+    this.entity.fields.push(new EntityFieldBuilder('name').name('Název').showAt(ShowingPlace.DATAGRID).result());
+
+    const source = new Observable<AssetList[]>((val) => {
+      this.observer = val;
+    });
+
+    this.dataLoader = new (class extends EntityDataLoader {
+      public loadItems(input: FindInput): Observable<any> {
+        return source;
+      }
+    })();
   }
 
   ngOnInit(): void {
@@ -72,29 +66,21 @@ export class DetailPage implements OnInit {
       if (params.has('id')) {
         const input = new FindGroupInput();
         input.id = params.get('id');
-        this.source.groupId = input.id;
         this.groupService
           .find(input)
           .result()
           .then(
             (value) => {
               this.group = value.data.findGroup;
-              this.source.groupId = this.group.id;
+              this.observer.next(this.group.assetLists);
+              this.playerUrl = environment.playersUrl + '?token=GID-' + this.group.id;
 
               const assetListInput = new FindAssetListInput();
               assetListInput.type = 'playlist';
 
-              this.assetListService
-                .findAll(assetListInput)
-                .toPromise()
-                .then(
-                  (val) => {
-                    this.assetLists = val.data.findAllAssetLists;
-                  },
-                  (error) => {
-                    this.alertService.showError('Chyba načítání', 'Při pokusu o načtení asset listů se objevila chyba');
-                  }
-                );
+              this.assetListService.findAll(assetListInput).subscribe((assetLists) => {
+                this.assetLists = assetLists;
+              });
             },
             (error) => {
               this.router.navigate([Path.Planner]);
@@ -108,8 +94,8 @@ export class DetailPage implements OnInit {
     this.modalService.open('add-assetlist-modal');
   }
 
-  removeAssetList(event) {
-    this.assetListId = event.data.id;
+  removeAssetList(id: string) {
+    this.assetListId = id;
     this.modalService.open('delete-assetassign-modal');
   }
 
@@ -120,7 +106,7 @@ export class DetailPage implements OnInit {
 
     input.assetLists = {
       mergeStrategy: 'REDUCE',
-      content: [this.assetListId]
+      content: [this.assetListId],
     };
 
     this.groupService
@@ -129,7 +115,7 @@ export class DetailPage implements OnInit {
       .then(
         (value) => {
           this.loading = false;
-          this.source.refresh();
+          this.dataLoader.refresh();
           this.closeModal();
           this.alertService.showSuccess('Asset list odebrán', 'Asset list byl úspěšně odebrán ze skupiny');
         },
@@ -150,7 +136,7 @@ export class DetailPage implements OnInit {
 
     input.assetLists = {
       mergeStrategy: 'EXTEND',
-      content: [this.selected.id]
+      content: [this.selected.id],
     };
 
     this.groupService
@@ -159,7 +145,7 @@ export class DetailPage implements OnInit {
       .then(
         (value) => {
           this.loading = false;
-          this.source.refresh();
+          this.dataLoader.refresh();
           this.closeModal();
           this.alertService.showSuccess('Asset list přiřazen', 'Asset list byl úspěšně přiřazen ke skupině');
         },
@@ -168,6 +154,10 @@ export class DetailPage implements OnInit {
           this.alertService.showError('Chyba ukládání', 'Při pokusu o uložení se vyskytla chyba');
         }
       );
+  }
+
+  showAssetList(type: string, id: string) {
+    this.router.navigate(['assetlists', type, id]);
   }
 
   changeAssetList(event) {

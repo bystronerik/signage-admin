@@ -37,7 +37,6 @@ export class DetailPage implements OnInit {
           .then(
             (value) => {
               this.player = value.data.findPlayer;
-              this.playerUrl = environment.playersUrl + '?token=' + this.player.token;
             },
             (error) => {
               this.router.navigate([Path.Players]);

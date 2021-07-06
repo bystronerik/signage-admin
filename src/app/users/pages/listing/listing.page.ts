@@ -27,19 +27,13 @@ export class ListingPage extends EntityComponent implements OnInit {
   ) {
     super(userService);
 
-    this.name('User')
-      .icon(null);
+    this.name('User').icon(null);
 
-    this.field('id')
-      .name('ID');
+    this.field('id').name('ID');
 
-    this.field('username')
-      .name('Uživatelské jméno')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('username').name('Uživatelské jméno').showAt(ShowingPlace.DATAGRID);
 
-    this.field('role')
-      .name('Role')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('role').name('Role').showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}
@@ -49,7 +43,7 @@ export class ListingPage extends EntityComponent implements OnInit {
   }
 
   async showDetail(event) {
-    await this.router.navigate([Path.Users, event.data.id]);
+    await this.router.navigate([Path.Users, event]);
   }
 
   closeWarning(): void {
@@ -57,7 +51,7 @@ export class ListingPage extends EntityComponent implements OnInit {
   }
 
   showDelete(event) {
-    this.userId = event.data.id;
+    this.userId = event;
     if (this.userId === this.authService.userValue.id) {
       this.modalService.open('self-delete-modal');
     } else {

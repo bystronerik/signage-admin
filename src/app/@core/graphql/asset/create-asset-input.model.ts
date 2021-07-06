@@ -1,3 +1,3 @@
-import {UpdateAssetInput} from '@core/graphql/asset/update-asset-input.model';
+import { UpdateAssetInput } from '@core/graphql/asset/update-asset-input.model';
 
-export class CreateAssetInput extends UpdateAssetInput{}
+export class CreateAssetInput extends UpdateAssetInput {}

@@ -1,4 +1,4 @@
-<main class="h-full overflow-y-auto">
+<main class="entity h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
     <div class="flex justify-between">
       <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -13,7 +13,7 @@
     <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
       <div class="mt-2 flex px-4 py-4">
         <!-- Card -->
-        <div class="flex">
+        <div class="w-1/4">
           <ng-container *ngIf="asset.type">
             <img *ngIf="asset.type.includes('image')" class="object-contain h-64" src="{{asset.path}}" />
             <video *ngIf="asset.type.includes('video')" class="h-64" controls>
@@ -22,94 +22,77 @@
             </video>
           </ng-container>
         </div>
-        <div class="flex">
+        <div class="fields w-3/4 mx-10">
           <!-- Left side -->
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Název</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{asset.name}} </span>
+          <div class="field">
+            <label for="name">Název</label>
+            <input id="name" [value]="asset.name" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Typ</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{asset.type}} </span>
+          <div class="field">
+            <label for="type">Typ</label>
+            <input id="type" [value]="asset.type" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
-            <span>Délka zobrazení</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{asset.showTime ? asset.showTime : "standardní"}} </span>
+          <div class="field">
+            <label for="alert">Překrytí informační zprávou</label>
+            <input id="alert" [value]='asset.alert ? asset.alert.name : "nenastaveno"' readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
-            <span>Vstupní animace</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="asset.animationIn; then animationInSet else animationInNull"></span>
-              <ng-template #animationInSet
-                >{{asset.animationIn.name ? asset.animationIn.name : "bez animace"}}</ng-template
-              >
-              <ng-template #animationInNull>bez animace</ng-template>
-            </span>
+          <div class="field">
+            <label for="showtime">Délka zobrazení</label>
+            <input id="showtime" [value]='asset.showTime ? asset.showTime : "standardní"' readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
-            <span>Závěrečná animace</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="asset.animationOut; then animationOutSet else animationOutNull"></span>
-              <ng-template #animationOutSet
-                >{{asset.animationOut.name ? asset.animationOut.name : "bez animace"}}</ng-template
-              >
-              <ng-template #animationOutNull>bez animace</ng-template>
-            </span>
+          <div class="field">
+            <label for="folder">Složka</label>
+            <input id="folder" [value]='asset.directory ? asset.directory.name : "žádná"' readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400 hidden">
-            <span>Validita</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="asset.validity; then validitySet else validityNull"></span>
-              <ng-template #validitySet
-                >{{asset.validity.enabled ? asset.validity.from + " - " + asset.validity.to : "bez
-                omezení"}}</ng-template
-              >
-              <ng-template #validityNull>bez omezení</ng-template>
-            </span>
+          <div class="field">
+            <label for="deleteafter">Smazat po</label>
+            <input
+              id="deleteafter"
+              [value]='asset.validity && asset.validity.enabled ? asset.validity.to : "bez omezení"'
+              readonly
+              type="text"
+            />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Smazat po</span>
-            <span class="mt-2 text-black dark:text-gray-200">
-              <span *ngIf="asset.validity; then validitySet else validityNull"></span>
-              <ng-template #validitySet>{{asset.validity.enabled ? asset.validity.to : "bez omezení"}}</ng-template>
-              <ng-template #validityNull>bez omezení</ng-template>
-            </span>
+          <div class="field hidden">
+            <label for="animationIn">Vstupní animace</label>
+            <input
+              id="animationIn"
+              [value]='asset.animationIn && asset.animationIn.name ? asset.animationIn.name : "bez animace"'
+              readonly
+              type="text"
+            />
+          </div>
+          <div class="field hidden">
+            <label for="animationOut">Závěrečná animace</label>
+            <input
+              id="animationOut"
+              [value]='asset.animationOut && asset.animationOut.name ? asset.animationOut.name : "bez animace"'
+              readonly
+              type="text"
+            />
+          </div>
+          <div class="field hidden">
+            <label for="validity">Validita</label>
+            <input
+              id="validity"
+              [value]='asset.validity && asset.validity.enabled ?
+                asset.validity.from + " - " + asset.validity.to : "bez omezení"'
+              readonly
+              type="text"
+            />
           </div>
         </div>
       </div>
       <div class="mt-4">
-        <h2 class="mb-0 relative text-xl font-semibold text-gray-700 dark:text-gray-200">Obsaženo v playlistech</h2>
-        <ng2-smart-table
-          [settings]="settings"
-          [source]="playlists"
-          (create)="createNew('playlist')"
-          (edit)="showDetail('playlist', $event)"
-          (delete)="showAssignDelete($event)"
-          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-        >
-        </ng2-smart-table>
-        <h2 class="mb-0 relative text-xl font-semibold text-gray-700 dark:text-gray-200">Obsaženo u klientů</h2>
-        <ng2-smart-table
-          [settings]="settings"
-          [source]="clients"
-          (create)="createNew('client')"
-          (edit)="showDetail('client', $event)"
-          (delete)="showAssignDelete($event)"
-          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-        >
-        </ng2-smart-table>
-        <h2 class="mb-0 relative text-xl font-semibold text-gray-700 dark:text-gray-200">
-          Obsaženo v prioritních playlistech
-        </h2>
-        <ng2-smart-table
-          [settings]="settings"
-          [source]="highpriority"
-          (create)="createNew('highpriority')"
-          (edit)="showDetail('highpriority', $event)"
-          (delete)="showAssignDelete($event)"
-          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-        >
-        </ng2-smart-table>
+        <h2 class="mb-2 relative text-xl font-semibold text-gray-700 dark:text-gray-200">Obsaženo v playlistech</h2>
+        <app-datagrid
+          [entity]="entity"
+          [dataLoader]="dataLoader"
+          [showCount]="false"
+          (addItem)="createNew('playlist')"
+          (detailItem)="showDetail('playlist', $event)"
+          (deleteItem)="showAssignDelete('playlist', $event)"
+        ></app-datagrid>
       </div>
     </div>
   </div>
@@ -117,14 +100,6 @@
     itemName="asset"
     (confirm)="submitDelete()"
     id="delete-asset-modal"
-    class="modal"
-    style="display: none"
-  >
-  </app-delete-modal>
-  <app-delete-modal
-    itemName="přiřazení assetu"
-    (confirm)="submitAssignDelete()"
-    id="delete-assetassign-modal"
     class="modal"
     style="display: none"
   >

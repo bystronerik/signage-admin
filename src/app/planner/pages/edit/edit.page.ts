@@ -8,6 +8,7 @@ import { CreateGroupInput, UpdateGroupInput } from '@core/graphql/group';
 import { AppAlertService } from '@core/shared/app-alert';
 import { Alert, AlertService } from '@core/shared/alert';
 import { FindAlertInput } from '@core/graphql/alert';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -15,7 +16,7 @@ import { FindAlertInput } from '@core/graphql/alert';
 })
 export class EditPage implements OnInit {
   group: Group;
-  alerts: Alert[];
+  alerts: Observable<Alert[]>;
   loading = false;
 
   constructor(
@@ -52,17 +53,7 @@ export class EditPage implements OnInit {
       }
     });
 
-    this.alertService
-      .find(new FindAlertInput())
-      .result()
-      .then(
-        (val) => {
-          this.alerts = val.data.findAllAlerts;
-        },
-        (error) => {
-          this.appAlertService.showError('Chyba načítání', 'Při pokusu o načtení informačních zpráv se objevila chyba');
-        }
-      );
+    this.alerts = this.alertService.findAll(new FindAlertInput());
   }
 
   onSubmit() {
@@ -72,9 +63,7 @@ export class EditPage implements OnInit {
     input.name = this.group.name;
     input.alert = this.group.alert.id;
 
-    const query = this.group.id
-      ? this.groupService.update(this.group.id, input)
-      : this.groupService.create(input);
+    const query = this.group.id ? this.groupService.update(this.group.id, input) : this.groupService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

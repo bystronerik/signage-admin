@@ -8,6 +8,10 @@ import { CreateAssetInput, UpdateAssetInput } from '@core/graphql/asset';
 import { AppAlertService } from '@core/shared/app-alert';
 import { Style, StyleService, StyleType } from '@core/shared/style';
 import { FindStyleInput } from '@core/graphql/style';
+import { Alert, AlertService } from '@core/shared/alert';
+import { FindAlertInput } from '@core/graphql/alert';
+import { Directory, DirectoryService } from '@core/shared/directory';
+import { FindDirectoryInput } from '@core/graphql/directory';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -19,14 +23,20 @@ export class EditPage implements OnInit {
   fileToUploadType: string;
   fileToUploadUrl: any;
   animations: Style[];
+  alerts: Alert[];
   loading = false;
+
+  rootDirectory: Directory;
+  directories: Directory[];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private assetService: AssetService,
-    private alertService: AppAlertService,
-    private styleService: StyleService
+    private appAlertService: AppAlertService,
+    private styleService: StyleService,
+    private alertService: AlertService,
+    private directoryService: DirectoryService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +48,23 @@ export class EditPage implements OnInit {
 
     this.asset.animationIn = new Style();
     this.asset.animationOut = new Style();
+
+    this.asset.alert = new Alert();
+    this.asset.directory = new Directory();
+
+    const directoryInput = new FindDirectoryInput();
+    directoryInput.name = '/';
+    directoryInput.parentDirectory = 'root';
+    this.directoryService
+      .find(directoryInput)
+      .result()
+      .then((val) => {
+        this.rootDirectory = val.data.findDirectory;
+      });
+
+    this.directoryService.findAll(new FindDirectoryInput()).subscribe((directories) => {
+      this.directories = directories;
+    });
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
@@ -61,6 +88,15 @@ export class EditPage implements OnInit {
               if (!this.asset.animationOut) {
                 this.asset.animationOut = new Style();
               }
+
+              if (!this.asset.alert) {
+                this.asset.alert = new Alert();
+              }
+
+              if (!this.asset.directory) {
+                this.asset.directory = new Directory();
+                this.asset.directory.id = this.rootDirectory.id;
+              }
             },
             (error) => {
               this.router.navigate([Path.Assets]);
@@ -71,17 +107,23 @@ export class EditPage implements OnInit {
 
     const findInput = new FindStyleInput();
     findInput.type = StyleType.ANIMATION;
-    this.styleService
-      .find(findInput)
-      .result()
-      .then(
-        (val) => {
-          this.animations = val.data.findAllStyles;
-        },
-        (error) => {
-          this.alertService.showError('Chyba načítání', 'Při pokusu o načtení animací se objevila chyba');
-        }
-      );
+    this.styleService.findAll(findInput).subscribe(
+      (styles) => {
+        this.animations = styles as Style[];
+      },
+      (error) => {
+        this.appAlertService.showError('Chyba načítání', 'Při pokusu o načtení animací se objevila chyba');
+      }
+    );
+
+    this.alertService.findAll(new FindAlertInput()).subscribe(
+      (alerts) => {
+        this.alerts = alerts as Alert[];
+      },
+      (error) => {
+        this.appAlertService.showError('Chyba načítání', 'Při pokusu o načtení informačních zpráv se objevila chyba');
+      }
+    );
   }
 
   async onSubmit() {
@@ -95,6 +137,8 @@ export class EditPage implements OnInit {
     input.animationIn = this.asset.animationIn.id;
     input.animationOut = this.asset.animationOut.id;
     input.showTime = this.asset.showTime;
+    input.alert = this.asset.alert.id;
+    input.directory = this.asset.directory.id;
 
     const query = this.asset.id
       ? this.assetService.update(this.asset.id, input, this.fileToUpload)
@@ -102,7 +146,7 @@ export class EditPage implements OnInit {
     query.toPromise().then(
       (value) => {
         this.loading = false;
-        this.alertService.showSuccess('Uloženo', 'Asset byl úspěšně uložen');
+        this.appAlertService.showSuccess('Uloženo', 'Asset byl úspěšně uložen');
 
         if (value.data.createAsset) {
           this.router.navigate([Path.Assets, value.data.createAsset.id]);
@@ -113,7 +157,8 @@ export class EditPage implements OnInit {
         }
       },
       (error) => {
-        this.alertService.showError('Chyba ukládání', 'Při ukládání assetu se vyskytla chyba');
+        console.log(error);
+        this.appAlertService.showError('Chyba ukládání', 'Při ukládání assetu se vyskytla chyba');
         this.loading = false;
       }
     );
@@ -152,5 +197,13 @@ export class EditPage implements OnInit {
         this.asset.animationOut.id = event.target.value;
         break;
     }
+  }
+
+  changeAlert(event) {
+    this.asset.alert.id = event.target.value;
+  }
+
+  changeDirectory(event) {
+    this.asset.directory.id = event.target.value;
   }
 }

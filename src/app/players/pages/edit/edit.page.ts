@@ -9,6 +9,7 @@ import { CreatePlayerInput, UpdatePlayerInput } from '@core/graphql/player';
 import { Group, GroupService } from '@core/shared/group';
 import { FindGroupInput } from '@core/graphql/group';
 import { AppAlertService } from '@core/shared/app-alert';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -16,7 +17,7 @@ import { AppAlertService } from '@core/shared/app-alert';
 })
 export class EditPage implements OnInit {
   player: Player;
-  groups: Group[];
+  groups: Observable<Group[]>;
   loading = false;
 
   constructor(
@@ -52,17 +53,7 @@ export class EditPage implements OnInit {
       }
     });
 
-    this.groupService
-      .find(new FindGroupInput())
-      .result()
-      .then(
-        (value) => {
-          this.groups = value.data.findAllGroups;
-        },
-        (error) => {
-          this.alertService.showError('Chyba načítání', 'Při pokusu o načtení skupin se objevila chyba');
-        }
-      );
+    this.groups = this.groupService.findAll(new FindGroupInput());
   }
 
   onSubmit() {
@@ -73,9 +64,7 @@ export class EditPage implements OnInit {
     input.token = this.player.token;
     input.group = this.player.group.id;
 
-    const query = this.player.id
-      ? this.playerService.update(this.player.id, input)
-      : this.playerService.create(input);
+    const query = this.player.id ? this.playerService.update(this.player.id, input) : this.playerService.create(input);
     query.toPromise().then(
       (value) => {
         this.loading = false;

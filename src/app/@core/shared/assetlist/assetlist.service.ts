@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {QueryRef} from 'apollo-angular';
-import {Observable} from 'rxjs';
-import {FetchResult} from '@apollo/client/core';
+import { Injectable } from '@angular/core';
+import { QueryRef } from 'apollo-angular';
+import { Observable } from 'rxjs';
+import { FetchResult } from '@apollo/client/core';
 import {
   AllAssetListsGQL,
   AssetAssignGQL,
@@ -15,14 +15,16 @@ import {
   UpdateAssetListGQL,
   UpdateAssetListInput,
 } from '@core/graphql/assetlist';
-import {IEntityService} from '@core/interfaces/entity-service.interface';
-import {AssetList} from '@core/shared/assetlist/assetlist.model';
-import {map} from 'rxjs/operators';
+import { IEntityService } from '@core/interfaces/entity-service.interface';
+import { AssetList } from '@core/shared/assetlist/assetlist.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AssetListService implements IEntityService<AssetList, FindAssetListInput, UpdateAssetListInput, CreateAssetListInput>{
+export class AssetListService
+  implements IEntityService<AssetList, FindAssetListInput, UpdateAssetListInput, CreateAssetListInput>
+{
   constructor(
     private allAssetListsGQL: AllAssetListsGQL,
     private oneAssetListGQL: OneAssetListGQL,
@@ -34,7 +36,9 @@ export class AssetListService implements IEntityService<AssetList, FindAssetList
   ) {}
 
   findAll(input: FindAssetListInput): Observable<any> {
-    return this.allAssetListsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllAssetLists));
+    return this.allAssetListsGQL
+      .watch({ data: input })
+      .valueChanges.pipe(map((result) => result.data.findAllAssetLists));
   }
 
   find(input: FindAssetListInput): QueryRef<any> {

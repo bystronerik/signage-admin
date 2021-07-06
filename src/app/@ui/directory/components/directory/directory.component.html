@@ -1,0 +1,55 @@
+<div
+  class="w-100 block p-5 mt-10 mb-10 text-black dark:text-white {{
+    isRoot ? 'dark:bg-gray-800 bg-white' : 'dark:bg-gray-700 bg-gray-100'
+  }} rounded-2xl"
+>
+  <div>
+    <h3 class="h3 inline-block">Složka {{ data.name }}</h3>
+    <a *ngIf="isRoot" (click)="addDirectory()" class="btn btn-sm btn-success float-right">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-8 pl-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      Přidat podsložku
+    </a>
+    <a *ngIf="!isRoot" (click)="deleteDirectory()" class="btn btn-sm btn-danger float-right"> Smazat </a>
+  </div>
+  <div *ngIf="items && items.length == 0" class="text-center mb-5">Žáden obsah</div>
+  <div
+    class="
+      w-100
+      mt-3
+      mb-3
+      border-white
+      pt-3
+      dark:text-white
+      text-black
+      border border-b-0 border-r-0 border-l-0 border-black
+      dark:border-white
+    "
+    *ngFor="let item of items"
+  >
+    <app-directory-item
+      class="ml-6"
+      [item]="item"
+      (showItem)="getDetailItem($event)"
+      (deleteItem)="delete($event)"
+    ></app-directory-item>
+  </div>
+  <div class="ml-6" *ngFor="let item of subDirectories">
+    <app-directory
+      [isRoot]="false"
+      [data]="item"
+      (detailItem)="getDetailItem($event)"
+      (deleteItem)="delete($event)"
+      (addItem)="add()"
+    ></app-directory>
+  </div>
+</div>
+<app-delete-modal
+  itemName="přesunout všechny položky do kořenové složky a tuto složku"
+  (confirm)="submitDelete()"
+  id="delete-directory-modal"
+  class="modal"
+  style="display: none"
+>
+</app-delete-modal>

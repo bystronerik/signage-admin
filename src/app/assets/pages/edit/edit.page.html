@@ -99,6 +99,67 @@
               </select>
             </label>
           </div>
+          <div class="mt-4">
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400"> Překrytí informační zprávou </span>
+              <select
+                (change)="changeAlert($event)"
+                [ngClass]="{ disabled: loading }"
+                [disabled]="loading"
+                name="group"
+                class="
+                  block
+                  w-full
+                  mt-1
+                  text-sm
+                  dark:text-gray-300
+                  dark:border-gray-600
+                  dark:bg-gray-700
+                  form-select
+                  focus:border-purple-400
+                  focus:outline-none
+                  focus:shadow-outline-purple
+                  dark:focus:shadow-outline-gray
+                "
+              >
+                <option value="" disabled>Zvolte překrytí informační zprávou</option>
+                <option value="null">Bez překrytí</option>
+                <option *ngFor="let item of alerts" [value]="item.id" [selected]="asset.alert.id == item.id">
+                  {{item.name}}
+                </option>
+              </select>
+            </label>
+          </div>
+          <div class="mt-4">
+            <label class="block text-sm">
+              <span class="text-gray-700 dark:text-gray-400"> Složka </span>
+              <select
+                (change)="changeDirectory($event)"
+                [ngClass]="{ disabled: loading }"
+                [disabled]="loading"
+                name="group"
+                class="
+                  block
+                  w-full
+                  mt-1
+                  text-sm
+                  dark:text-gray-300
+                  dark:border-gray-600
+                  dark:bg-gray-700
+                  form-select
+                  focus:border-purple-400
+                  focus:outline-none
+                  focus:shadow-outline-purple
+                  dark:focus:shadow-outline-gray
+                "
+              >
+                <option value="" disabled>Zvolte složku</option>
+                <option *ngFor="let item of directories" [value]="item.id" [selected]="asset.directory.id == item.id">
+                  {{item.name}}
+                </option>
+              </select>
+            </label>
+          </div>
           <div class="mt-4 hidden">
             <label class="block text-sm">
               <span class="text-gray-700 dark:text-gray-400">Délka zobrazení (sekundy)</span>

@@ -1,12 +1,11 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {Entity} from '@core/shared/entity';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Entity } from '@core/shared/entity';
 
 @Component({
   selector: 'app-datagrid-item',
   templateUrl: './datagrid-item.component.html',
   styleUrls: ['./datagrid-item.component.scss'],
 })
-
 export class DatagridItemComponent implements OnInit {
   @Input() entity: any;
   @Input() entityFields: Entity;
@@ -16,8 +15,7 @@ export class DatagridItemComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   show(value) {
     this.showItem.emit(value);
@@ -26,5 +24,4 @@ export class DatagridItemComponent implements OnInit {
   delete(value) {
     this.deleteItem.emit(value);
   }
-
 }

@@ -13,6 +13,15 @@ import { DatagridModule } from '@ui/datagrid/datagrid.module';
 
 @NgModule({
   declarations: [ListingPage, DetailPage, EditPage],
-  imports: [CommonModule, UsersRoutingModule, Ng2SmartTableModule, FormsModule, LayoutModule, ModalModule, AlertModule, DatagridModule]
+  imports: [
+    CommonModule,
+    UsersRoutingModule,
+    Ng2SmartTableModule,
+    FormsModule,
+    LayoutModule,
+    ModalModule,
+    AlertModule,
+    DatagridModule,
+  ],
 })
 export class UsersModule {}

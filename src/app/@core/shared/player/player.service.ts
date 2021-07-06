@@ -12,14 +12,14 @@ import {
   UpdatePlayerInput,
 } from '@core/graphql/player';
 import { DeletePlayerGQL } from '@core/graphql/player/delete-player.gql';
-import {map} from 'rxjs/operators';
-import {IEntityService} from '@core/interfaces/entity-service.interface';
-import {Player} from '@core/shared/player/player.model';
+import { map } from 'rxjs/operators';
+import { IEntityService } from '@core/interfaces/entity-service.interface';
+import { Player } from '@core/shared/player/player.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PlayerService implements IEntityService<Player, FindPlayerInput, UpdatePlayerInput, CreatePlayerInput>{
+export class PlayerService implements IEntityService<Player, FindPlayerInput, UpdatePlayerInput, CreatePlayerInput> {
   constructor(
     private allPlayersGQL: AllPlayersGQL,
     private onePlayerGQL: OnePlayerGQL,

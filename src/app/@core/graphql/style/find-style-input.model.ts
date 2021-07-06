@@ -1,5 +1,5 @@
 import { StyleType, StyleValueType } from '@core/shared/style';
-import {FindInput} from '@core/graphql/findinput';
+import { FindInput } from '@core/graphql/findinput';
 
 export class FindStyleInput extends FindInput {
   name: string;

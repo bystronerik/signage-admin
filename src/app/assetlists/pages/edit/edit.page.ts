@@ -9,6 +9,7 @@ import { AppAlertService } from '@core/shared/app-alert';
 import { FindStyleInput } from '@core/graphql/style';
 import { Style, StyleService, StyleType } from '@core/shared/style';
 import { Validity } from '@core/shared/asset';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -16,7 +17,7 @@ import { Validity } from '@core/shared/asset';
 })
 export class EditPage implements OnInit {
   assetList: AssetList;
-  animations: Style[];
+  animations: Observable<Style[]>;
   loading = false;
 
   constructor(
@@ -73,17 +74,7 @@ export class EditPage implements OnInit {
 
     const findInput = new FindStyleInput();
     findInput.type = StyleType.ANIMATION;
-    this.styleService
-      .find(findInput)
-      .result()
-      .then(
-        (val) => {
-          this.animations = val.data.findAllStyles;
-        },
-        (error) => {
-          this.alertService.showError('Chyba načítání', 'Při pokusu o načtení animací se objevila chyba');
-        }
-      );
+    this.animations = this.styleService.findAll(findInput);
   }
 
   onSubmit() {

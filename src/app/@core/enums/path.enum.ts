@@ -62,4 +62,8 @@ export enum Path {
   PlannerCreate = 'new',
   PlannerDetail = ':id',
   PlannerEdit = ':id/edit',
+
+  Directory = 'directory',
+  DirectoryEdit = ':id/edit',
+  DirectoryCreate = 'new',
 }

@@ -3,11 +3,12 @@
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Skupiny</h2>
 
     <app-datagrid
-    (detailItem)="showDetail($event)"
-    (addItem)="createNew()"
-    (deleteItem)="showDelete($event)"
-    [entity]="getEntityStructure()"
-    [dataLoader]="getEntityDataLoader()">
+      (detailItem)="showDetail($event)"
+      (addItem)="createNew()"
+      (deleteItem)="showDelete($event)"
+      [entity]="getEntityStructure()"
+      [dataLoader]="getEntityDataLoader()"
+    >
     </app-datagrid>
 
     <app-delete-modal

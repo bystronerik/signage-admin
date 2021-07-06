@@ -1,4 +1,4 @@
-<main class="h-full overflow-y-auto">
+<main class="entity h-full overflow-y-auto">
   <div class="container px-6 mx-auto grid">
     <div class="flex justify-between">
       <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -15,20 +15,19 @@
       <div class="mt-2 flex px-4 py-4 justify-between">
         <!-- Card -->
 
-        <div class="flex justify-between">
+        <div class="fields">
           <!-- Left side -->
-
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Název</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{style.name}} </span>
+          <div class="field">
+            <label for="name">Název</label>
+            <input id="name" [value]="style.name" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Typ</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{typeName(style.type)}} </span>
+          <div class="field">
+            <label for="type">Typ</label>
+            <input id="type" [value]="typeName(style.type)" readonly type="text" />
           </div>
-          <div class="ml-8 flex flex-col text-gray-600 dark:text-gray-400">
-            <span>Typ hodnoty</span>
-            <span class="mt-2 text-black dark:text-gray-200"> {{valueTypeName(style.valueType)}} </span>
+          <div class="field">
+            <label for="valueType">Typ hodnoty</label>
+            <input id="valueType" [value]="valueTypeName(style.valueType)" readonly type="text" />
           </div>
         </div>
       </div>

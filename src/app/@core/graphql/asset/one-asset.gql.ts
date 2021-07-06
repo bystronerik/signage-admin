@@ -18,6 +18,19 @@ export class OneAssetGQL extends Query<Response> {
         path
         type
         showTime
+        directory {
+          id
+          name
+        }
+        tags {
+          id
+          name
+          color
+        }
+        alert {
+          id
+          name
+        }
         animationIn {
           id
           name
@@ -35,6 +48,12 @@ export class OneAssetGQL extends Query<Response> {
           id
           name
           type
+          assets {
+            id
+            asset {
+              id
+            }
+          }
         }
       }
     }

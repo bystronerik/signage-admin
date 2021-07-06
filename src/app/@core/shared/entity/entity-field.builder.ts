@@ -3,10 +3,9 @@ import { Validator } from '@angular/forms';
 import { ShowingPlace } from '@core/shared/entity/showing-place.enum';
 
 export class EntityFieldBuilder {
-
   private readonly field: EntityField;
 
-  constructor(field: EntityField|string) {
+  constructor(field: EntityField | string) {
     if (field instanceof EntityField) {
       this.field = field;
     } else {
@@ -37,5 +36,4 @@ export class EntityFieldBuilder {
   result(): EntityField {
     return this.field;
   }
-
 }

@@ -9,19 +9,21 @@ import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@ui/+layout/layout.module';
 import { ModalModule } from '@ui/modal/modal.module';
 import { AlertModule } from '@ui/alert/alert.module';
-import {DatagridModule} from '@ui/datagrid/datagrid.module';
+import { DatagridModule } from '@ui/datagrid/datagrid.module';
+import { DirectoryModule } from '@ui/directory/directory.module';
 
 @NgModule({
   declarations: [ListingPage, DetailPage, EditPage],
-    imports: [
-        CommonModule,
-        AssetsRoutingModule,
-        Ng2SmartTableModule,
-        FormsModule,
-        LayoutModule,
-        ModalModule,
-        AlertModule,
-        DatagridModule,
-    ],
+  imports: [
+    CommonModule,
+    AssetsRoutingModule,
+    Ng2SmartTableModule,
+    FormsModule,
+    LayoutModule,
+    ModalModule,
+    AlertModule,
+    DatagridModule,
+    DirectoryModule,
+  ],
 })
 export class AssetsModule {}

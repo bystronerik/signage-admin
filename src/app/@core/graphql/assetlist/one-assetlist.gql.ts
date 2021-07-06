@@ -24,14 +24,21 @@ export class OneAssetListGQL extends Query<Response> {
           to
         }
         assets {
+          id
           asset {
             id
             name
+            path
           }
           validity {
             enabled
             from
             to
+          }
+          showTime
+          animationIn {
+            id
+            name
           }
         }
       }

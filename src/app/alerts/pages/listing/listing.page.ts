@@ -21,16 +21,11 @@ export class ListingPage extends EntityComponent implements OnInit {
   ) {
     super(alertService);
 
-    this.name('Alert')
-      .icon(null);
+    this.name('Alert').icon(null);
 
-    this.field('name')
-      .name('Název')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('name').name('Název').showAt(ShowingPlace.DATAGRID);
 
-    this.field('type')
-      .name('Typ')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('type').name('Typ').showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}
@@ -55,7 +50,7 @@ export class ListingPage extends EntityComponent implements OnInit {
       .then(
         (value) => {
           this.getEntityDataLoader().refresh();
-          this.appAlertService.showSuccess('Smazáno', 'Alert byl úspěšně odstraněn');
+          this.appAlertService.showSuccess('Smazáno', 'Informační zpráva byla úspěšně odstraněna');
         },
         (error) => {
           this.appAlertService.showError('Chyba ukládání', 'Při pokusu o smazání se vyskytla chyba');

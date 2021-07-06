@@ -23,12 +23,9 @@ export class ListingPage extends EntityComponent implements OnInit {
   ) {
     super(groupService);
 
-    this.name('Group')
-      .icon(null);
+    this.name('Group').icon(null);
 
-    this.field('name')
-      .name('Název')
-      .showAt(ShowingPlace.DATAGRID);
+    this.field('name').name('Název').showAt(ShowingPlace.DATAGRID);
   }
 
   ngOnInit(): void {}

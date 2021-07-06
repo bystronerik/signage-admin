@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { gql, Mutation } from 'apollo-angular';
+import { Player } from '@core/shared/player';
 
 export interface Response {
-  deletePlayer: boolean;
+  deletePlayer: Player;
 }
 
 @Injectable({
@@ -11,7 +12,9 @@ export interface Response {
 export class DeletePlayerGQL extends Mutation<Response> {
   document = gql`
     mutation ($id: ID!) {
-      deletePlayer(id: $id)
+      deletePlayer(id: $id) {
+        id
+      }
     }
   `;
 }
