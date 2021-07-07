@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
 
 @Component({
   templateUrl: './dashboard.page.html',
@@ -12,7 +10,8 @@ export class DashboardPage implements OnInit {
 
   ngOnInit(): void {}
 
-  getPlayersStatisticsGraph() {
+  // TODO použít ngx-charts
+  /*getPlayersStatisticsGraph() {
     const data: ChartDataSets[] = [
       { data: [8, 8, 8, 8, 7, 7, 8, 8, 8, 8, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 6, 6, 7, 7], label: 'Aktivní' },
     ];
@@ -76,5 +75,5 @@ export class DashboardPage implements OnInit {
       type,
       plugins,
     };
-  }
+  }*/
 }

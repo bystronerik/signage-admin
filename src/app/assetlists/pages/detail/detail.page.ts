@@ -5,20 +5,16 @@ import { Path } from '@core/enums';
 import { Asset, AssetService } from '@core/shared/asset';
 import { ModalService } from '@core/services';
 import { FindAssetInput } from '@core/graphql/asset';
-import { AssetList, AssetListAssetsDataSource, AssetListService } from '@core/shared/assetlist';
+import { AssetList, AssetListService } from '@core/shared/assetlist';
 import { AssetAssignInput } from '@core/graphql/assetlist/asset-assign-input.model';
 import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
 import { AppAlertService } from '@core/shared/app-alert';
 import { Directory, DirectoryService } from '@core/shared/directory';
-import { Observable, Observer } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FindDirectoryInput } from '@core/graphql/directory';
-import { cloneDeep } from '@apollo/client/utilities';
 import { Entity, ShowingPlace } from '@core/shared/entity';
 import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
 import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
-import { Player } from '@core/shared/player';
-import { FindPlayerInput } from '@core/graphql/player';
-import { FindInput } from '@core/graphql/findinput';
 import { map } from 'rxjs/operators';
 import { Style, StyleService, StyleType } from '@core/shared/style';
 import { FindStyleInput } from '@core/graphql/style';
@@ -48,7 +44,6 @@ export class DetailPage implements OnInit {
     private route: ActivatedRoute,
     private modalService: ModalService,
     private assetsService: AssetService,
-    private assetListAssetsDataSource: AssetListAssetsDataSource,
     private alertService: AppAlertService,
     private directoryService: DirectoryService,
     private styleService: StyleService

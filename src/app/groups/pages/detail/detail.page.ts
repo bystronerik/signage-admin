@@ -2,19 +2,16 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Group, GroupService } from '@core/shared/group';
 import { AuthService } from '@app/+auth';
-import { FindGroupInput, UpdateGroupInput } from '@core/graphql/group';
+import { FindGroupInput } from '@core/graphql/group';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
 import { Player, PlayerService } from '@core/shared/player';
 import { AppAlertService } from '@core/shared/app-alert';
 import { FindPlayerInput, UpdatePlayerInput } from '@core/graphql/player';
-import { GroupPlayersDataSource } from '@core/shared/group/group-players.data-source';
 import { Entity, ShowingPlace } from '@core/shared/entity';
 import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
 import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
-import { FindInput } from '@core/graphql/findinput';
 import { Observable, Observer } from 'rxjs';
-import { AssetList } from '@core/shared/assetlist';
 
 @Component({
   templateUrl: './detail.page.html',

@@ -4,7 +4,6 @@ import { ListingPage } from '@app/groups/pages/listing/listing.page';
 import { GroupsRoutingModule } from '@app/groups/groups-routing.module';
 import { DetailPage } from '@app/groups/pages/detail/detail.page';
 import { EditPage } from '@app/groups/pages/edit/edit.page';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@ui/+layout/layout.module';
 import { ModalModule } from '@ui/modal/modal.module';
@@ -13,15 +12,6 @@ import { DatagridModule } from '@ui/datagrid/datagrid.module';
 
 @NgModule({
   declarations: [ListingPage, DetailPage, EditPage],
-  imports: [
-    CommonModule,
-    GroupsRoutingModule,
-    Ng2SmartTableModule,
-    FormsModule,
-    LayoutModule,
-    ModalModule,
-    AlertModule,
-    DatagridModule,
-  ],
+  imports: [CommonModule, GroupsRoutingModule, FormsModule, LayoutModule, ModalModule, AlertModule, DatagridModule],
 })
 export class GroupsModule {}
