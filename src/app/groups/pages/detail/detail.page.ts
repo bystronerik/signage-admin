@@ -27,7 +27,6 @@ export class DetailPage implements OnInit {
   entity: Entity;
   dataLoader: EntityDataLoader;
 
-  private observer: Observer<Player[]>;
   private playerId: string;
 
   constructor(
@@ -43,13 +42,11 @@ export class DetailPage implements OnInit {
     this.entity.name = 'Přehrávače';
     this.entity.fields.push(new EntityFieldBuilder('name').name('Název').showAt(ShowingPlace.DATAGRID).result());
 
-    const source = new Observable<Player[]>((val) => {
-      this.observer = val;
-    });
-
     this.dataLoader = new (class extends EntityDataLoader {
       public loadItems(input: FindPlayerInput): Observable<any> {
-        return source;
+        input.group = input.id;
+        input.id = null;
+        return playerService.findAll(input);
       }
     })();
   }
@@ -69,12 +66,6 @@ export class DetailPage implements OnInit {
           .then(
             (value) => {
               this.group = value.data.findGroup;
-
-              const playerInput = new FindPlayerInput();
-              playerInput.group = this.group.id;
-              this.playerService.findAll(playerInput).subscribe((val) => {
-                this.observer.next(val);
-              });
 
               this.playerService.findAll(new FindPlayerInput()).subscribe((players) => {
                 this.players = players as Player[];
