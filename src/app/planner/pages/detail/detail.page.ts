@@ -13,7 +13,7 @@ import { Entity, ShowingPlace } from '@core/shared/entity';
 import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
 import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
 import { Observable, Observer } from 'rxjs';
-import { FindInput } from '@core/graphql/findinput';
+import { map } from 'rxjs/operators';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -52,8 +52,10 @@ export class DetailPage implements OnInit {
     });
 
     this.dataLoader = new (class extends EntityDataLoader {
-      public loadItems(input: FindInput): Observable<any> {
-        return source;
+      public loadItems(input: FindGroupInput): Observable<any> {
+        return groupService.find(input).valueChanges.pipe(map((val) => {
+          return val.data.findGroup.assetLists;
+        }));
       }
     })();
   }
@@ -72,7 +74,6 @@ export class DetailPage implements OnInit {
           .then(
             (value) => {
               this.group = value.data.findGroup;
-              this.observer.next(this.group.assetLists);
               this.playerUrl = environment.playersUrl + '?token=GID-' + this.group.id;
 
               const assetListInput = new FindAssetListInput();
@@ -117,7 +118,7 @@ export class DetailPage implements OnInit {
           this.loading = false;
           this.dataLoader.refresh();
           this.closeModal();
-          this.alertService.showSuccess('Asset list odebrán', 'Asset list byl úspěšně odebrán ze skupiny');
+          this.alertService.showSuccess('Playlist odebrán', 'Playlist byl úspěšně odebrán ze skupiny');
         },
         (error) => {
           this.alertService.showError('Chyba ukládání', 'Při pokusu o uložení se vyskytla chyba');
@@ -147,7 +148,7 @@ export class DetailPage implements OnInit {
           this.loading = false;
           this.dataLoader.refresh();
           this.closeModal();
-          this.alertService.showSuccess('Asset list přiřazen', 'Asset list byl úspěšně přiřazen ke skupině');
+          this.alertService.showSuccess('Playlist přiřazen', 'Playlist byl úspěšně přiřazen ke skupině');
         },
         (error) => {
           this.loading = false;
