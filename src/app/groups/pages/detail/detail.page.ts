@@ -137,8 +137,8 @@ export class DetailPage implements OnInit {
       );
   }
 
-  changePlayer(event) {
-    this.selected.id = event.target.value;
+  changePlayer(id: string) {
+    this.router.navigate([Path.Players, id]);
   }
 
   showDelete() {
