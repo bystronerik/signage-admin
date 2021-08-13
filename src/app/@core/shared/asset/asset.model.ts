@@ -18,4 +18,13 @@ export class Asset {
   directory: Directory;
   tags: Tag[];
   alert: Alert;
+
+  isImage(): boolean {
+    return this.type.toLowerCase().includes('image');
+  }
+
+  isVideo(): boolean {
+    return this.type.toLowerCase().includes('video');
+  }
+
 }
