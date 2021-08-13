@@ -15,8 +15,8 @@
         <!-- Card -->
         <div class="w-1/4">
           <ng-container *ngIf="asset.type">
-            <img *ngIf="asset.type.includes('image')" class="object-contain h-64" src="{{asset.path}}" />
-            <video *ngIf="asset.type.includes('video')" class="h-64" controls>
+            <img *ngIf="asset.type.toLowerCase().includes('image')" class="object-contain h-64" src="{{asset.path}}" />
+            <video *ngIf="asset.type.toLowerCase().includes('video')" class="h-64" controls>
               <source src="{{asset.path}}" type="{{asset.type}}" />
               Your browser does not support the video tag.
             </video>

@@ -394,6 +394,10 @@
       <div class="inline-block w-full md:w-full lg:w-1/2">
         <img class="p-10" *ngIf="fileToUploadType === 'image'" src="{{fileToUploadUrl}}" />
         <video class="p-10" *ngIf="fileToUploadType === 'video'" src="{{fileToUploadUrl}}"></video>
+        <ng-container *ngIf="fileToUploadType === undefined && asset.type">
+          <img class="p-10" *ngIf="asset.type.toLowerCase().includes('image')" src="{{asset.path}}" />
+          <video class="p-10" *ngIf="asset.type.toLowerCase().includes('video')" src="{{asset.path}}"></video>
+        </ng-container>
       </div>
     </div>
   </div>
