@@ -9,6 +9,7 @@ import { Asset } from '@core/shared/asset';
 export class DirectoryItemComponent implements OnInit {
   @Input() item: Asset;
   @Output() showItem = new EventEmitter<string>();
+  @Output() editItem = new EventEmitter<string>();
   @Output() deleteItem = new EventEmitter<string>();
 
   constructor() {}
@@ -17,6 +18,10 @@ export class DirectoryItemComponent implements OnInit {
 
   show(value) {
     this.showItem.emit(value);
+  }
+
+  edit(value) {
+    this.editItem.emit(value);
   }
 
   delete(value) {

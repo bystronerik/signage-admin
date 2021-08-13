@@ -45,6 +45,10 @@ export class ListingPage extends EntityComponent implements OnInit {
     await this.router.navigate([id], { relativeTo: this.route });
   }
 
+  async showEdit(id: string) {
+    await this.router.navigate([Path.Styles, id, 'edit']);
+  }
+
   showDelete(id: string) {
     this.styleId = id;
     this.modalService.open('delete-style-modal');

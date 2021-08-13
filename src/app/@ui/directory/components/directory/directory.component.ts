@@ -6,6 +6,7 @@ import { FindAssetInput } from '@core/graphql/asset';
 import { Router } from '@angular/router';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
+import { AppAlertService } from '@core/shared/app-alert';
 
 @Component({
   selector: 'app-directory',
@@ -17,6 +18,7 @@ export class DirectoryComponent implements OnInit {
   @Input() data: Directory;
   @Output() detailItem = new EventEmitter<string>();
   @Output() addItem = new EventEmitter<any>();
+  @Output() editItem = new EventEmitter<any>();
   @Output() deleteItem = new EventEmitter<string>();
 
   public subDirectories: Directory[];
@@ -26,7 +28,8 @@ export class DirectoryComponent implements OnInit {
     private directoryService: DirectoryService,
     private assetService: AssetService,
     private router: Router,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private alertService: AppAlertService
   ) {}
 
   ngOnInit(): void {
@@ -53,21 +56,23 @@ export class DirectoryComponent implements OnInit {
     this.assetService.findAll(input).subscribe(
       (items) => {
         this.items = items ? items : [];
-        console.log(items);
       },
       (error) => {
         this.items = [];
-        console.log(error);
       }
     );
   }
 
-  getDetailItem(value: string) {
+  detail(value: string) {
     this.detailItem.emit(value);
   }
 
   add() {
     this.addItem.emit();
+  }
+
+  edit(value: string) {
+    this.detailItem.emit(value);
   }
 
   delete(value: string) {
@@ -79,8 +84,27 @@ export class DirectoryComponent implements OnInit {
   }
 
   deleteDirectory() {
-    this.modalService.open('delete-directory-modal');
+    this.modalService.open('delete-directory-modal-' + this.data.id);
   }
 
-  submitDelete() {}
+  submitDelete() {
+    if (this.isRoot) {
+      this.alertService.showError('Chyba ukládání', 'Nelze smazat kořenovou složku');
+      return;
+    }
+
+    this.directoryService
+      .delete(this.data.id)
+      .toPromise()
+      .then(
+        (value) => {
+          this.router.navigate([Path.Assets]);
+          this.alertService.showSuccess('Smazáno', 'Složka byla úspěšně smazána');
+        },
+        (error) => {
+          this.alertService.showError('Chyba ukládání', 'Při pokusu o smazání se vyskytla chyba');
+        }
+      );
+  }
+
 }

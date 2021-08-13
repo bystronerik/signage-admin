@@ -38,6 +38,10 @@ export class ListingPage extends EntityComponent implements OnInit {
     await this.router.navigate([Path.Alerts, id]);
   }
 
+  async showEdit(id: string) {
+    await this.router.navigate([Path.Alerts, id, 'edit']);
+  }
+
   showDelete(id: string) {
     this.alertId = id;
     this.modalService.open('delete-alert-modal');

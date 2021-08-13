@@ -32,6 +32,10 @@ export class ListingPage extends EntityComponent implements OnInit {
     await this.router.navigate([Path.Groups, Path.GroupsCreate]);
   }
 
+  async showEdit(id: string) {
+    await this.router.navigate([Path.Groups, id, 'edit']);
+  }
+
   async showDetail(id: string) {
     await this.router.navigate([Path.Groups, id]);
   }

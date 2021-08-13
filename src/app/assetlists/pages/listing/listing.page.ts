@@ -49,6 +49,10 @@ export class ListingPage extends EntityComponent implements OnInit {
     await this.router.navigate([id], { relativeTo: this.route });
   }
 
+  async showEdit(id: string) {
+    await this.router.navigate([Path.AssetLists, id, 'edit']);
+  }
+
   showDelete(id: string) {
     this.assetListId = id;
     this.modalService.open('delete-assetlist-modal');

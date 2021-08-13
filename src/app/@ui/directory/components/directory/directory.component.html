@@ -31,24 +31,26 @@
     <app-directory-item
       class="ml-6"
       [item]="item"
-      (showItem)="getDetailItem($event)"
+      (showItem)="detail($event)"
+      (editItem)="edit($event)"
       (deleteItem)="delete($event)"
     ></app-directory-item>
   </div>
-  <div class="ml-6" *ngFor="let item of subDirectories">
+  <div *ngFor="let item of subDirectories">
     <app-directory
       [isRoot]="false"
       [data]="item"
-      (detailItem)="getDetailItem($event)"
+      (detailItem)="detail($event)"
+      (editItem)="edit($event)"
       (deleteItem)="delete($event)"
       (addItem)="add()"
     ></app-directory>
   </div>
 </div>
-<app-delete-modal
+<app-delete-modal *ngIf='!isRoot'
   itemName="přesunout všechny položky do kořenové složky a tuto složku"
   (confirm)="submitDelete()"
-  id="delete-directory-modal"
+  id="delete-directory-modal-{{data.id}}"
   class="modal"
   style="display: none"
 >

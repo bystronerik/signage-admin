@@ -5,21 +5,27 @@
     </svg>
   </div>
 </div>
-<div class="inline-block align-middle w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4">
+<div class="inline-block align-middle w-1/5 md:w-1/5 lg:w-1/5 xl:w-1/4">
   <img class="mx-auto h-32 object-cover max-w-3xl" src="{{ item.path }}" />
 </div>
-<div class="inline-block align-middle w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4">
+<div class="inline-block align-middle w-1/5 md:w-1/5 lg:w-1/5 xl:w-1/5">
   <div>
     {{ item['name'] }}
   </div>
 </div>
-<div class="inline-block align-middle w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4">
+<div class="inline-block align-middle w-1/5 md:w-1/5 lg:w-1/5 xl:w-1/5">
   <div>
     {{ item['type'] }}
   </div>
 </div>
 <div class="inline-block align-middle">
-  <a (click)="show(item.id)" class="btn btn-sm btn-secondary">
+  <a (click)="show(item.id)" class="btn btn-sm btn-secondary mx-1">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    </svg>
+  </a>
+  <a (click)="edit(item.id)" class="btn btn-sm btn-secondary mx-1">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path
         stroke-linecap="round"
@@ -29,7 +35,7 @@
       />
     </svg>
   </a>
-  <a (click)="delete(item.id)" class="btn btn-sm btn-danger">
+  <a (click)="delete(item.id)" class="btn btn-sm btn-danger mx-1">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path
         stroke-linecap="round"

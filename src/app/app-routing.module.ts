@@ -6,17 +6,6 @@ import { NotFoundPage } from './public/pages/not-found/not-found.page';
 import { InternalServerErrorPage } from '@app/public/pages/internal-server-error/internal-server-error.page';
 
 const routes: Routes = [
-  // ===== Uncomment if Path.Home is different from empty =====
-  // { path: '', redirectTo: Path.Home, pathMatch: 'full' },
-
-  // Public
-  /*{
-    path: '',
-    loadChildren: () =>
-      import('./public/public.module').then((m) => m.PublicModule),
-  },*/
-
-  // App
   {
     path: '',
     redirectTo: `${Path.Assets}`,
@@ -68,20 +57,15 @@ const routes: Routes = [
       },
     ],
   },
-
-  // Auth
   {
     path: Path.Auth,
     canActivate: [NoAuthGuard],
     loadChildren: () => import('./+auth/auth.module').then((m) => m.AuthModule),
   },
-
   {
     path: Path.InternalServerError,
     component: InternalServerErrorPage,
   },
-
-  // Not found page (must go at the bottom)
   {
     path: '**',
     component: NotFoundPage,

@@ -10,6 +10,7 @@ export class DatagridItemComponent implements OnInit {
   @Input() entity: any;
   @Input() entityFields: Entity;
   @Output() showItem = new EventEmitter<string>();
+  @Output() editItem = new EventEmitter<string>();
   @Output() deleteItem = new EventEmitter<string>();
   totalItems: number;
 
@@ -19,6 +20,10 @@ export class DatagridItemComponent implements OnInit {
 
   show(value) {
     this.showItem.emit(value);
+  }
+
+  edit(value) {
+    this.editItem.emit(value);
   }
 
   delete(value) {

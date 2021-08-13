@@ -63,7 +63,8 @@
   *ngFor="let item of data | async"
 >
   <app-datagrid-item
-    (showItem)="getDetailItem($event)"
+    (showItem)="showDetailItem($event)"
+    (editItem)="showEditItem($event)"
     (deleteItem)="delete($event)"
     [entity]="item"
     [entityFields]="entity"

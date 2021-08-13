@@ -5,10 +5,6 @@ import { UserService } from '@core/shared/user';
 import { ModalService } from '@core/services';
 import { AuthService } from '@app/+auth';
 import { AppAlertService } from '@core/shared/app-alert';
-import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
-import { FindInput } from '@core/graphql/findinput';
-import { Observable } from 'rxjs';
-import { FindUserInput } from '@core/graphql/user';
 import { EntityComponent, ShowingPlace } from '@core/shared/entity';
 
 @Component({
@@ -44,6 +40,10 @@ export class ListingPage extends EntityComponent implements OnInit {
 
   async showDetail(event) {
     await this.router.navigate([Path.Users, event]);
+  }
+
+  async showEdit(id: string) {
+    await this.router.navigate([Path.Users, id, 'edit']);
   }
 
   closeWarning(): void {

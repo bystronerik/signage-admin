@@ -4,6 +4,7 @@
     <!--<app-datagrid
       (detailItem)="showDetail($event)"
       (addItem)="createNew()"
+      (editItem)="showEdit($event)"
       (deleteItem)="showDelete($event)"
       [entity]="getEntityStructure()"
       [dataLoader]="getEntityDataLoader()">
@@ -22,6 +23,7 @@
         [data]="directory"
         (deleteItem)="showDelete($event)"
         (addItem)="createNew()"
+        (editItem)="showEdit($event)"
         (detailItem)="showDetail($event)"
       ></app-directory>
     </div>

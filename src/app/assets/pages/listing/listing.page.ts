@@ -54,6 +54,10 @@ export class ListingPage extends EntityComponent implements OnInit {
     await this.router.navigate([Path.Assets, Path.AssetsCreate]);
   }
 
+  async showEdit(id: string) {
+    await this.router.navigate([Path.Assets, id, 'edit']);
+  }
+
   async showDetail(id: string) {
     await this.router.navigate([Path.Assets, id]);
   }

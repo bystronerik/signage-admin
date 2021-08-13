@@ -15,6 +15,7 @@ export class DatagridComponent implements OnInit {
   @Input() entity: Entity;
   @Input() showCount = true;
   @Output() detailItem = new EventEmitter<string>();
+  @Output() editItem = new EventEmitter<string>();
   @Output() addItem = new EventEmitter<any>();
   @Output() deleteItem = new EventEmitter<string>();
 
@@ -37,8 +38,12 @@ export class DatagridComponent implements OnInit {
     });
   }
 
-  getDetailItem(value: string) {
+  showDetailItem(value: string) {
     this.detailItem.emit(value);
+  }
+
+  showEditItem(value: string) {
+    this.editItem.emit(value);
   }
 
   add() {
