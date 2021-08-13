@@ -73,7 +73,7 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.group = value.data.findGroup;
+              this.group = Object.assign(new Group(), value.data.findGroup);
               this.playerUrl = environment.playersUrl + '?token=GID-' + this.group.id;
 
               const assetListInput = new FindAssetListInput();

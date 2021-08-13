@@ -37,7 +37,7 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.alert = value.data.findAlert;
+              this.alert = Object.assign(new Alert(), value.data.findAlert);
             },
             (error) => {
               this.router.navigate([Path.Alerts]);

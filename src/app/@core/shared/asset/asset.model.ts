@@ -19,11 +19,11 @@ export class Asset {
   tags: Tag[];
   alert: Alert;
 
-  isImage(): boolean {
+  public isImage(): boolean {
     return this.type.toLowerCase().includes('image');
   }
 
-  isVideo(): boolean {
+  public isVideo(): boolean {
     return this.type.toLowerCase().includes('video');
   }
 

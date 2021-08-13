@@ -92,7 +92,7 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.assetList = value.data.findAssetList;
+              this.assetList = Object.assign(new AssetList(), value.data.findAssetList);
 
               this.assets = this.assetsService.findAll(new FindAssetInput());
 

@@ -63,7 +63,7 @@ export class EditPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.alert = JSON.parse(JSON.stringify(value.data.findAlert));
+              this.alert = Object.assign(new Alert(), value.data.findAlert);
               if (!this.alert.validity) {
                 this.alert.validity = new Validity();
                 this.alert.validity.enabled = false;

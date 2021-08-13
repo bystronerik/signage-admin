@@ -51,7 +51,7 @@ export class EditPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.assetList = JSON.parse(JSON.stringify(value.data.findAssetList));
+              this.assetList = Object.assign(new AssetList(), value.data.findAssetList);
               if (!this.assetList.validity) {
                 this.assetList.validity = new Validity();
                 this.assetList.validity.enabled = false;

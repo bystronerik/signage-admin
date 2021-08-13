@@ -45,7 +45,7 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.style = value.data.findStyle;
+              this.style = Object.assign(new Style(), value.data.findStyle);
             },
             (error) => {
               if (params.has('type')) {

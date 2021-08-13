@@ -48,7 +48,7 @@ export class EditPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.style = JSON.parse(JSON.stringify(value.data.findStyle));
+              this.style = Object.assign(new Style(), value.data.findStyle);
             },
             (error) => {
               this.router.navigate(['styles']);

@@ -40,7 +40,7 @@ export class EditPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.group = JSON.parse(JSON.stringify(value.data.findGroup));
+              this.group = Object.assign(new Group(), value.data.findGroup);
 
               if (!this.group.alert) {
                 this.group.alert = new Alert();

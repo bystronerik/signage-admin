@@ -62,7 +62,7 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.asset = value.data.findAsset;
+              this.asset = Object.assign(new Asset(), value.data.findAsset);
               this.observer.next(this.asset.assetLists.filter((val) => val.type === 'playlist'));
             },
             (error) => {

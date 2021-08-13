@@ -65,7 +65,7 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.group = value.data.findGroup;
+              this.group = Object.assign(new Group(), value.data.findGroup);
 
               this.playerService.findAll(new FindPlayerInput()).subscribe((players) => {
                 this.players = players as Player[];

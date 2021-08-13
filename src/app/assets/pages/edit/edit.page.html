@@ -392,11 +392,11 @@
         </form>
       </div>
       <div class="inline-block w-full md:w-full lg:w-1/2">
-        <img class="p-10" *ngIf="fileToUploadType === 'image'" src="{{fileToUploadUrl}}" />
-        <video class="p-10" *ngIf="fileToUploadType === 'video'" src="{{fileToUploadUrl}}"></video>
+        <img class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="fileToUploadType === 'image'" src="{{fileToUploadUrl}}" />
+        <video class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="fileToUploadType === 'video'" src="{{fileToUploadUrl}}"></video>
         <ng-container *ngIf="fileToUploadType === undefined && asset.type">
-          <img class="p-10" *ngIf="asset.isImage()" src="{{asset.path}}" />
-          <video class="p-10" *ngIf="asset.isVideo()" src="{{asset.path}}"></video>
+          <img class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="asset.isImage()" src="{{asset.path}}" />
+          <video class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="asset.isVideo()" src="{{asset.path}}"></video>
         </ng-container>
       </div>
     </div>

@@ -36,7 +36,7 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.player = value.data.findPlayer;
+              this.player = Object.assign(new Player(), value.data.findPlayer);
             },
             (error) => {
               this.router.navigate([Path.Players]);

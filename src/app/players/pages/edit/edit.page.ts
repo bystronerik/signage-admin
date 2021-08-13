@@ -41,7 +41,7 @@ export class EditPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.player = JSON.parse(JSON.stringify(value.data.findPlayer));
+              this.player = Object.assign(new Player(), value.data.findPlayer);
               if (!this.player.group) {
                 this.player.group = new Group();
               }

@@ -37,7 +37,7 @@ export class EditPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.user = JSON.parse(JSON.stringify(value.data.findUser));
+              this.user = Object.assign(new User(), value.data.findUser);
             },
             (error) => {
               this.router.navigate([Path.Users]);
