@@ -72,7 +72,7 @@ export class DirectoryComponent implements OnInit {
   }
 
   edit(value: string) {
-    this.detailItem.emit(value);
+    this.editItem.emit(value);
   }
 
   delete(value: string) {

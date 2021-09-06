@@ -20,7 +20,7 @@
             "customWebpackConfig": {
               "path": "config/webpack-prod.config.js"
             },
-            "outputPath": "dist/signage-software",
+            "outputPath": "build",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
