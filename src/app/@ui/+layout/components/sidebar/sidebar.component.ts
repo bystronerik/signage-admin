@@ -95,23 +95,23 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {}
 
   toggleSideMenu() {
-    const menu = this.settingsService.settings.menu;
+    const menu = this.settingsService.getSettings.menu;
     menu.sideMenuOpened = !menu.sideMenuOpened;
 
     this.settingsService.save();
   }
 
   isSideMenuOpen(): boolean {
-    return this.settingsService.settings.menu.sideMenuOpened;
+    return this.settingsService.getSettings.menu.sideMenuOpened;
   }
 
   toggleTab(tabId: string) {
-    const menu = this.settingsService.settings.menu;
+    const menu = this.settingsService.getSettings.menu;
     menu[tabId + 'TabOpened'] = !menu[tabId + 'TabOpened'];
     this.settingsService.save();
   }
 
   isTabOpened(tabId: string): boolean {
-    return this.settingsService.settings.menu[tabId + 'TabOpened'];
+    return this.settingsService.getSettings.menu[tabId + 'TabOpened'];
   }
 }

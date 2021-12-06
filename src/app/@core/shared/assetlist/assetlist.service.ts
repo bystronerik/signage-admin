@@ -3,20 +3,25 @@ import { QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { FetchResult } from '@apollo/client/core';
 import {
-  AllAssetListsGQL,
-  AssetAssignGQL,
+  FindAllAssetListsGQL,
+  AssignAssetToAssetListGQL,
   AssetAssignInput,
-  AssetRemoveGQL,
+  RemoveAssetFromAssetListGQL,
   CreateAssetListGQL,
   CreateAssetListInput,
   DeleteAssetListGQL,
   FindAssetListInput,
-  OneAssetListGQL,
+  FindAssetListGQL,
   UpdateAssetListGQL,
   UpdateAssetListInput,
-} from '@core/graphql/assetlist';
+  AssetList,
+  FindAssetListQuery,
+  FindAssetListQueryVariables,
+  UpdateAssetListMutation,
+  CreateAssetListMutation,
+  DeleteAssetListMutation
+} from '@app/graphql';
 import { IEntityService } from '@core/interfaces/entity-service.interface';
-import { AssetList } from '@core/shared/assetlist/assetlist.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -26,34 +31,34 @@ export class AssetListService
   implements IEntityService<AssetList, FindAssetListInput, UpdateAssetListInput, CreateAssetListInput>
 {
   constructor(
-    private allAssetListsGQL: AllAssetListsGQL,
-    private oneAssetListGQL: OneAssetListGQL,
+    private findAllAssetListsGQL: FindAllAssetListsGQL,
+    private findAssetListGQL: FindAssetListGQL,
     private createAssetListGQL: CreateAssetListGQL,
     private updateAssetListGQL: UpdateAssetListGQL,
     private deleteAssetListGQL: DeleteAssetListGQL,
-    private assetAssignGQL: AssetAssignGQL,
-    private assetRemoveGQL: AssetRemoveGQL
+    private assetAssignGQL: AssignAssetToAssetListGQL,
+    private assetRemoveGQL: RemoveAssetFromAssetListGQL,
   ) {}
 
-  findAll(input: FindAssetListInput): Observable<any> {
-    return this.allAssetListsGQL
+  findAll(input: FindAssetListInput): Observable<Array<Partial<AssetList>>> {
+    return this.findAllAssetListsGQL
       .watch({ data: input })
       .valueChanges.pipe(map((result) => result.data.findAllAssetLists));
   }
 
-  find(input: FindAssetListInput): QueryRef<any> {
-    return this.oneAssetListGQL.watch({ data: input });
+  find(input: FindAssetListInput): QueryRef<FindAssetListQuery, FindAssetListQueryVariables> {
+    return this.findAssetListGQL.watch({ data: input });
   }
 
-  update(id: string, input: UpdateAssetListInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateAssetListInput): Observable<FetchResult<UpdateAssetListMutation>> {
     return this.updateAssetListGQL.mutate({ id, data: input });
   }
 
-  create(input: CreateAssetListInput): Observable<FetchResult<any>> {
+  create(input: CreateAssetListInput): Observable<FetchResult<CreateAssetListMutation>> {
     return this.createAssetListGQL.mutate({ data: input });
   }
 
-  delete(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<DeleteAssetListMutation>> {
     return this.deleteAssetListGQL.mutate({ id });
   }
 

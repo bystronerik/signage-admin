@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Directory, DirectoryService } from '@core/shared/directory';
-import { FindDirectoryInput } from '@core/graphql/directory';
-import { Asset, AssetService } from '@core/shared/asset';
-import { FindAssetInput } from '@core/graphql/asset';
+import { DirectoryService } from '@core/shared/directory';
+import { FindDirectoryInput, FindAssetInput, Directory, Asset } from '@app/graphql';
+import { AssetService } from '@core/shared/asset';
 import { Router } from '@angular/router';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
@@ -38,7 +37,7 @@ export class DirectoryComponent implements OnInit {
   }
 
   loadSubDirectories(): void {
-    const input = new FindDirectoryInput();
+    const input: FindDirectoryInput = {};
     input.parentDirectory = this.data.id;
     this.directoryService.findAll(input).subscribe(
       (directories) => {
@@ -51,7 +50,7 @@ export class DirectoryComponent implements OnInit {
   }
 
   loadItems(): void {
-    const input = new FindAssetInput();
+    const input: FindAssetInput = {};
     input.directory = this.data.id;
     this.assetService.findAll(input).subscribe(
       (items) => {

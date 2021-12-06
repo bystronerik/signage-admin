@@ -1,0 +1,5 @@
+mutation UpdateAssetList($id: ID!, $data: UpdateAssetListInput!) {
+  updateAssetList(id: $id, data: $data) {
+    id
+  }
+}

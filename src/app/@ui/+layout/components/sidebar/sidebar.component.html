@@ -12,7 +12,7 @@
     <ul class="mt-6">
       <ng-container *ngFor="let group of this.groups">
         <li
-          *ngIf="(group.onlyAdmin && authService.userValue.role === 'ADMIN') || !group.onlyAdmin"
+          *ngIf="(group.onlyAdmin && authService.getUser.role === 'ADMIN') || !group.onlyAdmin"
           class="relative px-6 py-3"
         >
           <span

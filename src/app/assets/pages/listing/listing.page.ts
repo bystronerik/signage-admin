@@ -4,13 +4,9 @@ import { Path } from '@core/enums';
 import { AssetService } from '@core/shared/asset';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
-import { Entity, EntityComponent, ShowingPlace } from '@core/shared/entity';
-import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
-import { FindInput } from '@core/graphql/findinput';
-import { Observable } from 'rxjs';
-import { FindAssetInput } from '@core/graphql/asset';
-import { Directory, DirectoryService } from '@core/shared/directory';
-import { CreateDirectoryInput, FindDirectoryInput } from '@core/graphql/directory';
+import { EntityComponent, ShowingPlace } from '@core/shared/entity';
+import { DirectoryService } from '@core/shared/directory';
+import { Directory, FindDirectoryInput } from '@app/graphql';
 
 @Component({
   templateUrl: './listing.page.html',
@@ -39,35 +35,35 @@ export class ListingPage extends EntityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const input = new FindDirectoryInput();
+    const input: FindDirectoryInput = {};
     input.name = '/';
     input.parentDirectory = 'root';
     this.directoryService
       .find(input)
       .result()
       .then((val) => {
-        this.directory = val.data.findDirectory;
+        this.directory = val.data.findDirectory as Directory;
       });
   }
 
-  async createNew() {
+  async createNew(): Promise<void> {
     await this.router.navigate([Path.Assets, Path.AssetsCreate]);
   }
 
-  async showEdit(id: string) {
+  async showEdit(id: string): Promise<void> {
     await this.router.navigate([Path.Assets, id, 'edit']);
   }
 
-  async showDetail(id: string) {
+  async showDetail(id: string): Promise<void> {
     await this.router.navigate([Path.Assets, id]);
   }
 
-  showDelete(id: string) {
+  showDelete(id: string): void {
     this.assetId = id;
     this.modalService.open('delete-asset-modal');
   }
 
-  submitDelete() {
+  submitDelete(): void {
     this.assetService
       .delete(this.assetId)
       .toPromise()

@@ -2,22 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/+auth';
 import { Path } from '@core/enums';
-import { Asset, AssetService } from '@core/shared/asset';
+import { AssetService } from '@core/shared/asset';
 import { ModalService } from '@core/services';
-import { FindAssetInput } from '@core/graphql/asset';
-import { AssetList, AssetListService } from '@core/shared/assetlist';
-import { AssetAssignInput } from '@core/graphql/assetlist/asset-assign-input.model';
-import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
+import { FindStyleInput, AssetAssignInput, FindAssetListInput, Directory, AssetList, Style, Asset } from '@app/graphql';
+import { AssetListService } from '@core/shared/assetlist';
 import { AppAlertService } from '@core/shared/app-alert';
-import { Directory, DirectoryService } from '@core/shared/directory';
+import { DirectoryService } from '@core/shared/directory';
 import { Observable } from 'rxjs';
-import { FindDirectoryInput } from '@core/graphql/directory';
 import { Entity, ShowingPlace } from '@core/shared/entity';
 import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
 import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
 import { map } from 'rxjs/operators';
-import { Style, StyleService, StyleType } from '@core/shared/style';
-import { FindStyleInput } from '@core/graphql/style';
+import { StyleService, StyleType } from '@core/shared/style';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -79,26 +75,26 @@ export class DetailPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.assetList = new AssetList();
-    this.assetEntry = new AssetAssignInput();
+    this.assetList = {} as AssetList;
+    this.assetEntry = {} as AssetAssignInput;
     this.assetEntry.validityEnabled = false;
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindAssetListInput();
+        const input: FindAssetListInput = {};
         input.id = params.get('id');
         this.assetListService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.assetList = Object.assign(new AssetList(), value.data.findAssetList);
+              this.assetList = Object.assign({} as AssetList, value.data.findAssetList);
 
-              this.assets = this.assetsService.findAll(new FindAssetInput());
+              this.assets = this.assetsService.findAll({});
 
-              this.directories = this.directoryService.findAll(new FindDirectoryInput());
+              this.directories = this.directoryService.findAll({});
 
-              const findInput = new FindStyleInput();
+              const findInput: FindStyleInput = {};
               findInput.type = StyleType.ANIMATION;
               this.animations = this.styleService.findAll(findInput);
             },

@@ -4,21 +4,22 @@ import { BehaviorSubject } from 'rxjs';
 import { RandomGeneratorService } from '@core/services';
 import { AppAlertType } from '@core/shared/app-alert/app-alert-type.enum';
 import { cloneDeep } from '@apollo/client/utilities';
+import { getItem, setItem, StorageItem } from '@core/utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppAlertService {
-  private readonly ALERTS_ITEM = '_alerts';
-  private alertsSubject = new BehaviorSubject<AppAlert[]>(this._getAlerts());
+
+  private alerts = new BehaviorSubject<AppAlert[] | null>(this._getAlerts());
 
   constructor(private randomGeneratorService: RandomGeneratorService) {
-    if (this.alerts == null) {
+    if (this.getAlerts == null) {
       this._saveAlerts([]);
     } else {
       const now = Date.now();
 
-      this.alerts.forEach((item) => {
+      this.getAlerts.forEach((item) => {
         if (now - item.createDate > 120000) {
           this.dismiss(item.id);
         }
@@ -26,8 +27,8 @@ export class AppAlertService {
     }
   }
 
-  get alerts(): AppAlert[] {
-    return this.alertsSubject?.value;
+  get getAlerts(): AppAlert[] | null {
+    return this.alerts.getValue();
   }
 
   showInfo(title: string, content: string): void {
@@ -53,7 +54,7 @@ export class AppAlertService {
     alert.content = content;
     alert.type = type;
     alert.createDate = Date.now();
-    this._saveAlerts(this.alerts.concat(alert));
+    this._saveAlerts(this.getAlerts.concat(alert));
 
     setTimeout(() => {
       this.dismiss(alert.id);
@@ -61,11 +62,11 @@ export class AppAlertService {
   }
 
   dismiss(id: string): void {
-    this._saveAlerts(this.alerts.filter((item) => item.id !== id));
+    this._saveAlerts(this.getAlerts.filter((item) => item.id !== id));
   }
 
   private _getAlerts(): AppAlert[] {
-    const alerts = JSON.parse(localStorage.getItem(this.ALERTS_ITEM)) as AppAlert[];
+    const alerts = getItem(StorageItem.Alerts) as AppAlert[];
     if (alerts == null) {
       return alerts;
     }
@@ -84,7 +85,7 @@ export class AppAlertService {
       item.type = item.type.toString();
     });
 
-    localStorage.setItem(this.ALERTS_ITEM, JSON.stringify(items));
-    this.alertsSubject.next(alerts);
+    setItem(StorageItem.Alerts, items);
+    this.alerts.next(alerts);
   }
 }

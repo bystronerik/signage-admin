@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/+auth';
 import { Path } from '@app/@core/enums';
-import { User } from '@app/@core/shared/user';
 
 @Component({
   templateUrl: './sign-in.page.html',

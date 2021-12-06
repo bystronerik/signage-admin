@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/+auth';
-import { Alert, AlertService } from '@core/shared/alert';
-import { FindAlertInput } from '@core/graphql/alert';
+import { AlertService } from '@core/shared/alert';
+import { Alert, FindAlertInput } from '@app/graphql';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
@@ -26,18 +26,18 @@ export class DetailPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.alert = new Alert();
+    this.alert = {} as Alert;
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindAlertInput();
+        const input: FindAlertInput = {};
         input.id = params.get('id');
         this.alertService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.alert = Object.assign(new Alert(), value.data.findAlert);
+              this.alert = Object.assign({} as Alert, value.data.findAlert);
             },
             (error) => {
               this.router.navigate([Path.Alerts]);

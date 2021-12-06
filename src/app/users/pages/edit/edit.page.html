@@ -17,7 +17,7 @@
               <input
                 [(ngModel)]="user.username"
                 [ngClass]="{ disabled: loading }"
-                [disabled]="loading || user.id === authService.userValue.id"
+                [disabled]="loading || user.id === authService.getUser.id"
                 name="username"
                 type="text"
                 class="
@@ -81,7 +81,7 @@
               <select
                 (change)="changeRole($event)"
                 [ngClass]="{ disabled: loading }"
-                [disabled]="loading || user.id === authService.userValue.id"
+                [disabled]="loading || user.id === authService.getUser.id"
                 name="group"
                 class="
                   block

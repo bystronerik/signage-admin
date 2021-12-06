@@ -1,0 +1,5 @@
+mutation UpdateAlert($id: ID!, $data: UpdateAlertInput!) {
+  updateAlert(id: $id, data: $data) {
+    id
+  }
+}

@@ -1,0 +1,5 @@
+mutation RemoveAssetFromAssetList($id: ID!, $asset: ID!) {
+  removeAssetFromAssetList(id: $id, assetEntry: $asset) {
+    id
+  }
+}

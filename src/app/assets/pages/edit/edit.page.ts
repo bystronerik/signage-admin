@@ -1,17 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Asset, Validity } from '@core/shared/asset';
-import { FindAssetInput } from '@core/graphql/asset';
+import {
+  Validity,
+  FindAssetInput,
+  CreateAssetInput,
+  UpdateAssetInput,
+  FindStyleInput,
+  FindDirectoryInput,
+  Style,
+  Alert,
+  Asset,
+  Directory,
+  UpdateAssetMutation, CreateAssetMutation
+} from '@app/graphql';
 import { AssetService } from '@core/shared/asset/asset.service';
 import { Path } from '@core/enums';
-import { CreateAssetInput, UpdateAssetInput } from '@core/graphql/asset';
 import { AppAlertService } from '@core/shared/app-alert';
-import { Style, StyleService, StyleType } from '@core/shared/style';
-import { FindStyleInput } from '@core/graphql/style';
-import { Alert, AlertService } from '@core/shared/alert';
-import { FindAlertInput } from '@core/graphql/alert';
-import { Directory, DirectoryService } from '@core/shared/directory';
-import { FindDirectoryInput } from '@core/graphql/directory';
+import { StyleService, StyleType } from '@core/shared/style';
+import { AlertService } from '@core/shared/alert';
+import { DirectoryService } from '@core/shared/directory';
+import { FetchResult } from '@apollo/client/core';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -40,19 +49,19 @@ export class EditPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.asset = new Asset();
+    this.asset = {} as Asset;
     this.asset.showTime = 20;
 
-    this.asset.validity = new Validity();
+    this.asset.validity = {} as Validity;
     this.asset.validity.enabled = false;
 
-    this.asset.animationIn = new Style();
-    this.asset.animationOut = new Style();
+    this.asset.animationIn = {} as Style;
+    this.asset.animationOut = {} as Style;
 
-    this.asset.alert = new Alert();
-    this.asset.directory = new Directory();
+    this.asset.alert = {} as Alert;
+    this.asset.directory = {} as Directory;
 
-    const directoryInput = new FindDirectoryInput();
+    const directoryInput: FindDirectoryInput = {};
     directoryInput.name = '/';
     directoryInput.parentDirectory = 'root';
     this.directoryService
@@ -62,39 +71,39 @@ export class EditPage implements OnInit {
         this.rootDirectory = val.data.findDirectory;
       });
 
-    this.directoryService.findAll(new FindDirectoryInput()).subscribe((directories) => {
+    this.directoryService.findAll({}).subscribe((directories) => {
       this.directories = directories;
     });
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindAssetInput();
+        const input: FindAssetInput = {};
         input.id = params.get('id');
         this.assetService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.asset = Object.assign(new Asset(), value.data.findAsset);
+              this.asset = Object.assign({} as Asset, value.data.findAsset);
               if (!this.asset.validity) {
-                this.asset.validity = new Validity();
+                this.asset.validity = {} as Validity;
                 this.asset.validity.enabled = false;
               }
 
               if (!this.asset.animationIn) {
-                this.asset.animationIn = new Style();
+                this.asset.animationIn = {} as Style;
               }
 
               if (!this.asset.animationOut) {
-                this.asset.animationOut = new Style();
+                this.asset.animationOut = {} as Style;
               }
 
               if (!this.asset.alert) {
-                this.asset.alert = new Alert();
+                this.asset.alert = {} as Alert;
               }
 
               if (!this.asset.directory) {
-                this.asset.directory = new Directory();
+                this.asset.directory = {} as Directory;
                 this.asset.directory.id = this.rootDirectory.id;
               }
             },
@@ -105,7 +114,7 @@ export class EditPage implements OnInit {
       }
     });
 
-    const findInput = new FindStyleInput();
+    const findInput: FindStyleInput = {};
     findInput.type = StyleType.ANIMATION;
     this.styleService.findAll(findInput).subscribe(
       (styles) => {
@@ -116,7 +125,7 @@ export class EditPage implements OnInit {
       }
     );
 
-    this.alertService.findAll(new FindAlertInput()).subscribe(
+    this.alertService.findAll({}).subscribe(
       (alerts) => {
         this.alerts = alerts as Alert[];
       },
@@ -129,7 +138,7 @@ export class EditPage implements OnInit {
   async onSubmit() {
     this.loading = true;
 
-    const input = this.asset.id ? new UpdateAssetInput() : new CreateAssetInput();
+    const input: UpdateAssetInput|CreateAssetInput = this.asset.id ? {} as UpdateAssetInput : {} as CreateAssetInput;
     input.name = this.asset.name;
     input.validityEnabled = this.asset.validity.enabled;
     input.validFrom = this.asset.validity.from;
@@ -140,19 +149,19 @@ export class EditPage implements OnInit {
     input.alert = this.asset.alert.id;
     input.directory = this.asset.directory.id;
 
-    const query = this.asset.id
-      ? this.assetService.update(this.asset.id, input, this.fileToUpload)
-      : this.assetService.create(input, this.fileToUpload);
+    const query: Observable<FetchResult<UpdateAssetMutation | CreateAssetMutation>> = this.asset.id
+      ? this.assetService.update(this.asset.id, input as UpdateAssetInput, this.fileToUpload)
+      : this.assetService.create(input as CreateAssetInput, this.fileToUpload);
     query.toPromise().then(
       (value) => {
         this.loading = false;
         this.appAlertService.showSuccess('Uloženo', 'Asset byl úspěšně uložen');
 
-        if (value.data.createAsset) {
+        if ('createAsset' in value.data) {
           this.router.navigate([Path.Assets, value.data.createAsset.id]);
         }
 
-        if (value.data.updateAsset) {
+        if ('updateAsset' in value.data) {
           this.router.navigate([Path.Assets, value.data.updateAsset.id]);
         }
       },

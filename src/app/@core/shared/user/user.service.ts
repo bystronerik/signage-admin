@@ -3,17 +3,17 @@ import { QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { FetchResult } from '@apollo/client/core';
 import {
-  AllUsersGQL,
+  FindAllUsersGQL,
   CreateUserGQL,
   CreateUserInput,
   FindUserInput,
-  OneUserGQL,
+  FindUserGQL,
   UpdateUserGQL,
-  UpdateUserInput,
-} from '@core/graphql/user';
-import { DeleteUserGQL } from '@core/graphql/user/delete-user.gql';
+  DeleteUserGQL,
+  UpdateUserInput, CreateUserMutation, DeleteUserMutation, UpdateUserMutation, FindUserQuery, FindUserQueryVariables
+} from '@app/graphql';
 import { IEntityService } from '@core/interfaces/entity-service.interface';
-import { User } from '@core/shared/user/user.model';
+import { User } from '@app/graphql';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -21,30 +21,30 @@ import { map } from 'rxjs/operators';
 })
 export class UserService implements IEntityService<User, FindUserInput, CreateUserInput, UpdateUserInput> {
   constructor(
-    private allUsersGQL: AllUsersGQL,
-    private oneUserGQL: OneUserGQL,
+    private findAllUsersGQL: FindAllUsersGQL,
+    private findUserGQL: FindUserGQL,
     private createUserGQL: CreateUserGQL,
     private updateUserGQL: UpdateUserGQL,
     private deleteUserGQL: DeleteUserGQL
   ) {}
 
-  findAll(input: FindUserInput): Observable<any> {
-    return this.allUsersGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllUsers));
+  findAll(input: FindUserInput): Observable<Array<User>> {
+    return this.findAllUsersGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllUsers));
   }
 
-  find(input: FindUserInput): QueryRef<any, {}> {
-    return this.oneUserGQL.watch({ data: input });
+  find(input: FindUserInput): QueryRef<FindUserQuery, FindUserQueryVariables> {
+    return this.findUserGQL.watch({ data: input });
   }
 
-  update(id: string, input: UpdateUserInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateUserInput): Observable<FetchResult<UpdateUserMutation>> {
     return this.updateUserGQL.mutate({ id, data: input });
   }
 
-  create(input: CreateUserInput): Observable<FetchResult<any>> {
+  create(input: CreateUserInput): Observable<FetchResult<CreateUserMutation>> {
     return this.createUserGQL.mutate({ data: input });
   }
 
-  delete(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<DeleteUserMutation>> {
     return this.deleteUserGQL.mutate({ id });
   }
 }

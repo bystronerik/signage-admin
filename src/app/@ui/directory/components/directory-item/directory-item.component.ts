@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Asset } from '@core/shared/asset';
+import { Asset } from '@app/graphql';
 
 @Component({
   selector: 'app-directory-item',

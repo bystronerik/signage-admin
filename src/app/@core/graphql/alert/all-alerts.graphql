@@ -1,0 +1,8 @@
+query FindAllAlerts($data: FindAlertInput!) {
+  findAllAlerts(data: $data) {
+    id
+    name
+    type
+    position
+  }
+}

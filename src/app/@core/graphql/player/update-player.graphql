@@ -1,0 +1,5 @@
+mutation UpdatePlayer($id: ID!, $data: UpdatePlayerInput!) {
+  updatePlayer(id: $id, data: $data) {
+    id
+  }
+}

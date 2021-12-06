@@ -1,0 +1,14 @@
+query FindGroup($data: FindGroupInput!) {
+  findGroup(data: $data) {
+    id
+    name
+    assetLists {
+      id
+      name
+    }
+    alert {
+      id
+      name
+    }
+  }
+}

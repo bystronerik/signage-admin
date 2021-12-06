@@ -1,0 +1,5 @@
+mutation AssignAssetToAssetList($id: ID!, $data: AssetAssignInput!) {
+  assignAssetToAssetList(id: $id, data: $data) {
+    id
+  }
+}

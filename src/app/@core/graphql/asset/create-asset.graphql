@@ -1,0 +1,5 @@
+mutation CreateAsset($data: CreateAssetInput!, $file: FileUpload!) {
+  createAsset(data: $data, file: $file) {
+    id
+  }
+}

@@ -14,7 +14,7 @@ export class NoAuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const isLoggedIn = this.authService.isLoggedIn.value;
+    const isLoggedIn = this.authService.isLoggedIn;
     if (isLoggedIn) {
       this.router.navigate([Path.Dashboard]);
       return false;

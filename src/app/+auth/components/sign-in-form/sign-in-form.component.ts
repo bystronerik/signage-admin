@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Path } from '@app/@core/enums';
-import { User } from '@app/@core/shared/user';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
@@ -28,7 +27,7 @@ export class SignInFormComponent implements OnInit {
   ngOnInit(): void {}
 
   onClickSignIn() {
-    const user: Partial<User> = {
+    const user = {
       username: this.signInForm.get('username').value,
       password: this.signInForm.get('password').value,
     };

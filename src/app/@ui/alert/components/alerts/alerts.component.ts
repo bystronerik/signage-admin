@@ -13,7 +13,7 @@ export class AlertsComponent implements OnInit {
   ngOnInit(): void {}
 
   getAlerts(): AppAlert[] {
-    return this.alertService.alerts;
+    return this.alertService.getAlerts;
   }
 
   dismissAlert(id: string): void {

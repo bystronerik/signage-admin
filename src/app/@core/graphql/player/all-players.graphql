@@ -1,0 +1,7 @@
+query FindAllPlayers($data: FindPlayerInput!) {
+  findAllPlayers(data: $data) {
+    id
+    name
+    token
+  }
+}

@@ -1,0 +1,5 @@
+mutation CreateAlert($data: CreateAlertInput!) {
+  createAlert(data: $data) {
+    id
+  }
+}

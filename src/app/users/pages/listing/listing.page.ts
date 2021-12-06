@@ -52,7 +52,7 @@ export class ListingPage extends EntityComponent implements OnInit {
 
   showDelete(event) {
     this.userId = event;
-    if (this.userId === this.authService.userValue.id) {
+    if (this.userId === this.authService.getUser.id) {
       this.modalService.open('self-delete-modal');
     } else {
       this.modalService.open('delete-user-modal');

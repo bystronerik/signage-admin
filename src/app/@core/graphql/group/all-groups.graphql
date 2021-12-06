@@ -1,0 +1,6 @@
+query FindAllGroups($data: FindGroupInput!) {
+  findAllGroups(data: $data) {
+    id
+    name
+  }
+}

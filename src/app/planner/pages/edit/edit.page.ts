@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Group } from '@core/shared/group';
 import { GroupService } from '@core/shared/group/group.service';
-import { FindGroupInput } from '@core/graphql/group';
+import {
+  CreateGroupInput,
+  UpdateGroupInput,
+  Alert,
+  FindGroupInput,
+  Group,
+  UpdateGroupMutation,
+  CreateGroupMutation
+} from '@app/graphql';
 import { Path } from '@core/enums';
-import { CreateGroupInput, UpdateGroupInput } from '@core/graphql/group';
 import { AppAlertService } from '@core/shared/app-alert';
-import { Alert, AlertService } from '@core/shared/alert';
-import { FindAlertInput } from '@core/graphql/alert';
+import { AlertService } from '@core/shared/alert';
 import { Observable } from 'rxjs';
+import { FetchResult } from '@apollo/client/core';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -28,22 +34,22 @@ export class EditPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.group = new Group();
-    this.group.alert = new Alert();
+    this.group = {} as Group;
+    this.group.alert = {} as Alert;
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindGroupInput();
+        const input: FindGroupInput = {};
         input.id = params.get('id');
         this.groupService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.group = Object.assign(new Group(), value.data.findGroup);
+              this.group = Object.assign({} as Group, value.data.findGroup);
 
               if (!this.group.alert) {
-                this.group.alert = new Alert();
+                this.group.alert = {} as Alert;
               }
             },
             (error) => {
@@ -53,27 +59,27 @@ export class EditPage implements OnInit {
       }
     });
 
-    this.alerts = this.alertService.findAll(new FindAlertInput());
+    this.alerts = this.alertService.findAll({}) as Observable<Array<Alert>>;
   }
 
   onSubmit() {
     this.loading = true;
 
-    const input = this.group.id ? new UpdateGroupInput() : new CreateGroupInput();
+    const input: UpdateGroupInput|CreateGroupInput = this.group.id ? {} as UpdateGroupInput : {} as CreateGroupInput;
     input.name = this.group.name;
     input.alert = this.group.alert.id;
 
-    const query = this.group.id ? this.groupService.update(this.group.id, input) : this.groupService.create(input);
+    const query: Observable<FetchResult<CreateGroupMutation|UpdateGroupMutation>> = this.group.id ? this.groupService.update(this.group.id, input as UpdateGroupInput) : this.groupService.create(input as CreateGroupInput);
     query.toPromise().then(
       (value) => {
         this.loading = false;
         this.appAlertService.showSuccess('Uloženo', 'Skupina byla úspěšně uložena');
 
-        if (value.data.createGroup) {
+        if ('createGroup' in value.data) {
           this.router.navigate([Path.Planner, value.data.createGroup.id]);
         }
 
-        if (value.data.updateGroup) {
+        if ('updateGroup' in value.data) {
           this.router.navigate([Path.Planner, value.data.updateGroup.id]);
         }
       },

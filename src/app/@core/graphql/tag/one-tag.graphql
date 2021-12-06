@@ -1,0 +1,7 @@
+query FindTag($data: FindTagInput!) {
+  findTag(data: $data) {
+    id
+    name
+    color
+  }
+}

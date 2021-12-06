@@ -14,13 +14,13 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const isLoggedIn = this.authService.isLoggedIn.value;
+    const isLoggedIn = this.authService.isLoggedIn;
 
     if (isLoggedIn) {
-      if (Date.parse(this.authService.tokenValue.expiresIn) > Date.now()) {
+      if (Date.parse(this.authService.getToken.expiresIn) > Date.now()) {
         return true;
       } else {
-        this.authService.logout();
+        this.authService.signOut();
         location.reload();
       }
     }

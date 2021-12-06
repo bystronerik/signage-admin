@@ -4,12 +4,7 @@ import { Path } from '@core/enums';
 import { PlayerService } from '@core/shared/player';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
-import { Entity, EntityComponent, ShowingPlace } from '@core/shared/entity';
-import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
-import { FindInput } from '@core/graphql/findinput';
-import { Observable } from 'rxjs';
-import { FindStyleInput } from '@core/graphql/style';
-import { FindPlayerInput } from '@core/graphql/player';
+import { EntityComponent, ShowingPlace } from '@core/shared/entity';
 
 @Component({
   templateUrl: './listing.page.html',
@@ -37,24 +32,24 @@ export class ListingPage extends EntityComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  async createNew() {
+  async createNew(): Promise<void> {
     await this.router.navigate([Path.Players, Path.PlayersCreate]);
   }
 
-  async showDetail(id: string) {
+  async showDetail(id: string): Promise<void> {
     await this.router.navigate([Path.Players, id]);
   }
 
-  async showEdit(id: string) {
+  async showEdit(id: string): Promise<void> {
     await this.router.navigate([Path.Players, id, 'edit']);
   }
 
-  showDelete(id: string) {
+  showDelete(id: string): void {
     this.playerId = id;
     this.modalService.open('delete-player-modal');
   }
 
-  submitDelete() {
+  submitDelete(): void {
     this.playerService
       .delete(this.playerId)
       .toPromise()

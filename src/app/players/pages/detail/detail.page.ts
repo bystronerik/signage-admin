@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Player, PlayerService } from '@core/shared/player';
+import { PlayerService } from '@core/shared/player';
 import { AuthService } from '@app/+auth';
-import { FindPlayerInput } from '@core/graphql/player';
+import { Player, FindPlayerInput } from '@app/graphql';
 import { Path } from '@core/enums';
-import { environment } from '@environments/environment';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
 
@@ -26,17 +25,17 @@ export class DetailPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.player = new Player();
+    this.player = {} as Player;
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindPlayerInput();
+        const input: FindPlayerInput = {};
         input.id = params.get('id');
         this.playerService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.player = Object.assign(new Player(), value.data.findPlayer);
+              this.player = Object.assign({} as Player, value.data.findPlayer);
             },
             (error) => {
               this.router.navigate([Path.Players]);

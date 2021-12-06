@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/+auth';
-import { Asset, AssetService } from '@core/shared/asset';
-import { FindAssetInput } from '@core/graphql/asset';
+import { AssetService } from '@core/shared/asset';
+import { AssetList, Asset, FindAssetInput } from '@app/graphql';
 import { Path } from '@core/enums';
-import { AssetList, AssetListService } from '@core/shared/assetlist';
+import { AssetListService } from '@core/shared/assetlist';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
 import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
@@ -52,17 +52,17 @@ export class DetailPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.asset = new Asset();
+    this.asset = {} as Asset;
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindAssetInput();
+        const input: FindAssetInput = {};
         input.id = params.get('id');
         this.assetService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.asset = Object.assign(new Asset(), value.data.findAsset);
+              this.asset = Object.assign({} as Asset, value.data.findAsset);
               this.observer.next(this.asset.assetLists.filter((val) => val.type === 'playlist'));
             },
             (error) => {
@@ -73,19 +73,19 @@ export class DetailPage implements OnInit {
     });
   }
 
-  createNew(type: string) {
+  createNew(type: string): void {
     this.router.navigate(['assetlists', type]);
   }
 
-  showDetail(type: string, id: string) {
+  showDetail(type: string, id: string): void {
     this.router.navigate(['assetlists', type, id]);
   }
 
-  showDelete() {
+  showDelete(): void {
     this.modalService.open('delete-asset-modal');
   }
 
-  submitDelete() {
+  submitDelete(): void {
     this.assetService
       .delete(this.asset.id)
       .toPromise()
@@ -100,7 +100,7 @@ export class DetailPage implements OnInit {
       );
   }
 
-  showAssignDelete(type: string, id: string) {
+  showAssignDelete(type: string, id: string): void {
     this.router.navigate(['assetlists', type, id]);
   }
 }

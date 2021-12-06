@@ -1,0 +1,502 @@
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behaviour of this scalar."""
+  url: String!
+) on SCALAR
+
+type Alert {
+  id: ID!
+  name: String!
+  type: String!
+  position: String!
+  value: String!
+  validity: Validity
+  background: Style
+  borders: Style
+  height: Style
+  textSize: Style
+  textColor: Style
+  textPosition: Style
+  running: Boolean
+}
+
+type AlertData {
+  id: ID!
+  position: String!
+  value: String!
+  validity: Validity
+  background: String
+  borders: String
+  height: String
+  textSize: String
+  textColor: String
+  textPosition: String
+  running: Boolean
+}
+
+type Asset {
+  id: ID!
+  name: String!
+  path: String!
+  type: FileType!
+  showTime: Int
+  validity: Validity
+  animationIn: Style
+  animationOut: Style
+  assetLists: [AssetList]
+  directory: Directory
+  tags: [Tag]
+  alert: Alert
+}
+
+input AssetAssignInput {
+  asset: String!
+  validityEnabled: Boolean!
+  validFrom: Date
+  validTo: Date
+  showTime: Int
+  animationIn: String
+  animationOut: String
+  position: Int
+}
+
+type AssetData {
+  id: ID!
+  path: String!
+  type: FileType!
+  showTime: Int
+  validity: Validity
+  animationIn: String
+  animationOut: String
+  alert: AlertData
+}
+
+type AssetEntry {
+  id: ID!
+  asset: Asset!
+  validity: Validity!
+  showTime: Int
+  animationIn: Style
+  animationOut: Style
+  position: Int
+}
+
+type AssetList {
+  id: ID!
+  name: String!
+  type: String!
+  animationIn: Style
+  animationOut: Style
+  validity: Validity
+  prioritized: Boolean
+  enabled: Boolean!
+  assets: [AssetEntry]
+}
+
+input CreateAlertInput {
+  name: String!
+  type: String!
+  position: String!
+  value: String!
+  validityEnabled: Boolean
+  validFrom: Date
+  validTo: Date
+  background: String
+  borders: String
+  height: String
+  textSize: String
+  textColor: String
+  textPosition: String
+  running: Boolean
+}
+
+input CreateAssetInput {
+  name: String!
+  showTime: Int
+  animationIn: String
+  animationOut: String
+  validityEnabled: Boolean
+  validFrom: Date
+  validTo: Date
+  alert: String
+  tags: ListChange
+  directory: String
+}
+
+input CreateAssetListInput {
+  name: String!
+  type: String!
+  animationIn: String
+  animationOut: String
+  validityEnabled: Boolean
+  validFrom: Date
+  validTo: Date
+  prioritized: Boolean
+  enabled: Boolean!
+}
+
+input CreateDirectoryInput {
+  name: String!
+  parentDirectory: String
+}
+
+input CreateGroupInput {
+  name: String!
+  alert: String
+  assetLists: [String]
+}
+
+input CreatePlayerInput {
+  name: String!
+  token: String!
+  group: String
+}
+
+input CreateStyleInput {
+  name: String!
+  type: String!
+  value: String!
+  valueType: String!
+}
+
+input CreateTagInput {
+  name: String!
+  color: String
+}
+
+input CreateUserInput {
+  username: String!
+  password: String!
+  role: String
+}
+
+scalar DataType
+
+scalar Date
+
+type DeployData {
+  id: String!
+  versionHash: String!
+}
+
+type Directory {
+  id: ID!
+  name: String!
+  parentDirectory: Directory
+}
+
+scalar FileType
+
+scalar FileUpload
+
+input FindAlertInput {
+  id: ID
+  name: String
+  type: String
+  position: String
+  value: String
+}
+
+input FindAssetInput {
+  id: ID
+  name: String
+  path: String
+  type: FileType
+  directory: String
+}
+
+input FindAssetListInput {
+  id: ID
+  name: String
+  type: String
+  prioritized: Boolean
+  enabled: Boolean
+}
+
+input FindDirectoryInput {
+  id: ID
+  name: String
+  parentDirectory: String
+}
+
+input FindGroupInput {
+  id: ID
+  name: String
+}
+
+input FindPlayerInput {
+  id: ID
+  name: String
+  token: String
+  group: String
+}
+
+input FindSettingsGroupInput {
+  id: ID
+  name: String
+  parent: String
+}
+
+input FindSettingsValueInput {
+  id: ID
+  settings: String
+}
+
+input FindStyleInput {
+  id: ID
+  name: String
+  type: String
+  valueType: String
+}
+
+input FindTagInput {
+  id: ID
+  name: String
+  color: String
+}
+
+input FindUserInput {
+  id: ID
+  username: String
+  password: String
+  role: String
+}
+
+type Group {
+  id: ID!
+  name: String!
+  alert: Alert
+  assetLists: [AssetList]
+}
+
+input ListChange {
+  mergeStrategy: String!
+  content: [String]!
+}
+
+type LoginDetails {
+  user: User!
+  token: Token!
+}
+
+type Mutation {
+  login(username: String!, password: String!, shortSession: Boolean!): LoginDetails
+  createAlert(data: CreateAlertInput!): Alert!
+  updateAlert(id: ID!, data: UpdateAlertInput!): Alert!
+  deleteAlert(id: ID!): Alert!
+  totalDeleteAlert(id: ID!): Boolean!
+  createAsset(data: CreateAssetInput!, file: FileUpload!): Asset!
+  updateAsset(id: ID!, data: UpdateAssetInput!, file: FileUpload): Asset!
+  deleteAsset(id: ID!): Asset!
+  totalDeleteAsset(id: ID!): Boolean!
+  createAssetList(data: CreateAssetListInput!): AssetList!
+  updateAssetList(id: ID!, data: UpdateAssetListInput!): AssetList!
+  deleteAssetList(id: ID!): AssetList!
+  totalDeleteAssetList(id: ID!): Boolean!
+  assignAssetToAssetList(id: ID!, data: AssetAssignInput!): AssetList!
+  removeAssetFromAssetList(id: ID!, assetEntry: ID!): AssetList!
+  deploy: DeployData
+  createDirectory(data: CreateDirectoryInput!): Directory!
+  updateDirectory(id: ID!, data: UpdateDirectoryInput!): Directory!
+  deleteDirectory(id: ID!): Directory!
+  totalDeleteDirectory(id: ID!): Boolean!
+  createGroup(data: CreateGroupInput!): Group!
+  updateGroup(id: ID!, data: UpdateGroupInput!): Group!
+  deleteGroup(id: ID!): Group!
+  totalDeleteGroup(id: ID!): Boolean!
+  createPlayer(data: CreatePlayerInput!): Player!
+  updatePlayer(id: ID!, data: UpdatePlayerInput!): Player!
+  deletePlayer(id: ID!): Player!
+  totalDeletePlayer(id: ID!): Boolean!
+  setSettingsValue(settings: String!, data: SetSettingsValueInput): SettingsValue
+  createStyle(data: CreateStyleInput!): Style!
+  updateStyle(id: ID!, data: UpdateStyleInput!): Style!
+  deleteStyle(id: ID!): Style!
+  totalDeleteStyle(id: ID!): Boolean!
+  createTag(data: CreateTagInput!): Tag!
+  updateTag(id: ID!, data: UpdateTagInput!): Tag!
+  deleteTag(id: ID!): Tag!
+  totalDeleteTag(id: ID!): Boolean!
+  createUser(data: CreateUserInput!): User!
+  updateUser(id: ID!, data: UpdateUserInput!): User!
+  deleteUser(id: ID!): User!
+  totalDeleteUser(id: ID!): Boolean!
+}
+
+type Player {
+  id: ID!
+  name: String!
+  token: String!
+  group: Group
+}
+
+type PlayerData {
+  assets: [AssetData]!
+  priorityAssets: [AssetData]!
+  alert: AlertData
+  styles: String!
+}
+
+type Query {
+  findAlert(data: FindAlertInput!): Alert!
+  findAllAlerts(data: FindAlertInput!): [Alert]!
+  findAsset(data: FindAssetInput!): Asset!
+  findAllAssets(data: FindAssetInput!): [Asset]!
+  findAssetList(data: FindAssetListInput!): AssetList!
+  findAllAssetLists(data: FindAssetListInput!): [AssetList]!
+  deployInfo: DeployData
+  syncPlayer(token: String!): PlayerData
+  findDirectory(data: FindDirectoryInput!): Directory!
+  findAllDirectories(data: FindDirectoryInput!): [Directory]!
+  findGroup(data: FindGroupInput!): Group!
+  findAllGroups(data: FindGroupInput!): [Group]!
+  findPlayer(data: FindPlayerInput!): Player!
+  findAllPlayers(data: FindPlayerInput!): [Player]!
+  findAllSettingsGroups(data: FindSettingsGroupInput): [SettingsGroup]!
+  findAllSettingsValues(data: FindSettingsValueInput): [SettingsValue]!
+  findStyle(data: FindStyleInput!): Style!
+  findAllStyles(data: FindStyleInput!): [Style]!
+  findTag(data: FindTagInput!): Tag!
+  findAllTags(data: FindTagInput!): [Tag]!
+  findUser(data: FindUserInput!): User!
+  findAllUsers(data: FindUserInput!): [User]!
+}
+
+input SetSettingsValueInput {
+  value: String!
+}
+
+type Settings {
+  id: ID!
+  name: String!
+  description: String
+  type: DataType!
+}
+
+type SettingsGroup {
+  id: ID!
+  name: String!
+  description: String
+  parent: SettingsGroup
+  settings: [Settings]
+}
+
+type SettingsValue {
+  id: ID!
+  settings: String!
+  data: String!
+  type: DataType!
+}
+
+type Style {
+  id: ID!
+  name: String!
+  type: String!
+  value: String!
+  valueType: String!
+}
+
+type Subscription {
+  deployInfoSync: DeployData
+}
+
+type Tag {
+  id: ID!
+  name: String!
+  color: String
+}
+
+type Token {
+  accessToken: String
+  expiresIn: Date
+}
+
+input UpdateAlertInput {
+  name: String
+  type: String
+  position: String
+  value: String
+  validityEnabled: Boolean
+  validFrom: Date
+  validTo: Date
+  background: String
+  borders: String
+  height: String
+  textSize: String
+  textColor: String
+  textPosition: String
+  running: Boolean
+}
+
+input UpdateAssetInput {
+  name: String
+  showTime: Int
+  animationIn: String
+  animationOut: String
+  validityEnabled: Boolean
+  validFrom: Date
+  validTo: Date
+  alert: String
+  tags: ListChange
+  directory: String
+}
+
+input UpdateAssetListInput {
+  name: String
+  type: String
+  animationIn: String
+  animationOut: String
+  validityEnabled: Boolean
+  validFrom: Date
+  validTo: Date
+  prioritized: Boolean
+  enabled: Boolean
+}
+
+input UpdateDirectoryInput {
+  name: String!
+  parentDirectory: String
+}
+
+input UpdateGroupInput {
+  name: String
+  alert: String
+  assetLists: ListChange
+}
+
+input UpdatePlayerInput {
+  name: String
+  token: String
+  group: String
+}
+
+input UpdateStyleInput {
+  name: String
+  type: String
+  value: String
+  valueType: String
+}
+
+input UpdateTagInput {
+  name: String!
+  color: String
+}
+
+input UpdateUserInput {
+  username: String
+  password: String
+  role: String
+}
+
+type User {
+  id: ID!
+  username: String!
+  role: String
+}
+
+type Validity {
+  enabled: Boolean!
+  from: Date
+  to: Date
+}
+

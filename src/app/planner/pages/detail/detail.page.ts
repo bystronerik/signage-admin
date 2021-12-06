@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Group, GroupService } from '@core/shared/group';
+import { GroupService } from '@core/shared/group';
 import { AuthService } from '@app/+auth';
-import { FindGroupInput, UpdateGroupInput } from '@core/graphql/group';
+import { FindGroupInput, UpdateGroupInput, FindAssetListInput, AssetList, Group } from '@app/graphql';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
-import { AssetList, AssetListService } from '@core/shared/assetlist';
-import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
+import { AssetListService } from '@core/shared/assetlist';
 import { AppAlertService } from '@core/shared/app-alert';
 import { environment } from '@environments/environment';
 import { Entity, ShowingPlace } from '@core/shared/entity';
@@ -61,26 +60,26 @@ export class DetailPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.group = new Group();
-    this.selected = new AssetList();
+    this.group = {} as Group;
+    this.selected = {} as AssetList;
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindGroupInput();
+        const input: FindGroupInput = {};
         input.id = params.get('id');
         this.groupService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.group = Object.assign(new Group(), value.data.findGroup);
+              this.group = Object.assign({} as Group, value.data.findGroup);
               this.playerUrl = environment.playersUrl + '?token=GID-' + this.group.id;
 
-              const assetListInput = new FindAssetListInput();
+              const assetListInput: FindAssetListInput = {};
               assetListInput.type = 'playlist';
 
               this.assetListService.findAll(assetListInput).subscribe((assetLists) => {
-                this.assetLists = assetLists;
+                this.assetLists = assetLists as AssetList[];
               });
             },
             (error) => {
@@ -103,7 +102,7 @@ export class DetailPage implements OnInit {
   submitAssetListDelete() {
     this.loading = true;
 
-    const input = new UpdateGroupInput();
+    const input: UpdateGroupInput = {};
 
     input.assetLists = {
       mergeStrategy: 'REDUCE',
@@ -133,7 +132,7 @@ export class DetailPage implements OnInit {
   submitModal() {
     this.loading = true;
 
-    const input = new UpdateGroupInput();
+    const input: UpdateGroupInput = {};
 
     input.assetLists = {
       mergeStrategy: 'EXTEND',

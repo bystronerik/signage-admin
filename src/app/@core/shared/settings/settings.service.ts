@@ -3,17 +3,17 @@ import { Settings } from './settings.model';
 import { BehaviorSubject } from 'rxjs';
 import { SettingsTheme } from '@core/shared/settings/settings-theme.model';
 import { SettingsMenu } from '@core/shared/settings/settings-menu.model';
+import { getItem, setItem, StorageItem } from '@core/utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
-  private readonly SETTINGS_ITEM = '_settings';
 
-  private settingsSubject = new BehaviorSubject<Settings>(this._getSettings());
+  private settingsSubject = new BehaviorSubject<Settings | null>(getItem(StorageItem.Settings) as Settings);
 
   constructor() {
-    if (this.settings == null) {
+    if (this.getSettings == null) {
       const settings = new Settings();
 
       const menu = new SettingsMenu();
@@ -32,24 +32,20 @@ export class SettingsService {
       theme.darkMode = true;
       settings.theme = theme;
 
-      this._saveSettings(settings);
+      this.saveSettings(settings);
     }
   }
 
-  get settings(): Settings {
-    return this.settingsSubject?.value;
+  get getSettings(): Settings | null {
+    return this.settingsSubject.getValue();
   }
 
   save(): void {
-    this._saveSettings(this.settings);
+    this.saveSettings(this.getSettings);
   }
 
-  private _getSettings(): Settings {
-    return JSON.parse(localStorage.getItem(this.SETTINGS_ITEM)) as Settings;
-  }
-
-  private _saveSettings(settings: Settings): void {
-    localStorage.setItem(this.SETTINGS_ITEM, JSON.stringify(settings));
+  private saveSettings(settings: Settings): void {
+    setItem(StorageItem.Settings, settings);
     this.settingsSubject.next(settings);
   }
 }

@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/+auth';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
-import { FindStyleInput } from '@core/graphql/style';
-import { Style, StyleService } from '@core/shared/style';
+import { Style, FindStyleInput } from '@app/graphql';
+import { StyleService } from '@core/shared/style';
 import { AppAlertService } from '@core/shared/app-alert';
 
 @Component({
@@ -34,18 +34,18 @@ export class DetailPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.style = new Style();
+    this.style = {} as Style;
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindStyleInput();
+        const input: FindStyleInput = {};
         input.id = params.get('id');
         this.styleService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.style = Object.assign(new Style(), value.data.findStyle);
+              this.style = Object.assign({} as Style, value.data.findStyle);
             },
             (error) => {
               if (params.has('type')) {

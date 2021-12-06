@@ -1,0 +1,9 @@
+query FindAllDirectories($data: FindDirectoryInput!) {
+  findAllDirectories(data: $data) {
+    id
+    name
+    parentDirectory {
+      id
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation CreateAssetList($data: CreateAssetListInput!) {
+  createAssetList(data: $data) {
+    id
+  }
+}

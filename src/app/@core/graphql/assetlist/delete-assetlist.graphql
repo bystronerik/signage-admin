@@ -1,0 +1,5 @@
+mutation DeleteAssetList($id: ID!) {
+  deleteAssetList(id: $id) {
+    id
+  }
+}

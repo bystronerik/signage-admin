@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Group, GroupService } from '@core/shared/group';
+import { GroupService } from '@core/shared/group';
 import { AuthService } from '@app/+auth';
-import { FindGroupInput } from '@core/graphql/group';
+import { FindGroupInput, FindPlayerInput, UpdatePlayerInput, Player, Group } from '@app/graphql';
 import { Path } from '@core/enums';
 import { ModalService } from '@core/services';
-import { Player, PlayerService } from '@core/shared/player';
+import { PlayerService } from '@core/shared/player';
 import { AppAlertService } from '@core/shared/app-alert';
-import { FindPlayerInput, UpdatePlayerInput } from '@core/graphql/player';
 import { Entity, ShowingPlace } from '@core/shared/entity';
 import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
 import { EntityFieldBuilder } from '@core/shared/entity/entity-field.builder';
-import { Observable, Observer } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './detail.page.html',
@@ -52,12 +51,12 @@ export class DetailPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.group = new Group();
-    this.selected = new Player();
+    this.group = {} as Group;
+    this.selected = {} as Player;
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindGroupInput();
+        const input: FindGroupInput = {};
         input.id = params.get('id');
 
         this.groupService
@@ -65,9 +64,9 @@ export class DetailPage implements OnInit {
           .result()
           .then(
             (value) => {
-              this.group = Object.assign(new Group(), value.data.findGroup);
+              this.group = Object.assign({} as Group, value.data.findGroup);
 
-              this.playerService.findAll(new FindPlayerInput()).subscribe((players) => {
+              this.playerService.findAll({}).subscribe((players) => {
                 this.players = players as Player[];
               });
             },
@@ -91,7 +90,7 @@ export class DetailPage implements OnInit {
   submitPlayerDelete() {
     this.loading = true;
 
-    const input = new UpdatePlayerInput();
+    const input: UpdatePlayerInput = {};
     input.group = '';
 
     this.playerService
@@ -117,7 +116,7 @@ export class DetailPage implements OnInit {
   submitModal() {
     this.loading = true;
 
-    const input = new UpdatePlayerInput();
+    const input: UpdatePlayerInput = {};
     input.group = this.group.id;
 
     this.playerService

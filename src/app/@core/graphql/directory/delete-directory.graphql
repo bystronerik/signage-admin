@@ -1,0 +1,5 @@
+mutation DeleteDirectory($id: ID!) {
+  deleteDirectory(id: $id) {
+    id
+  }
+}

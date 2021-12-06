@@ -5,10 +5,6 @@ import { StyleService } from '@core/shared/style';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
 import { EntityComponent, ShowingPlace } from '@core/shared/entity';
-import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
-import { FindStyleInput } from '@core/graphql/style';
-import { FindInput } from '@core/graphql/findinput';
-import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './listing.page.html',
@@ -37,24 +33,24 @@ export class ListingPage extends EntityComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  async createNew() {
+  async createNew(): Promise<void> {
     await this.router.navigate([Path.StylesCreate], { relativeTo: this.route });
   }
 
-  async showDetail(id: string) {
+  async showDetail(id: string): Promise<void> {
     await this.router.navigate([id], { relativeTo: this.route });
   }
 
-  async showEdit(id: string) {
+  async showEdit(id: string): Promise<void> {
     await this.router.navigate([Path.Styles, id, 'edit']);
   }
 
-  showDelete(id: string) {
+  showDelete(id: string): void {
     this.styleId = id;
     this.modalService.open('delete-style-modal');
   }
 
-  submitDelete() {
+  submitDelete(): void {
     this.styleService
       .delete(this.styleId)
       .toPromise()

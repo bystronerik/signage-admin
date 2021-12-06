@@ -1,0 +1,9 @@
+query FindStyle($data: FindStyleInput!) {
+  findStyle(data: $data) {
+    id
+    name
+    type
+    value
+    valueType
+  }
+}

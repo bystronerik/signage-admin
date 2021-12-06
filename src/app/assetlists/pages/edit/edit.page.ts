@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Path } from '@core/enums';
-import { AssetList, AssetListService } from '@core/shared/assetlist';
-import { FindAssetListInput } from '@core/graphql/assetlist/find-assetlist-input.model';
-import { UpdateAssetListInput } from '@core/graphql/assetlist/update-assetlist-input.model';
-import { CreateAssetListInput } from '@core/graphql/assetlist/create-assetlist-input.model';
+import { AssetListService } from '@core/shared/assetlist';
+import {
+  FindAssetListInput,
+  UpdateAssetListInput,
+  CreateAssetListInput,
+  FindStyleInput,
+  UpdateAssetListMutation,
+  CreateAssetListMutation,
+  AssetList,
+  Style,
+  Validity
+} from '@app/graphql';
 import { AppAlertService } from '@core/shared/app-alert';
-import { FindStyleInput } from '@core/graphql/style';
-import { Style, StyleService, StyleType } from '@core/shared/style';
-import { Validity } from '@core/shared/asset';
+import { StyleService, StyleType } from '@core/shared/style';
 import { Observable } from 'rxjs';
+import { FetchResult } from '@apollo/client/core';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -29,12 +36,12 @@ export class EditPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.assetList = new AssetList();
+    this.assetList = {} as AssetList;
     this.assetList.enabled = true;
-    this.assetList.validity = new Validity();
+    this.assetList.validity = {} as Validity;
     this.assetList.validity.enabled = false;
-    this.assetList.animationIn = new Style();
-    this.assetList.animationOut = new Style();
+    this.assetList.animationIn = {} as Style;
+    this.assetList.animationOut = {} as Style;
 
     this.route.paramMap.subscribe((params) => {
       if (!params.has('type')) {
@@ -44,25 +51,25 @@ export class EditPage implements OnInit {
       }
 
       if (params.has('id')) {
-        const input = new FindAssetListInput();
+        const input: FindAssetListInput = {};
         input.id = params.get('id');
         this.assetListService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.assetList = Object.assign(new AssetList(), value.data.findAssetList);
+              this.assetList = Object.assign({} as AssetList, value.data.findAssetList);
               if (!this.assetList.validity) {
-                this.assetList.validity = new Validity();
+                this.assetList.validity = {} as Validity;
                 this.assetList.validity.enabled = false;
               }
 
               if (!this.assetList.animationIn) {
-                this.assetList.animationIn = new Style();
+                this.assetList.animationIn = {} as Style;
               }
 
               if (!this.assetList.animationOut) {
-                this.assetList.animationOut = new Style();
+                this.assetList.animationOut = {} as Style;
               }
             },
             (error) => {
@@ -72,7 +79,7 @@ export class EditPage implements OnInit {
       }
     });
 
-    const findInput = new FindStyleInput();
+    const findInput: FindStyleInput = {};
     findInput.type = StyleType.ANIMATION;
     this.animations = this.styleService.findAll(findInput);
   }
@@ -80,7 +87,7 @@ export class EditPage implements OnInit {
   onSubmit() {
     this.loading = true;
 
-    const input = this.assetList.id ? new UpdateAssetListInput() : new CreateAssetListInput();
+    const input: UpdateAssetListInput|CreateAssetListInput = this.assetList.id ? {} as UpdateAssetListInput : {} as CreateAssetListInput;
     input.name = this.assetList.name;
     input.type = this.assetList.type;
 
@@ -98,19 +105,19 @@ export class EditPage implements OnInit {
     input.prioritized = this.assetList.prioritized;
     input.enabled = this.assetList.enabled !== undefined ? this.assetList.enabled : true;
 
-    const query = this.assetList.id
-      ? this.assetListService.update(this.assetList.id, input)
-      : this.assetListService.create(input);
+    const query: Observable<FetchResult<UpdateAssetListMutation|CreateAssetListMutation>> = this.assetList.id
+      ? this.assetListService.update(this.assetList.id, input as UpdateAssetListInput)
+      : this.assetListService.create(input as CreateAssetListInput);
     query.toPromise().then(
       (value) => {
         this.loading = false;
         this.alertService.showSuccess('Uloženo', 'Asset list byl úspěšně uložen');
 
-        if (value.data.createAssetList) {
-          this.router.navigate([Path.AssetLists, value.data.updateAssetList.id]);
+        if ('createAssetList' in value.data) {
+          this.router.navigate([Path.AssetLists, value.data.createAssetList.id]);
         }
 
-        if (value.data.updateAssetList) {
+        if ('updateAssetList' in value.data) {
           this.router.navigate([Path.AssetLists, value.data.updateAssetList.id]);
         }
       },

@@ -34,25 +34,25 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleSideMenu() {
-    const menu = this.settingsService.settings.menu;
+    const menu = this.settingsService.getSettings.menu;
     menu.sideMenuOpened = !menu.sideMenuOpened;
 
     this.settingsService.save();
   }
 
   toggleProfileMenu() {
-    const menu = this.settingsService.settings.menu;
+    const menu = this.settingsService.getSettings.menu;
     menu.profileMenuOpened = !menu.profileMenuOpened;
 
     this.settingsService.save();
   }
 
   isProfileMenuOpen(): boolean {
-    return this.settingsService.settings.menu.profileMenuOpened;
+    return this.settingsService.getSettings.menu.profileMenuOpened;
   }
 
   toggleDarkMode() {
-    const theme = this.settingsService.settings.theme;
+    const theme = this.settingsService.getSettings.theme;
     theme.darkMode = !theme.darkMode;
 
     this.settingsService.save();
@@ -60,11 +60,11 @@ export class NavbarComponent implements OnInit {
   }
 
   isDarkModeEnabled(): boolean {
-    return this.settingsService.settings.theme.darkMode;
+    return this.settingsService.getSettings.theme.darkMode;
   }
 
   private refreshThemeElement() {
-    if (this.settingsService.settings.theme.darkMode) {
+    if (this.settingsService.getSettings.theme.darkMode) {
       document.getElementById('theme').setAttribute('class', 'theme-dark');
       document.getElementById('theme-color').setAttribute('value', '#1a1c23');
     } else {

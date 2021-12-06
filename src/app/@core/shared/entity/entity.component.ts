@@ -5,7 +5,6 @@ import { IEntityService } from '@core/interfaces/entity-service.interface';
 import { EntityDataLoader } from '@core/shared/entity/entity.data-loader';
 import { FindInput } from '@core/graphql/findinput';
 import { Observable } from 'rxjs';
-import { FindStyleInput } from '@core/graphql/style';
 
 export class EntityComponent {
   private readonly service: IEntityService<any, any, any, any>;

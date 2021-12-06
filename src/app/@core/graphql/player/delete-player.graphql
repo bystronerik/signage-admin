@@ -1,0 +1,5 @@
+mutation DeletePlayer($id: ID!) {
+  deletePlayer(id: $id) {
+    id
+  }
+}

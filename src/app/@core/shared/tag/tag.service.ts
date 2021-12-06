@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { IEntityService } from '@core/interfaces/entity-service.interface';
-import { Tag } from '@core/shared/tag';
 import {
-  AllTagsGQL,
+  FindAllTagsGQL,
   CreateTagGQL,
   CreateTagInput,
   DeleteTagGQL,
   FindTagInput,
-  OneTagGQL,
+  FindTagGQL,
   UpdateTagGQL,
   UpdateTagInput,
-} from '@core/graphql/tag';
+  Tag, FindTagQuery, FindTagQueryVariables, UpdateTagMutation, CreateTagMutation, DeleteTagMutation
+} from '@app/graphql';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { QueryRef } from 'apollo-angular';
@@ -21,30 +21,30 @@ import { FetchResult } from '@apollo/client/core';
 })
 export class TagService implements IEntityService<Tag, FindTagInput, UpdateTagInput, CreateTagInput> {
   constructor(
-    private allTagsGQL: AllTagsGQL,
-    private oneTagGQL: OneTagGQL,
+    private findAllTagsGQL: FindAllTagsGQL,
+    private findTagGQL: FindTagGQL,
     private createTagGQL: CreateTagGQL,
     private updateTagGQL: UpdateTagGQL,
     private deleteTagGQL: DeleteTagGQL
   ) {}
 
-  findAll(input: FindTagInput): Observable<any> {
-    return this.allTagsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllTags));
+  findAll(input: FindTagInput): Observable<Array<Tag>> {
+    return this.findAllTagsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllTags));
   }
 
-  find(input: FindTagInput): QueryRef<any, any> {
-    return this.oneTagGQL.watch({ data: input });
+  find(input: FindTagInput): QueryRef<FindTagQuery, FindTagQueryVariables> {
+    return this.findTagGQL.watch({ data: input });
   }
 
-  update(id: string, input: UpdateTagInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateTagInput): Observable<FetchResult<UpdateTagMutation>> {
     return this.updateTagGQL.mutate({ id, data: input });
   }
 
-  create(input: CreateTagInput): Observable<FetchResult<any>> {
+  create(input: CreateTagInput): Observable<FetchResult<CreateTagMutation>> {
     return this.createTagGQL.mutate({ data: input });
   }
 
-  delete(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<DeleteTagMutation>> {
     return this.deleteTagGQL.mutate({ id });
   }
 }

@@ -1,0 +1,6 @@
+mutation CreateDirectory($data: CreateDirectoryInput!) {
+  createDirectory(data: $data) {
+    id
+    name
+  }
+}

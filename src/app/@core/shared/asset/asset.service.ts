@@ -3,48 +3,48 @@ import { QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { FetchResult } from '@apollo/client/core';
 import {
-  AllAssetsGQL,
+  FindAllAssetsGQL,
   CreateAssetGQL,
   CreateAssetInput,
   FindAssetInput,
-  OneAssetGQL,
+  FindAssetGQL,
   UpdateAssetGQL,
   UpdateAssetInput,
-} from '@core/graphql/asset';
-import { DeleteAssetGQL } from '@core/graphql/asset/delete-asset.gql';
+  DeleteAssetGQL,
+  Asset, FindAssetQuery, FindAssetQueryVariables, UpdateAssetMutation, CreateAssetMutation, DeleteAssetMutation
+} from '@app/graphql';
 import { map } from 'rxjs/operators';
 import { IEntityService } from '@core/interfaces/entity-service.interface';
-import { Asset } from '@core/shared/asset/asset.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AssetService implements IEntityService<Asset, FindAssetInput, UpdateAssetInput, CreateAssetInput> {
   constructor(
-    private allAssetsGQL: AllAssetsGQL,
-    private oneAssetGQL: OneAssetGQL,
+    private findAllAssetsGQL: FindAllAssetsGQL,
+    private findAssetGQL: FindAssetGQL,
     private createAssetGQL: CreateAssetGQL,
     private updateAssetGQL: UpdateAssetGQL,
     private deleteAssetGQL: DeleteAssetGQL
   ) {}
 
-  findAll(input: FindAssetInput): Observable<any> {
-    return this.allAssetsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllAssets));
+  findAll(input: FindAssetInput): Observable<Array<Asset>> {
+    return this.findAllAssetsGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllAssets));
   }
 
-  find(input: FindAssetInput): QueryRef<any, any> {
-    return this.oneAssetGQL.watch({ data: input });
+  find(input: FindAssetInput): QueryRef<FindAssetQuery, FindAssetQueryVariables> {
+    return this.findAssetGQL.watch({ data: input });
   }
 
-  update(id: string, input: UpdateAssetInput, file: File): Observable<FetchResult<any>> {
+  update(id: string, input: UpdateAssetInput, file: File): Observable<FetchResult<UpdateAssetMutation>> {
     return this.updateAssetGQL.mutate({ id, data: input, file }, { context: { useMultipart: true } });
   }
 
-  create(input: CreateAssetInput, file: File): Observable<FetchResult<any>> {
+  create(input: CreateAssetInput, file: File): Observable<FetchResult<CreateAssetMutation>> {
     return this.createAssetGQL.mutate({ data: input, file }, { context: { useMultipart: true } });
   }
 
-  delete(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<DeleteAssetMutation>> {
     return this.deleteAssetGQL.mutate({ id });
   }
 }

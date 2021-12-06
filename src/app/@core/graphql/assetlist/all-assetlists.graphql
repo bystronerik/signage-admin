@@ -1,0 +1,6 @@
+query FindAllAssetLists($data: FindAssetListInput!) {
+  findAllAssetLists(data: $data) {
+    id
+    name
+  }
+}

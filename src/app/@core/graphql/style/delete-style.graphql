@@ -1,0 +1,5 @@
+mutation DeleteStyle($id: ID!) {
+  deleteStyle(id: $id) {
+    id
+  }
+}

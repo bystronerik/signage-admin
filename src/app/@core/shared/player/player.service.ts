@@ -3,48 +3,47 @@ import { QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { FetchResult } from '@apollo/client/core';
 import {
-  AllPlayersGQL,
+  FindAllPlayersGQL,
   CreatePlayerGQL,
   CreatePlayerInput,
   FindPlayerInput,
-  OnePlayerGQL,
+  FindPlayerGQL,
   UpdatePlayerGQL,
   UpdatePlayerInput,
-} from '@core/graphql/player';
-import { DeletePlayerGQL } from '@core/graphql/player/delete-player.gql';
+  DeletePlayerGQL,
+  Player, FindPlayerQuery, FindPlayerQueryVariables, UpdatePlayerMutation, CreatePlayerMutation, DeletePlayerMutation
+} from '@app/graphql';
 import { map } from 'rxjs/operators';
 import { IEntityService } from '@core/interfaces/entity-service.interface';
-import { Player } from '@core/shared/player/player.model';
-
 @Injectable({
   providedIn: 'root',
 })
 export class PlayerService implements IEntityService<Player, FindPlayerInput, UpdatePlayerInput, CreatePlayerInput> {
   constructor(
-    private allPlayersGQL: AllPlayersGQL,
-    private onePlayerGQL: OnePlayerGQL,
+    private findAllPlayersGQL: FindAllPlayersGQL,
+    private findPlayerGQL: FindPlayerGQL,
     private createPlayerGQL: CreatePlayerGQL,
     private updatePlayerGQL: UpdatePlayerGQL,
     private deletePlayerGQL: DeletePlayerGQL
   ) {}
 
-  findAll(input: FindPlayerInput): Observable<any> {
-    return this.allPlayersGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllPlayers));
+  findAll(input: FindPlayerInput): Observable<Array<Player>> {
+    return this.findAllPlayersGQL.watch({ data: input }).valueChanges.pipe(map((result) => result.data.findAllPlayers));
   }
 
-  find(input: FindPlayerInput): QueryRef<any, any> {
-    return this.onePlayerGQL.watch({ data: input });
+  find(input: FindPlayerInput): QueryRef<FindPlayerQuery, FindPlayerQueryVariables> {
+    return this.findPlayerGQL.watch({ data: input });
   }
 
-  update(id: string, input: UpdatePlayerInput): Observable<FetchResult<any>> {
+  update(id: string, input: UpdatePlayerInput): Observable<FetchResult<UpdatePlayerMutation>> {
     return this.updatePlayerGQL.mutate({ id, data: input });
   }
 
-  create(input: CreatePlayerInput): Observable<FetchResult<any>> {
+  create(input: CreatePlayerInput): Observable<FetchResult<CreatePlayerMutation>> {
     return this.createPlayerGQL.mutate({ data: input });
   }
 
-  delete(id: string): Observable<FetchResult<any>> {
+  delete(id: string): Observable<FetchResult<DeletePlayerMutation>> {
     return this.deletePlayerGQL.mutate({ id });
   }
 }

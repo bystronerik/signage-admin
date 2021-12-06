@@ -1,0 +1,5 @@
+mutation UpdateStyle($id: ID!, $data: UpdateStyleInput!) {
+  updateStyle(id: $id, data: $data) {
+    id
+  }
+}

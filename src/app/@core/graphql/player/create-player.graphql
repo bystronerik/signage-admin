@@ -1,0 +1,5 @@
+mutation CreatePlayer($data: CreatePlayerInput!) {
+  createPlayer(data: $data) {
+    id
+  }
+}

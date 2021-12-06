@@ -1,0 +1,11 @@
+query FindPlayer($data: FindPlayerInput!) {
+  findPlayer(data: $data) {
+    id
+    name
+    token
+    group {
+      id
+      name
+    }
+  }
+}

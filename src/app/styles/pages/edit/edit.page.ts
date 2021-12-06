@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Style, StyleService, StyleType, StyleValueType } from '@core/shared/style';
-import { FindStyleInput } from '@core/graphql/style/find-style-input.model';
-import { UpdateStyleInput } from '@core/graphql/style/update-style-input.model';
-import { CreateStyleInput } from '@core/graphql/style/create-style-input.model';
+import { StyleService, StyleType, StyleValueType } from '@core/shared/style';
+import {
+  FindStyleInput,
+  UpdateStyleInput,
+  CreateStyleInput,
+  CreateStyleMutation,
+  UpdateStyleMutation,
+  Style
+} from '@app/graphql';
 import { AppAlertService } from '@core/shared/app-alert';
 import { Path } from '@core/enums';
+import { Observable } from 'rxjs';
+import { FetchResult } from '@apollo/client/core';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -38,17 +45,17 @@ export class EditPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.style = new Style();
+    this.style = {} as Style;
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindStyleInput();
+        const input: FindStyleInput = {};
         input.id = params.get('id');
         this.styleService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.style = Object.assign(new Style(), value.data.findStyle);
+              this.style = Object.assign({} as Style, value.data.findStyle);
             },
             (error) => {
               this.router.navigate(['styles']);
@@ -61,23 +68,23 @@ export class EditPage implements OnInit {
   onSubmit() {
     this.loading = true;
 
-    const input = this.style.id ? new UpdateStyleInput() : new CreateStyleInput();
+    const input: UpdateStyleInput|CreateStyleInput = this.style.id ? {} as UpdateStyleInput : {} as CreateStyleInput;
     input.name = this.style.name;
     input.type = this.style.type;
     input.value = this.style.value;
     input.valueType = this.style.valueType;
 
-    const query = this.style.id ? this.styleService.update(this.style.id, input) : this.styleService.create(input);
+    const query: Observable<FetchResult<CreateStyleMutation|UpdateStyleMutation>> = this.style.id ? this.styleService.update(this.style.id, input as UpdateStyleInput) : this.styleService.create(input as CreateStyleInput);
     query.toPromise().then(
       (value) => {
         this.loading = false;
         this.alertService.showSuccess('Uloženo', 'Vzhled byl úspěšně uložen');
 
-        if (value.data.createStyle) {
+        if ('createStyle' in value.data) {
           this.router.navigate([Path.Styles, value.data.createStyle.id]);
         }
 
-        if (value.data.updateStyle) {
+        if ('updateStyle' in value.data) {
           this.router.navigate([Path.Styles, value.data.updateStyle.id]);
         }
       },

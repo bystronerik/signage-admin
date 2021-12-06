@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
     private deployService: DeployService,
     private modalService: ModalService
   ) {
-    this.isLoggedIn$ = this.authService.isLoggedIn.asObservable();
+    this.isLoggedIn$ = this.authService.isLoggedInObservable;
   }
 
   ngOnInit(): void {
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   }
 
   onLogout() {
-    this.authService.logout();
+    this.authService.signOut();
     // this.router.navigate([Path.SignIn]);
   }
 

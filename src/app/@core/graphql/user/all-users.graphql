@@ -1,0 +1,7 @@
+query FindAllUsers($data: FindUserInput!) {
+  findAllUsers(data: $data) {
+    id
+    username
+    role
+  }
+}

@@ -1,40 +1,45 @@
 import { Injectable } from '@angular/core';
-import { User } from '@core/shared/user';
-import { BehaviorSubject } from 'rxjs';
-import { Token } from '../interfaces';
-import { LoginGQL } from '@core/graphql';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Token, User, LoginGQL } from '@app/graphql';
 import { Router } from '@angular/router';
 import { Path } from '@core/enums';
+import { getItem, removeItem, setItem, StorageItem } from '@core/utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly USER_ITEM = '_user';
-  private readonly TOKEN_ITEM = '_token';
 
-  private userSubject = new BehaviorSubject<User>(this._getUser());
-  private tokenSubject = new BehaviorSubject<Token>(this._getToken());
-
-  isLoggedIn = new BehaviorSubject<boolean>(this.loggedIn);
+  private isLoggedIn$ = new BehaviorSubject<boolean>(!!getItem(StorageItem.Auth));
+  private user = new BehaviorSubject<User|null>(getItem(StorageItem.AuthUser) as User);
+  private token = new BehaviorSubject<Token|null>(getItem(StorageItem.AuthToken) as Token);
 
   constructor(private loginGQL: LoginGQL, private router: Router) {}
 
-  get userValue(): User {
-    return this.userSubject?.value;
+  get getToken(): Token | null {
+    return this.token.getValue();
   }
 
-  get tokenValue(): Token {
-    return this.tokenSubject?.value;
+  get getUser(): User | null {
+    return this.user.getValue();
   }
 
-  private get loggedIn(): boolean {
-    const user = this.userSubject?.value;
-    const token = this.tokenSubject?.value;
-    return !!(user && token);
+  get isLoggedIn(): boolean {
+    if (this.isLoggedIn$.getValue() && this.getToken) {
+      if (Date.parse(this.getToken.expiresIn) < Date.now()) {
+        this.signOut();
+        return false;
+      }
+    }
+
+    return this.isLoggedIn$.getValue();
   }
 
-  signIn(userdata: User, shortSession: boolean): Promise<any> {
+  get isLoggedInObservable(): Observable<boolean> {
+    return this.isLoggedIn$.asObservable();
+  }
+
+  signIn(userdata: { username: string, password: string }, shortSession: boolean): Promise<void> {
     return this.loginGQL
       .mutate({
         username: userdata.username,
@@ -45,9 +50,9 @@ export class AuthService {
       .then(
         ({ data }) => {
           const { user, token } = data.login;
-          this._saveUser(user);
-          this._saveToken(token);
-          this.isLoggedIn.next(true);
+          setItem(StorageItem.AuthUser, user);
+          setItem(StorageItem.AuthToken, token);
+          this.isLoggedIn$.next(true);
         },
         (error) => {
           console.log('there was an error sending the query', error);
@@ -55,39 +60,16 @@ export class AuthService {
       );
   }
 
-  beginPasswordReset(email: string) {
-    // return super.post({ email }, 'begin-password-reset');
-  }
+  signOut(): void {
+    removeItem(StorageItem.AuthUser);
+    this.user.next(null);
 
-  resetPassword(username: string, password: string, token: string) {
-    // return super.post({ username, password, token }, 'reset-password');
-  }
+    removeItem(StorageItem.AuthToken);
+    this.token.next(null);
 
-  logout() {
-    localStorage.removeItem(this.USER_ITEM);
-    localStorage.removeItem(this.TOKEN_ITEM);
-    this.userSubject.next(null);
-    this.tokenSubject.next(null);
-    this.isLoggedIn.next(false);
+    removeItem(StorageItem.Auth);
+    this.isLoggedIn$.next(false);
 
     this.router.navigate([`/${Path.SignIn}`]);
-  }
-
-  private _getUser(): User {
-    return JSON.parse(localStorage.getItem(this.USER_ITEM)) as User;
-  }
-
-  private _getToken(): Token {
-    return JSON.parse(localStorage.getItem(this.TOKEN_ITEM)) as Token;
-  }
-
-  private _saveUser(user: User): void {
-    localStorage.setItem(this.USER_ITEM, JSON.stringify(user));
-    this.userSubject.next(user);
-  }
-
-  private _saveToken(token: Token): void {
-    localStorage.setItem(this.TOKEN_ITEM, JSON.stringify(token));
-    this.tokenSubject.next(token);
   }
 }

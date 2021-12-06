@@ -4,7 +4,7 @@ import { Path } from '@core/enums';
 import { AlertService } from '@core/shared/alert';
 import { ModalService } from '@core/services';
 import { AppAlertService } from '@core/shared/app-alert';
-import { Entity, EntityComponent, ShowingPlace } from '@core/shared/entity';
+import { EntityComponent, ShowingPlace } from '@core/shared/entity';
 
 @Component({
   templateUrl: './listing.page.html',

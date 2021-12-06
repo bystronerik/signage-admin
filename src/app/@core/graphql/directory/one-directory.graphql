@@ -1,0 +1,6 @@
+query FindDirectory($data: FindDirectoryInput!) {
+  findDirectory(data: $data) {
+    id
+    name
+  }
+}

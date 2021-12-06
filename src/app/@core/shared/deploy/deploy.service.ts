@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DeployGQL } from '@core/graphql/deploy';
+import { DeployGQL, DeployMutation } from '@app/graphql';
 import { Observable } from 'rxjs';
 import { FetchResult } from '@apollo/client/core';
 
@@ -9,7 +9,7 @@ import { FetchResult } from '@apollo/client/core';
 export class DeployService {
   constructor(private deployGQL: DeployGQL) {}
 
-  deploy(): Observable<FetchResult<any>> {
+  deploy(): Observable<FetchResult<DeployMutation>> {
     return this.deployGQL.mutate();
   }
 }

@@ -1,0 +1,5 @@
+mutation UpdateDirectory($id: ID!, $data: UpdateDirectoryInput!) {
+  updateDirectory(id: $id, data: $data) {
+    id
+  }
+}

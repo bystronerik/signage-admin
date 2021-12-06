@@ -395,8 +395,8 @@
         <img class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="fileToUploadType === 'image'" src="{{fileToUploadUrl}}" />
         <video class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="fileToUploadType === 'video'" src="{{fileToUploadUrl}}"></video>
         <ng-container *ngIf="fileToUploadType === undefined && asset.type">
-          <img class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="asset.isImage()" src="{{asset.path}}" />
-          <video class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="asset.isVideo()" src="{{asset.path}}"></video>
+          <img class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="asset.type.toLowerCase().includes('image')" src="{{asset.path}}" />
+          <video class="px-10 pb-5 mx-auto" style="max-height: 25rem;" *ngIf="asset.type.toLowerCase().includes('video')" src="{{asset.path}}"></video>
         </ng-container>
       </div>
     </div>

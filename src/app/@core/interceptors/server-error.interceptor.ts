@@ -14,7 +14,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if ([401, 403].includes(error.status)) {
-          this.authService.logout();
+          this.authService.signOut();
           this.router.navigateByUrl(Path.SignIn);
           return throwError(error);
         } else if (error.status === 500) {

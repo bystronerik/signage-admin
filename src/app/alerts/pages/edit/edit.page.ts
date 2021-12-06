@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Alert } from '@core/shared/alert';
-import { CreateAlertInput, FindAlertInput, UpdateAlertInput } from '@core/graphql/alert';
+import {
+  CreateAlertInput,
+  FindAlertInput,
+  UpdateAlertInput,
+  Style,
+  Validity,
+  Alert,
+  UpdateAlertMutation, CreateAlertMutation
+} from '@app/graphql';
 import { AlertService } from '@core/shared/alert/alert.service';
 import { Path } from '@core/enums';
 import { AppAlertService } from '@core/shared/app-alert';
-import { Validity } from '@core/shared/asset';
 import { AlertPosition } from '@core/shared/alert/alert-position.enum';
 import { AlertType } from '@core/shared/alert/alert-type.enum';
-import { Style, StyleService, StyleType } from '@core/shared/style';
-import { FindStyleInput } from '@core/graphql/style';
+import { StyleService, StyleType } from '@core/shared/style';
+import { Observable } from 'rxjs';
+import { FetchResult } from '@apollo/client/core';
 
 @Component({
   templateUrl: './edit.page.html',
@@ -42,55 +49,55 @@ export class EditPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.alert = new Alert();
-    this.alert.validity = new Validity();
+    this.alert = {} as Alert;
+    this.alert.validity = {} as Validity;
     this.alert.validity.enabled = false;
 
-    this.alert.background = new Style();
-    this.alert.borders = new Style();
-    this.alert.height = new Style();
-    this.alert.textPosition = new Style();
-    this.alert.textColor = new Style();
-    this.alert.textSize = new Style();
-    this.alert.textSize = new Style();
+    this.alert.background = {} as Style;
+    this.alert.borders = {} as Style;
+    this.alert.height = {} as Style;
+    this.alert.textPosition = {} as Style;
+    this.alert.textColor = {} as Style;
+    this.alert.textSize = {} as Style;
+    this.alert.textSize = {} as Style;
 
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindAlertInput();
+        const input: FindAlertInput = {};
         input.id = params.get('id');
         this.alertService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.alert = Object.assign(new Alert(), value.data.findAlert);
+              this.alert = Object.assign({} as Alert, value.data.findAlert);
               if (!this.alert.validity) {
-                this.alert.validity = new Validity();
+                this.alert.validity = {} as Validity;
                 this.alert.validity.enabled = false;
               }
 
               if (!this.alert.background) {
-                this.alert.background = new Style();
+                this.alert.background = {} as Style;
               }
 
               if (!this.alert.borders) {
-                this.alert.borders = new Style();
+                this.alert.borders = {} as Style;
               }
 
               if (!this.alert.height) {
-                this.alert.height = new Style();
+                this.alert.height = {} as Style;
               }
 
               if (!this.alert.textPosition) {
-                this.alert.textPosition = new Style();
+                this.alert.textPosition = {} as Style;
               }
 
               if (!this.alert.textColor) {
-                this.alert.textColor = new Style();
+                this.alert.textColor = {} as Style;
               }
 
               if (!this.alert.textSize) {
-                this.alert.textSize = new Style();
+                this.alert.textSize = {} as Style;
               }
 
               this.activeStyles['background'] = this.alert.background.value;
@@ -107,7 +114,7 @@ export class EditPage implements OnInit {
       }
     });
 
-    this.styleService.findAll(new FindStyleInput()).subscribe(
+    this.styleService.findAll({}).subscribe(
       (val) => {
         // this.animations = val.data.findAllStyles;
         this.backgrounds = val.filter((item) => item.type === StyleType.BACKGROUND);
@@ -126,10 +133,10 @@ export class EditPage implements OnInit {
   async onSubmit() {
     this.loading = true;
 
-    const input = this.alert.id ? new UpdateAlertInput() : new CreateAlertInput();
+    const input: UpdateAlertInput|CreateAlertInput = this.alert.id ? {} as UpdateAlertInput : {} as CreateAlertInput;
     input.name = this.alert.name;
     input.value = this.alert.value;
-    input.type = AlertType.STANDALONE;
+    input.type = AlertType.STANDALONE.toString();
     input.position = this.alert.position;
     input.validityEnabled = this.alert.validity.enabled;
     input.validFrom = this.alert.validity.from;
@@ -142,17 +149,17 @@ export class EditPage implements OnInit {
     input.textSize = this.alert.textSize.id;
     input.running = this.alert.running;
 
-    const query = this.alert.id ? this.alertService.update(this.alert.id, input) : this.alertService.create(input);
+    const query: Observable<FetchResult<UpdateAlertMutation|CreateAlertMutation>> = this.alert.id ? this.alertService.update(this.alert.id, input as UpdateAlertInput) : this.alertService.create(input as CreateAlertInput);
     query.toPromise().then(
       (value) => {
         this.loading = false;
         this.appAlertService.showSuccess('Uloženo', 'Informační zpráva byla úspěšně uložena');
 
-        if (value.data.createAlert) {
+        if ('createAlert' in value.data) {
           this.router.navigate([Path.Alerts, value.data.createAlert.id]);
         }
 
-        if (value.data.updateAlert) {
+        if ('updateAlert' in value.data) {
           this.router.navigate([Path.Alerts, value.data.updateAlert.id]);
         }
       },

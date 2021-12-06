@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { APOLLO_OPTIONS } from 'apollo-angular';
+import { APOLLO_NAMED_OPTIONS, NamedOptions } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache, ApolloLink, DefaultOptions } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
-import { Token } from '@app/+auth/shared/interfaces';
+import { Token } from '@app/graphql';
 import { environment } from '@environments/environment';
-
-const uri = environment.apiUrl;
+import { getItem, StorageItem } from '@core/utils';
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -20,7 +19,7 @@ const defaultOptions: DefaultOptions = {
   },
 };
 
-export function createApollo(httpLink: HttpLink) {
+export function createApollo(httpLink: HttpLink, uri: string) {
   const basic = setContext((operation, context) => ({
     headers: {
       Accept: 'charset=utf-8',
@@ -28,7 +27,7 @@ export function createApollo(httpLink: HttpLink) {
   }));
 
   const auth = setContext((operation, context) => {
-    const token = JSON.parse(localStorage.getItem('_token')) as Token;
+    const token = getItem(StorageItem.AuthToken) as Token;
 
     if (token === null) {
       return {};
@@ -36,6 +35,7 @@ export function createApollo(httpLink: HttpLink) {
       return {
         headers: {
           Authorization: `Bearer ${token.accessToken}`,
+          'X-Client-Id': 'testovaci-id',
         },
       };
     }
@@ -55,8 +55,12 @@ export function createApollo(httpLink: HttpLink) {
   exports: [HttpClientModule],
   providers: [
     {
-      provide: APOLLO_OPTIONS,
-      useFactory: createApollo,
+      provide: APOLLO_NAMED_OPTIONS,
+      useFactory(httpLink: HttpLink): NamedOptions {
+        return {
+          base: createApollo(httpLink, environment.apiUrl),
+        };
+      },
       deps: [HttpLink],
     },
   ],

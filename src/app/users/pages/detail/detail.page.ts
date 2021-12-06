@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User, UserService } from '@core/shared/user';
-import { FindUserInput } from '@core/graphql/user';
+import { UserService } from '@core/shared/user';
+import { User, FindUserInput } from '@app/graphql';
 import { Path } from '@core/enums';
 import { AuthService } from '@app/+auth';
 import { ModalService } from '@core/services';
@@ -24,17 +24,17 @@ export class DetailPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.user = new User();
+    this.user = {} as User;
     this.route.paramMap.subscribe((params) => {
       if (params.has('id')) {
-        const input = new FindUserInput();
+        const input: FindUserInput = {};
         input.id = params.get('id');
         this.userService
           .find(input)
           .result()
           .then(
             (value) => {
-              this.user = Object.assign(new User(), value.data.findUser);
+              this.user = Object.assign({} as User, value.data.findUser);
             },
             (error) => {
               this.router.navigate([Path.Users]);

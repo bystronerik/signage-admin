@@ -1,1 +1,1 @@
-export { LoginGQL } from '@core/graphql/login.gql';
+export { FindInput } from '@core/graphql/findinput.ts';

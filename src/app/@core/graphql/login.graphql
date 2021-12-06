@@ -1,0 +1,13 @@
+mutation Login($username: String!, $password: String!, $shortSession: Boolean!) {
+  login(username: $username, password: $password, shortSession: $shortSession) {
+    user {
+      id
+      username
+      role
+    }
+    token {
+      accessToken
+      expiresIn
+    }
+  }
+}

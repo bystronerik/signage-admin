@@ -1,0 +1,5 @@
+mutation UpdateAsset($id: ID!, $data: UpdateAssetInput!, $file: FileUpload) {
+  updateAsset(id: $id, data: $data, file: $file) {
+    id
+  }
+}

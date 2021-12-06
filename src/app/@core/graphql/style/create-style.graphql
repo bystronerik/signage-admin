@@ -1,0 +1,5 @@
+mutation CreateStyle($data: CreateStyleInput!) {
+  createStyle(data: $data) {
+    id
+  }
+}
